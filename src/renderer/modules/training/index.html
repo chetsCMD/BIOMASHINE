@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">Тренировки</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="./module.css">
+    <script src="bm://app/vendor/chart.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main>
+    <div class="add-panel">
+        <div class="add-panel-title" data-i18n="form.addTitle">Добавить тренировку</div>
+        <div class="add-form" id="add-workout-form">
+            <div class="field-group">
+                <label for="workout-date" data-i18n="form.date">ДАТА</label>
+                <input type="date" id="workout-date">
+            </div>
+            <div class="field-group">
+                <label for="workout-start" data-i18n="form.start">НАЧАЛО</label>
+                <input type="time" id="workout-start">
+            </div>
+            <div class="field-group">
+                <label for="workout-end" data-i18n="form.end">ОКОНЧАНИЕ</label>
+                <input type="time" id="workout-end">
+            </div>
+            <div class="field-group">
+                <label for="workout-type" data-i18n="form.type">ТИП</label>
+                <select id="workout-type">
+                    <option value="home" data-i18n="filter.home">Дома</option>
+                    <option value="gym" data-i18n="filter.gym">В зале</option>
+                </select>
+            </div>
+        </div>
+        <div class="template-selector">
+            <span class="template-label" data-i18n="form.templateLabel">ШАБЛОН:</span>
+            <select id="template-select">
+                <option value="" data-i18n="template.selectPlaceholder">— выбрать —</option>
+            </select>
+            <button class="btn secondary btn-sm" id="apply-template-btn" data-i18n="form.applyTemplate">Применить</button>
+            <button class="btn secondary btn-sm" id="save-template-btn" data-i18n="form.saveTemplate">Сохранить как шаблон</button>
+            <input type="text" id="template-name" class="template-name-input" placeholder="Имя шаблона" data-i18n-placeholder="form.templateName">
+        </div>
+        <div id="exercises-container">
+            <div class="exercise-row">
+                <input type="text" class="ex-name" placeholder="Упражнение" data-i18n-placeholder="form.exercise">
+                <input type="number" class="ex-sets" placeholder="Подходы" min="1" data-i18n-placeholder="form.sets">
+                <input type="number" class="ex-reps" placeholder="Повторения" min="1" data-i18n-placeholder="form.reps">
+                <input type="number" class="ex-weight" placeholder="Вес (кг)" step="0.5" min="0" data-i18n-placeholder="form.weight">
+                <input type="text" class="ex-note" placeholder="Заметка" data-i18n-placeholder="form.note">
+                <button class="remove-exercise" style="visibility:hidden;">✕</button>
+            </div>
+        </div>
+        <button class="btn add-exercise-btn btn-sm" id="add-exercise-btn" style="margin-top:8px;padding:4px 16px;" data-i18n="form.addExercise">➕ Добавить упражнение</button>
+        <div style="margin-top:12px;">
+            <div class="field-group" style="margin-bottom:8px;">
+                <label for="workout-note" data-i18n="form.workoutNote">ЗАМЕТКА К ТРЕНИРОВКЕ</label>
+                <input type="text" id="workout-note" placeholder="Самочувствие, погода..." data-i18n-placeholder="form.workoutNotePlaceholder">
+            </div>
+            <button class="btn" id="save-workout-btn" data-i18n="form.saveWorkout">СОХРАНИТЬ ТРЕНИРОВКУ</button>
+        </div>
+        <div id="add-status" class="status-box"></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.calendar">Календарь</div>
+    <div class="panel-card">
+        <div class="calendar-nav">
+            <button id="prev-month">←</button>
+            <span class="month-label" id="month-label">Январь 2025</span>
+            <button id="next-month">→</button>
+        </div>
+        <div class="week-grid" id="calendar-grid">
+            <div class="week-day-header" data-i18n="weekday.mon">Пн</div>
+            <div class="week-day-header" data-i18n="weekday.tue">Вт</div>
+            <div class="week-day-header" data-i18n="weekday.wed">Ср</div>
+            <div class="week-day-header" data-i18n="weekday.thu">Чт</div>
+            <div class="week-day-header" data-i18n="weekday.fri">Пт</div>
+            <div class="week-day-header" data-i18n="weekday.sat">Сб</div>
+            <div class="week-day-header" data-i18n="weekday.sun">Вс</div>
+        </div>
+        <div id="day-detail" class="day-detail-block" style="display:none;"></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.week">Недельная сводка</div>
+    <div class="panel-card">
+        <div class="stats-grid" id="week-stats">
+            <div class="stat-card"><div class="stat-card-label" data-i18n="week.count">Тренировок</div><div class="stat-card-value" id="week-count">0</div></div>
+            <div class="stat-card"><div class="stat-card-label" data-i18n="week.time">Время (ч)</div><div class="stat-card-value" id="week-time">0</div></div>
+            <div class="stat-card"><div class="stat-card-label" data-i18n="week.avg">Среднее время</div><div class="stat-card-value" id="week-avg">0</div></div>
+            <div class="stat-card"><div class="stat-card-label" data-i18n="week.goal">Цель</div><div class="stat-card-value" id="week-goal-progress">0%</div></div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar"><div class="progress-fill" id="week-goal-bar" style="width:0%;"></div></div>
+            <div class="progress-label"><span data-i18n="week.goalProgress">Выполнение недельной цели</span><span id="week-goal-text">0 / 0</span></div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.progress">Прогресс по упражнениям</div>
+    <div class="panel-card">
+        <div class="progress-selectors">
+            <div class="field-group progress-select-lg">
+                <label for="progress-exercise-select" data-i18n="progress.exercise">ВЫБЕРИТЕ УПРАЖНЕНИЕ</label>
+                <select id="progress-exercise-select"><option value="">—</option></select>
+            </div>
+            <div class="field-group progress-select-sm">
+                <label for="progress-period" data-i18n="progress.period">ПЕРИОД</label>
+                <select id="progress-period">
+                    <option value="5" data-i18n="period.last5">Последние 5</option>
+                    <option value="10" data-i18n="period.last10">Последние 10</option>
+                    <option value="30" data-i18n="period.month">Месяц</option>
+                    <option value="all" data-i18n="period.all">Всё время</option>
+                </select>
+            </div>
+        </div>
+        <div class="chart-wrap"><canvas id="progress-chart"></canvas></div>
+        <div id="progress-stats" class="progress-stats"></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.goals">Цели</div>
+    <div class="panel-card">
+        <div class="goals-container" id="goals-container">
+            <div class="goal-item">
+                <span class="goal-name" data-i18n="goals.weekly">Недельная цель (тренировок)</span>
+                <div class="weekly-goal-row">
+                    <input type="number" id="weekly-target" class="weekly-target-input" min="0" step="1">
+                    <button class="btn secondary btn-sm" id="set-weekly-goal" data-i18n="goals.setWeekly">Установить</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="daily-goal-title" data-i18n="goals.dailyTitle">Ежедневные цели</div>
+                <div class="goal-form" id="daily-goal-form">
+                    <div class="field-group">
+                        <label for="daily-goal-exercise" data-i18n="goals.exercise">УПРАЖНЕНИЕ</label>
+                        <select id="daily-goal-exercise"><option value="">—</option></select>
+                    </div>
+                    <div class="field-group">
+                        <label for="daily-goal-reps" data-i18n="goals.repsPerDay">ПОВТОРЕНИЙ В ДЕНЬ</label>
+                        <input type="number" id="daily-goal-reps" min="1" step="1" placeholder="100">
+                    </div>
+                    <button class="btn secondary" id="add-daily-goal-btn" data-i18n="goals.add">Добавить цель</button>
+                </div>
+                <div id="exercise-goals-list" class="exercise-goals-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.history">История тренировок</div>
+    <div class="panel-card">
+        <div class="filter-row">
+            <select id="history-filter-type">
+                <option value="all" data-i18n="filter.all">Все</option>
+                <option value="home" data-i18n="filter.home">Дома</option>
+                <option value="gym" data-i18n="filter.gym">В зале</option>
+            </select>
+            <select id="history-filter-period">
+                <option value="week" data-i18n="filter.week">Неделя</option>
+                <option value="month" data-i18n="filter.month">Месяц</option>
+                <option value="all" data-i18n="filter.allTime">Всё время</option>
+            </select>
+            <input type="date" id="history-filter-from" placeholder="С" data-i18n-placeholder="history.from">
+            <input type="date" id="history-filter-to" placeholder="По" data-i18n-placeholder="history.to">
+            <button class="btn secondary btn-sm" id="apply-history-filter" data-i18n="history.apply">Применить</button>
+            <button class="btn secondary btn-sm" id="reset-history-filter" data-i18n="history.reset">Сброс</button>
+        </div>
+        <div class="history-list" id="history-list"></div>
+    </div>
+</main>
+
+<div class="modal-overlay" id="edit-modal">
+    <div class="modal-content">
+        <button class="modal-close" id="edit-modal-close">&times;</button>
+        <div class="modal-title" data-i18n="modal.editTitle">Редактировать тренировку</div>
+        <div class="add-form" id="edit-workout-form">
+            <div class="field-group">
+                <label for="edit-date" data-i18n="form.date">ДАТА</label>
+                <input type="date" id="edit-date">
+            </div>
+            <div class="field-group">
+                <label for="edit-start" data-i18n="form.start">НАЧАЛО</label>
+                <input type="time" id="edit-start">
+            </div>
+            <div class="field-group">
+                <label for="edit-end" data-i18n="form.end">ОКОНЧАНИЕ</label>
+                <input type="time" id="edit-end">
+            </div>
+            <div class="field-group">
+                <label for="edit-type" data-i18n="form.type">ТИП</label>
+                <select id="edit-type">
+                    <option value="home" data-i18n="filter.home">Дома</option>
+                    <option value="gym" data-i18n="filter.gym">В зале</option>
+                </select>
+            </div>
+        </div>
+        <div id="edit-exercises-container"></div>
+        <button class="btn add-exercise-btn btn-sm" id="edit-add-exercise-btn" style="margin-top:8px;padding:4px 16px;" data-i18n="form.addExercise">➕ Добавить упражнение</button>
+        <div style="margin-top:12px;">
+            <div class="field-group" style="margin-bottom:8px;">
+                <label for="edit-note" data-i18n="form.workoutNote">ЗАМЕТКА К ТРЕНИРОВКЕ</label>
+                <input type="text" id="edit-note" placeholder="Самочувствие, погода..." data-i18n-placeholder="form.workoutNotePlaceholder">
+            </div>
+            <button class="btn" id="save-edit-btn" data-i18n="form.saveEdit">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+        </div>
+        <div id="edit-status" class="status-box"></div>
+    </div>
+</div>
+</body>
+</html>

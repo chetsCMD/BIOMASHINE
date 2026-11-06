@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">Реакция</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="./module.css">
+    <script src="bm://app/vendor/chart.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main>
+    <div class="reaction-box" id="reaction-box">
+        <div style="text-align: center;">
+            <div id="main-text" data-i18n="test.startPrompt">Нажмите, чтобы начать</div>
+            <div class="sub-text" id="sub-text"></div>
+        </div>
+    </div>
+
+    <div class="test-controls">
+        <button class="btn" id="start-test-btn" data-i18n="btn.start">НАЧАТЬ ТЕСТ</button>
+        <button class="btn secondary" id="reset-test-btn" data-i18n="btn.reset">СБРОСИТЬ</button>
+    </div>
+
+    <div id="current-result" class="result-panel" style="display: none;">
+        <div style="text-align: center; font-size: 12px; color: var(--td);" data-i18n="result.title">Результаты этапов</div>
+        <div class="stage-values" id="stage-values"></div>
+        <div class="average" id="average-result">-- <span class="ms" data-i18n="unit.ms">мс</span></div>
+        <div id="save-status" class="save-status"></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.stats">Статистика</div>
+    <div class="panel-card">
+        <div class="stats-grid" id="stats-grid"></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.charts">Графики</div>
+    <div class="panel-card">
+        <div class="panel-title" data-i18n="chart.progressTitle">Прогресс среднего времени реакции</div>
+        <div class="chart-wrap"><canvas id="progress-chart"></canvas></div>
+    </div>
+    <div class="panel-card">
+        <div class="panel-title" data-i18n="chart.histogramTitle">Распределение средних значений</div>
+        <div class="chart-wrap"><canvas id="histogram-chart"></canvas></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.log">Журнал</div>
+    <div class="panel-card">
+        <div class="history-list" id="history-list"></div>
+    </div>
+</main>
+</body>
+</html>

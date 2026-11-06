@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">КБЖУ</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="./module.css">
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main>
+    <div class="kbju-card-main kbju-main-card">
+        <div class="title-row">
+            <h2 data-i18n="calc.title">Калькулятор КБЖУ</h2>
+            <div class="toggle-wrapper">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="tep-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <span class="kbju-tep-label" data-i18n="tep.label">ТЭП</span>
+                <div class="info-icon">
+                    i
+                    <div class="info-tooltip" data-i18n="tep.hint">Термический эффект пищи — это энергия, которую организм тратит на переваривание, всасывание и обработку еды. То есть съедая условный 1 г белка, организм потратит 0,25 белка на его обработку, оставив на рост мышц и поддержания жизни 0,75.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-params-panel">
+            <div class="kbju-params-title" data-i18n="params.title">Параметры пользователя</div>
+            <div class="user-params-form">
+                <div class="param-field">
+                    <label for="user-height" data-i18n="params.height">РОСТ (СМ)</label>
+                    <input type="number" id="user-height" step="1" placeholder="175">
+                </div>
+                <div class="param-field">
+                    <label for="user-age" data-i18n="params.age">ВОЗРАСТ (ЛЕТ)</label>
+                    <input type="number" id="user-age" step="1" placeholder="25">
+                </div>
+                <div class="param-field">
+                    <label for="user-trainings" data-i18n="params.trainings">ТРЕНИРОВОК / НЕД.</label>
+                    <input type="number" id="user-trainings" step="1" placeholder="3">
+                </div>
+                <button class="save-params-btn" id="save-params-btn" data-i18n="params.save">СОХРАНИТЬ</button>
+            </div>
+            <div id="param-status" class="param-status"></div>
+        </div>
+
+        <div id="kbju-missing" class="kbju-missing"></div>
+
+        <div class="kbju-panel">
+            <div class="bmr-block">
+                <div class="bmr-title" data-i18n="bmr.title">Основной обмен (ПБМ)</div>
+                <div class="bmr-number"><span id="bmr-value" class="kbju-value-pulse">--</span> <span data-i18n="bmr.unit">ккал/день</span></div>
+                <div class="bmr-hint" data-i18n="bmr.hint">Минимальное количество калорий для поддержания жизнедеятельности</div>
+            </div>
+        </div>
+
+        <h3 class="kbju-heading calories" data-i18n="calories.title">Суточные калории</h3>
+
+        <div class="calorie-box">
+            <div class="activity-row">
+                <div class="activity-pill"><span id="activity-text">--</span></div>
+            </div>
+            <div class="calorie-grid">
+                <div class="calorie-card">
+                    <div class="calorie-label" data-i18n="calories.loss">Сброс веса</div>
+                    <div class="calorie-number"><span id="calories-loss">--</span></div>
+                    <div class="calorie-unit" data-i18n="calories.unit">ккал</div>
+                </div>
+                <div class="calorie-card">
+                    <div class="calorie-label" data-i18n="calories.maintain">Поддержка веса</div>
+                    <div class="calorie-number"><span id="calories-maintain">--</span></div>
+                    <div class="calorie-unit" data-i18n="calories.unit">ккал</div>
+                </div>
+                <div class="calorie-card">
+                    <div class="calorie-label" data-i18n="calories.gain">Набор массы</div>
+                    <div class="calorie-number"><span id="calories-gain">--</span></div>
+                    <div class="calorie-unit" data-i18n="calories.unit">ккал</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="kbju-heading nutrients" data-i18n="nutrients.title">Нормы БЖУ в день</h3>
+
+        <div class="nutrient-grid" id="nutrient-grid"></div>
+    </div>
+</main>
+</body>
+</html>

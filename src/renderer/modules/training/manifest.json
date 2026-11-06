@@ -1,0 +1,11 @@
+{
+  "id": "training",
+  "kind": "page",
+  "title": "Тренировки",
+  "version": "1.0.0",
+  "description": "Журнал тренировок, календарь, шаблоны, цели и прогресс по упражнениям",
+  "order": 60,
+  "entry": "index.html",
+  "channels": ["workouts:*"],
+  "i18n": true
+}

@@ -1,0 +1,11 @@
+{
+  "id": "weight",
+  "kind": "page",
+  "title": "Вес",
+  "version": "1.0.0",
+  "description": "Отслеживание веса, процента жира и воды, целей и динамики",
+  "order": 10,
+  "entry": "index.html",
+  "channels": ["profile:*", "measurements:*"],
+  "i18n": true
+}

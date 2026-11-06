@@ -1,0 +1,11 @@
+{
+  "id": "nutrition",
+  "kind": "page",
+  "title": "Питание",
+  "version": "1.0.0",
+  "description": "Журнал питания с расчётом КБЖУ за день",
+  "order": 40,
+  "entry": "index.html",
+  "channels": ["nutrition:*"],
+  "i18n": true
+}

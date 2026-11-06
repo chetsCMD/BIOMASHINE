@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">Питание</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="./module.css">
+    <script src="bm://app/vendor/chart.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main>
+    <div class="add-panel">
+        <div class="add-panel-title" data-i18n="form.title">Добавить приём пищи</div>
+        <div class="add-form" id="add-food-form">
+            <div class="field-group">
+                <label data-i18n="form.date">ДАТА</label>
+                <input type="text" id="food-date" placeholder="06.05.2026">
+            </div>
+            <div class="field-group">
+                <label data-i18n="form.name">НАЗВАНИЕ</label>
+                <input type="text" id="food-name" placeholder="Семечки" data-i18n-placeholder="form.namePlaceholder">
+            </div>
+            <div class="field-group">
+                <label data-i18n="form.weight">ВЕС (Г)</label>
+                <input type="number" id="food-weight" placeholder="25" step="0.1">
+            </div>
+            <div class="field-group">
+                <label data-i18n="form.calories">КАЛОРИИ</label>
+                <input type="number" id="food-calories" placeholder="710" step="0.1">
+            </div>
+            <div class="field-group">
+                <label data-i18n="form.protein">БЕЛКИ (Г)</label>
+                <input type="number" id="food-protein" placeholder="26" step="0.1">
+            </div>
+            <div class="field-group">
+                <label data-i18n="form.fat">ЖИРЫ (Г)</label>
+                <input type="number" id="food-fat" placeholder="65" step="0.1">
+            </div>
+            <div class="field-group">
+                <label data-i18n="form.carbs">УГЛЕВОДЫ (Г)</label>
+                <input type="number" id="food-carbs" placeholder="6" step="0.1">
+            </div>
+            <div class="field-group">
+                <label><span data-i18n="form.perPortion">НА ПОРЦИЮ</span> <span class="opt" data-i18n="form.perPortionOpt">(грамм)</span></label>
+                <input type="number" id="food-per-portion" placeholder="100" step="0.1" value="100">
+            </div>
+            <button class="btn add-food-submit" id="add-food-btn" data-i18n="form.add">ДОБАВИТЬ</button>
+        </div>
+        <div id="food-status" class="food-status"></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.today">Сегодня</div>
+    <div class="today-block">
+        <div class="panel-card">
+            <div class="panel-title" data-i18n="today.meals">Приёмы пищи</div>
+            <div id="today-meals-list"></div>
+        </div>
+        <div class="panel-card">
+            <div class="panel-header">
+                <div class="panel-header-title" data-i18n="today.macrosTitle">Макронутриенты за сегодня</div>
+                <div class="panel-header-date" id="today-date-header"></div>
+            </div>
+            <div id="today-stats-container">
+                <div class="today-stats-layout">
+                    <div>
+                        <div class="today-macros">
+                            <div class="today-macro-item">
+                                <div class="today-macro-label" data-i18n="macro.calories">Калории</div>
+                                <div class="today-macro-value"><span id="today-calories">0</span><span class="today-macro-unit"> <span data-i18n="unit.kcal">ккал</span></span></div>
+                            </div>
+                            <div class="today-macro-item">
+                                <div class="today-macro-label" data-i18n="today.countLabel">Приёмов</div>
+                                <div class="today-macro-value"><span id="today-count">0</span><span class="today-macro-unit"> <span data-i18n="unit.pcs">шт</span></span></div>
+                            </div>
+                            <div class="today-macro-item">
+                                <div class="today-macro-label" data-i18n="macro.protein">Белки</div>
+                                <div class="today-macro-value"><span id="today-protein">0</span><span class="today-macro-unit"> <span data-i18n="unit.g">г</span></span></div>
+                            </div>
+                            <div class="today-macro-item">
+                                <div class="today-macro-label" data-i18n="macro.fat">Жиры</div>
+                                <div class="today-macro-value"><span id="today-fat">0</span><span class="today-macro-unit"> <span data-i18n="unit.g">г</span></span></div>
+                            </div>
+                            <div class="today-macro-item">
+                                <div class="today-macro-label" data-i18n="macro.carbs">Углеводы</div>
+                                <div class="today-macro-value"><span id="today-carbs">0</span><span class="today-macro-unit"> <span data-i18n="unit.g">г</span></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="chart-donut-wrap">
+                            <div class="chart-donut-container">
+                                <canvas id="today-chart"></canvas>
+                                <div class="chart-donut-center">
+                                    <div class="chart-donut-calories" id="today-center">0</div>
+                                    <div class="chart-donut-label" data-i18n="unit.kcal">ккал</div>
+                                </div>
+                            </div>
+                            <div class="chart-legend">
+                                <div class="chart-legend-item"><div class="chart-legend-dot protein"></div><span><span data-i18n="macro.protein">Белки</span>: <span id="today-legend-protein">0</span> <span data-i18n="unit.g">г</span></span></div>
+                                <div class="chart-legend-item"><div class="chart-legend-dot fat"></div><span><span data-i18n="macro.fat">Жиры</span>: <span id="today-legend-fat">0</span> <span data-i18n="unit.g">г</span></span></div>
+                                <div class="chart-legend-item"><div class="chart-legend-dot carbs"></div><span><span data-i18n="macro.carbs">Углеводы</span>: <span id="today-legend-carbs">0</span> <span data-i18n="unit.g">г</span></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.stats">Статистика</div>
+    <div class="panel-card" id="stats-panel">
+        <div class="panel-title" data-i18n="stats.title">Общая статистика</div>
+        <div class="stats-summary">
+            <div class="stats-summary-item">
+                <div class="stats-summary-label" data-i18n="stats.days">Дней записи</div>
+                <div class="stats-summary-value"><span id="stats-days">0</span><span class="stats-summary-unit"> <span data-i18n="unit.days">дн</span></span></div>
+            </div>
+            <div class="stats-summary-item">
+                <div class="stats-summary-label" data-i18n="stats.entries">Всего приёмов</div>
+                <div class="stats-summary-value"><span id="stats-entries">0</span><span class="stats-summary-unit"> <span data-i18n="unit.pcs">шт</span></span></div>
+            </div>
+            <div class="stats-summary-item">
+                <div class="stats-summary-label" data-i18n="stats.calories">Всего калорий</div>
+                <div class="stats-summary-value"><span id="stats-calories">0</span><span class="stats-summary-unit"> <span data-i18n="unit.kcal">ккал</span></span></div>
+            </div>
+            <div class="stats-summary-item">
+                <div class="stats-summary-label" data-i18n="stats.weight">Всего веса</div>
+                <div class="stats-summary-value" id="stats-weight">0</div>
+            </div>
+        </div>
+        <div class="stats-chart-row">
+            <div>
+                <div class="stats-summary two-cols">
+                    <div class="stats-summary-item">
+                        <div class="stats-summary-label" data-i18n="stats.protein">Всего белков</div>
+                        <div class="stats-summary-value"><span id="stats-protein">0</span><span class="stats-summary-unit"> <span data-i18n="unit.g">г</span></span></div>
+                    </div>
+                    <div class="stats-summary-item">
+                        <div class="stats-summary-label" data-i18n="stats.fat">Всего жиров</div>
+                        <div class="stats-summary-value"><span id="stats-fat">0</span><span class="stats-summary-unit"> <span data-i18n="unit.g">г</span></span></div>
+                    </div>
+                    <div class="stats-summary-item">
+                        <div class="stats-summary-label" data-i18n="stats.carbs">Всего углеводов</div>
+                        <div class="stats-summary-value"><span id="stats-carbs">0</span><span class="stats-summary-unit"> <span data-i18n="unit.g">г</span></span></div>
+                    </div>
+                    <div class="stats-summary-item">
+                        <div class="stats-summary-label" data-i18n="stats.average">Среднее в день</div>
+                        <div class="stats-summary-value"><span id="stats-average">0</span><span class="stats-summary-unit"> <span data-i18n="unit.kcal">ккал</span></span></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="chart-donut-wrap">
+                    <div class="chart-donut-container">
+                        <canvas id="stats-chart"></canvas>
+                        <div class="chart-donut-center">
+                            <div class="chart-donut-calories" id="stats-center">0</div>
+                            <div class="chart-donut-label" data-i18n="stats.centerLabel">ккал всего</div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="chart-legend-item"><div class="chart-legend-dot protein"></div><span data-i18n="macro.protein">Белки</span></div>
+                        <div class="chart-legend-item"><div class="chart-legend-dot fat"></div><span data-i18n="macro.fat">Жиры</span></div>
+                        <div class="chart-legend-item"><div class="chart-legend-dot carbs"></div><span data-i18n="macro.carbs">Углеводы</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.history">История</div>
+    <div class="panel-card" id="history-panel"></div>
+</main>
+</body>
+</html>

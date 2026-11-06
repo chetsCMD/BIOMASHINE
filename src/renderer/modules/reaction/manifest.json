@@ -1,0 +1,13 @@
+{
+  "id": "reaction",
+  "kind": "page",
+  "title": "Реакция",
+  "version": "1.0.0",
+  "description": "Тест скорости реакции: 5 этапов, статистика и графики",
+  "order": 80,
+  "entry": "index.html",
+  "channels": [
+    "reaction:*"
+  ],
+  "i18n": true
+}

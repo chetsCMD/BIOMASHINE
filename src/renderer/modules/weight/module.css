@@ -1,0 +1,224 @@
+:root {
+  --danger: #ff4444;
+  --danger-hover: #ff6666;
+  --ok: #8bc34a;
+  --bad: #ff8888;
+}
+
+.req {
+  color: var(--danger);
+}
+
+.btn-danger {
+  background: var(--danger) !important;
+  color: white !important;
+}
+.btn-danger:hover {
+  background: var(--danger-hover) !important;
+}
+
+.add-data-panel {
+  background: var(--s1);
+  border: 1px solid var(--br);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.4s ease both;
+}
+.add-data-title {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--td);
+  margin-bottom: 16px;
+}
+.add-data-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+.add-data-field {
+  flex: 1;
+  min-width: 120px;
+}
+.add-data-field label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--tdd);
+  margin-bottom: 6px;
+}
+.add-data-field label .optional {
+  color: var(--tddd);
+  font-size: 8px;
+}
+.add-data-field input {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--br);
+  color: var(--t);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+}
+.add-data-field input:focus {
+  border-color: var(--wh);
+}
+.add-data-field input.optional-field {
+  border-color: var(--tddd);
+}
+.add-data-btn {
+  background: var(--wh);
+  color: var(--bg);
+  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  height: 42px;
+}
+.add-data-btn:hover {
+  background: var(--t);
+  transform: translateY(-1px);
+}
+.add-data-status {
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--tdd);
+  display: none;
+}
+.add-data-status.success {
+  color: var(--ok);
+}
+.add-data-status.error {
+  color: var(--bad);
+}
+.delete-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.delete-modal.active {
+  display: flex;
+}
+.delete-modal-content {
+  background: var(--s1);
+  border: 1px solid var(--br);
+  border-radius: 12px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: auto;
+  padding: 24px;
+}
+.delete-modal-title {
+  font-size: 16px;
+  font-family: 'Playfair Display', serif;
+  color: var(--wh);
+  margin-bottom: 20px;
+}
+.delete-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.delete-table th {
+  text-align: left;
+  padding: 12px 8px;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--td);
+  border-bottom: 1px solid var(--br);
+}
+.delete-table td {
+  padding: 12px 8px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--br2);
+}
+.delete-row-btn {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+.delete-row-btn:hover {
+  background: var(--danger-hover);
+}
+.close-modal-btn {
+  margin-top: 20px;
+  background: var(--s2);
+  border: 1px solid var(--br);
+  color: var(--t);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.goal-input-panel {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--br);
+}
+.goal-input-title {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--td);
+  margin-bottom: 16px;
+}
+.goal-input-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.period-selector {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0 20px;
+  flex-wrap: wrap;
+}
+.period-selector label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--tdd);
+}
+.period-selector select {
+  background: var(--s2);
+  border: 1px solid var(--br);
+  color: var(--t);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  outline: none;
+}
+.period-selector select:focus {
+  border-color: var(--wh);
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">Следите за весом</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="./module.css">
+    <script src="bm://app/vendor/chart.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main>
+    <div class="add-data-panel">
+        <div class="add-data-title" data-i18n="add.title">Добавить замер</div>
+        <div class="add-data-form">
+            <div class="add-data-field">
+                <label><span data-i18n="add.date">ДАТА</span> <span class="req">*</span></label>
+                <input type="text" id="new-date" placeholder="31.12.2025">
+            </div>
+            <div class="add-data-field">
+                <label><span data-i18n="add.weight">ВЕС (КГ)</span> <span class="req">*</span></label>
+                <input type="number" id="new-weight" step="0.1" placeholder="70.5">
+            </div>
+            <div class="add-data-field">
+                <label><span data-i18n="add.fat">ЖИР (%)</span> <span class="optional" data-i18n="add.optional">(необяз.)</span></label>
+                <input type="number" id="new-fat" step="0.1" placeholder="—" class="optional-field">
+            </div>
+            <div class="add-data-field">
+                <label><span data-i18n="add.water">ВОДА (%)</span> <span class="optional" data-i18n="add.optional">(необяз.)</span></label>
+                <input type="number" id="new-water" step="0.1" placeholder="—" class="optional-field">
+            </div>
+            <button class="add-data-btn" id="add-measurement-btn" data-i18n="add.submit">ДОБАВИТЬ</button>
+            <button class="add-data-btn btn-danger" id="delete-measurement-btn" data-i18n="add.delete">УДАЛИТЬ</button>
+        </div>
+        <div id="add-data-status" class="add-data-status"></div>
+
+        <div class="goal-input-panel">
+            <div class="goal-input-title" data-i18n="goals.title">Цели</div>
+            <div class="goal-input-form">
+                <div class="add-data-field">
+                    <label data-i18n="goals.weight">ЦЕЛЬ ПО ВЕСУ (КГ)</label>
+                    <input type="number" id="goal-weight" step="0.1" placeholder="75.0">
+                </div>
+                <div class="add-data-field">
+                    <label><span data-i18n="goals.fat">ЦЕЛЬ ПО ЖИРУ (%)</span> <span class="optional" data-i18n="add.optional">(необяз.)</span></label>
+                    <input type="number" id="goal-fat" step="0.1" placeholder="—" class="optional-field">
+                </div>
+                <div class="add-data-field">
+                    <label data-i18n="goals.deadline">ДЕДЛАЙН (ДД.ММ.ГГГГ)</label>
+                    <input type="text" id="goal-deadline" placeholder="01.09.2026">
+                </div>
+                <button class="add-data-btn" id="set-goals-btn" data-i18n="goals.save">СОХРАНИТЬ ЦЕЛИ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.current">Текущие показатели</div>
+    <div class="hero" id="hero"></div>
+
+    <div class="section-sep" data-i18n="section.dynamics">Динамика</div>
+    <div class="period-selector">
+        <label data-i18n="chart.periodLabel">Период графика:</label>
+        <select id="chart-period">
+            <option value="week" data-i18n="period.week">Неделя</option>
+            <option value="month" data-i18n="period.month">Месяц</option>
+            <option value="3months" data-i18n="period.3months">3 месяца</option>
+            <option value="year" data-i18n="period.year">Год</option>
+            <option value="all" selected data-i18n="period.all">Всё время</option>
+        </select>
+        <button class="btn-apply" id="apply-chart-period" data-i18n="chart.apply">Применить</button>
+    </div>
+    <div class="charts-row" id="charts-row"></div>
+
+    <div class="section-sep" data-i18n="section.changes">Изменения за период</div>
+    <div class="row-2">
+        <div class="panel">
+            <div class="panel-title" data-i18n="panel.period">Период</div>
+            <div class="ptabs" id="ptabs">
+                <button class="ptab on" data-p="1" id="ptab-1" data-i18n="period.1m">1 мес</button>
+                <button class="ptab" data-p="3" id="ptab-3" data-i18n="period.3m">3 мес</button>
+                <button class="ptab" data-p="6" id="ptab-6" data-i18n="period.6m">6 мес</button>
+                <button class="ptab" data-p="12" id="ptab-12" data-i18n="period.year">Год</button>
+            </div>
+            <div id="period-table"></div>
+        </div>
+        <div class="panel">
+            <div class="panel-title" data-i18n="panel.custom">Произвольный диапазон</div>
+            <div class="dinputs">
+                <div class="dgroup">
+                    <label data-i18n="custom.from">С даты</label>
+                    <input type="date" id="d-from">
+                </div>
+                <div class="dgroup">
+                    <label data-i18n="custom.to">По дату</label>
+                    <input type="date" id="d-to">
+                </div>
+            </div>
+            <button class="btn-apply" id="btn-custom" data-i18n="custom.calculate">Рассчитать</button>
+            <div id="custom-result"></div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.goals">Цели и ориентиры</div>
+    <div class="row-2">
+        <div class="panel" id="goals-panel">
+            <div class="panel-title" data-i18n="goals.progressTitle">Прогресс к целям</div>
+            <div id="goals-content"></div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">
+                <span data-i18n="ideal.title">Идеальный вес при росте</span>
+                <span id="height-label">—</span>
+                <span data-i18n="ideal.cm">см</span>
+            </div>
+            <table class="ideal-t" id="ideal-table"></table>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.records">Рекорды</div>
+    <div class="records-grid" id="records-grid"></div>
+</main>
+
+<div id="delete-modal" class="delete-modal">
+    <div class="delete-modal-content">
+        <div class="delete-modal-title" data-i18n="delete.title">Выберите запись для удаления</div>
+        <div style="overflow-x: auto;">
+            <table class="delete-table">
+                <thead>
+                    <tr>
+                        <th data-i18n="delete.date">Дата</th>
+                        <th data-i18n="delete.weight">Вес (кг)</th>
+                        <th data-i18n="delete.fat">Жир (%)</th>
+                        <th data-i18n="delete.water">Вода (%)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="delete-table-body"></tbody>
+            </table>
+        </div>
+        <button class="close-modal-btn" id="close-delete-modal-btn" data-i18n="delete.close">ЗАКРЫТЬ</button>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "id": "running",
+  "kind": "page",
+  "title": "Бег",
+  "version": "1.0.0",
+  "description": "Журнал беговых тренировок, цели, статистика и достижения",
+  "order": 50,
+  "entry": "index.html",
+  "channels": ["running:*"],
+  "i18n": true
+}

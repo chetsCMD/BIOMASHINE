@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">Анализ сна</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="./module.css">
+    <script src="bm://app/vendor/chart.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main>
+    <div class="add-data-panel">
+        <div class="add-data-title">
+            <span data-i18n="add.title">Добавить сон</span>
+            <button class="add-data-btn add-data-btn--secondary add-data-btn--small" id="fill-date-btn" data-i18n="add.fillDate">Заполнить дату</button>
+        </div>
+        <div class="add-data-form">
+            <div class="add-data-field">
+                <label data-i18n="add.start">НАЧАЛО СНА</label>
+                <input type="datetime-local" id="sleep-start">
+            </div>
+            <div class="add-data-field">
+                <label data-i18n="add.end">КОНЕЦ СНА</label>
+                <input type="datetime-local" id="sleep-end">
+            </div>
+            <button class="add-data-btn" id="add-sleep-btn" data-i18n="add.submit">ДОБАВИТЬ</button>
+        </div>
+        <div id="add-data-status" class="add-data-status"></div>
+
+        <div class="goal-input-panel">
+            <div class="goal-input-title" data-i18n="schedule.title">Идеальный график сна</div>
+            <div class="goal-input-form">
+                <div class="add-data-field">
+                    <label data-i18n="schedule.bedtime">ИДЕАЛЬНОЕ ВРЕМЯ ЗАСЫПАНИЯ</label>
+                    <input type="time" id="ideal-bedtime">
+                </div>
+                <div class="add-data-field">
+                    <label data-i18n="schedule.waketime">ИДЕАЛЬНОЕ ВРЕМЯ ПРОБУЖДЕНИЯ</label>
+                    <input type="time" id="ideal-waketime">
+                </div>
+                <button class="add-data-btn" id="save-schedule-btn" data-i18n="schedule.save">СОХРАНИТЬ</button>
+                <button class="add-data-btn add-data-btn--secondary" id="reset-schedule-btn" data-i18n="schedule.reset">СБРОСИТЬ</button>
+            </div>
+        </div>
+
+        <div class="goal-input-panel">
+            <div class="goal-input-title" data-i18n="nosleep.title">Отметить день без сна</div>
+            <div class="goal-input-form">
+                <div class="add-data-field">
+                    <label data-i18n="nosleep.date">ДАТА</label>
+                    <input type="date" id="no-sleep-date">
+                </div>
+                <button class="add-data-btn add-data-btn--dark" id="add-no-sleep-btn" data-i18n="nosleep.add">НЕ СПАЛ</button>
+                <button class="add-data-btn add-data-btn--dim" id="remove-no-sleep-btn" data-i18n="nosleep.remove">СНЯТЬ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sleep-header-stats">
+        <div class="sleep-stat-card">
+            <div class="sleep-stat-label" data-i18n="stats.days">Дней записи</div>
+            <div class="sleep-stat-value" id="total-days">0</div>
+        </div>
+        <div class="sleep-stat-card">
+            <div class="sleep-stat-label" data-i18n="stats.avgDuration">Средняя продолжительность</div>
+            <div class="sleep-stat-value" id="avg-duration">0 <span class="sleep-stat-unit" data-i18n="unit.hour">ч</span></div>
+        </div>
+        <div class="sleep-stat-card">
+            <div class="sleep-stat-label" data-i18n="stats.matchCount">Совпадений с идеалом</div>
+            <div class="sleep-stat-value" id="match-count">0</div>
+        </div>
+        <div class="sleep-stat-card">
+            <div class="sleep-stat-label" data-i18n="stats.avgDeviation">Ср. отклонение от идеала</div>
+            <div class="sleep-stat-value" id="avg-deviation">0 <span class="sleep-stat-unit" data-i18n="unit.hour">ч</span></div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="calendar.title">Календарь сна</div>
+    <div class="calendar-wrapper">
+        <div class="calendar-container">
+            <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+        <div class="calendar-stats">
+            <div class="calendar-stats-title" data-i18n="calendar.stats">Статистика календаря</div>
+            <div class="calendar-stats-item"><span><div class="stat-color ideal"></div> <span data-i18n="calendar.ideal">Идеальный сон</span></span><span id="stat-ideal">0</span></div>
+            <div class="calendar-stats-item"><span><div class="stat-color good"></div> <span data-i18n="calendar.good">≥8 часов</span></span><span id="stat-good">0</span></div>
+            <div class="calendar-stats-item"><span><div class="stat-color warning"></div> <span data-i18n="calendar.warning">6-8 часов</span></span><span id="stat-warning">0</span></div>
+            <div class="calendar-stats-item"><span><div class="stat-color bad"></div> &lt;<span data-i18n="calendar.bad">6 часов</span></span><span id="stat-bad">0</span></div>
+            <div class="calendar-stats-item"><span><div class="stat-color no-sleep"></div> <span data-i18n="calendar.noSleep">Без сна</span></span><span id="stat-no-sleep">0</span></div>
+            <div class="calendar-stats-item"><span><div class="stat-color miss"></div> <span data-i18n="calendar.noData">Нет данных</span></span><span id="stat-miss">0</span></div>
+        </div>
+    </div>
+
+    <div class="bottom-stats-row">
+        <div class="stat-series">
+            <div class="calendar-stats-title" data-i18n="streaks.title">Серии сна</div>
+            <div class="stat-series-item"><span data-i18n="streaks.ideal">🏆 Идеальная серия</span><span id="streak-ideal">0</span></div>
+            <div class="stat-series-item"><span data-i18n="streaks.good">🏆 Серия >8 ч</span><span id="streak-good">0</span></div>
+            <div class="stat-series-item"><span data-i18n="streaks.warning">🏆 Серия 6-8 ч</span><span id="streak-warning">0</span></div>
+            <div class="stat-series-item"><span><span data-i18n="streaks.badLabel">🏆 Серия</span> &lt;<span data-i18n="streaks.badValue">6 ч</span></span><span id="streak-bad">0</span></div>
+            <div class="stat-series-item stat-series-item--separated"><span data-i18n="streaks.records">📅 Самая длинная серия записей</span><span id="streak-records">0</span></div>
+            <div class="stat-series-item"><span data-i18n="streaks.current">📅 Текущая серия записей</span><span id="current-streak">0</span></div>
+            <div class="stat-series-item"><span data-i18n="streaks.maxGap">📅 Самый большой перерыв</span><span id="max-gap">0</span></div>
+        </div>
+        <div class="donut-container">
+            <div class="calendar-stats-title" data-i18n="donut.title">Распределение типов сна</div>
+            <div class="donut-chart-wrapper">
+                <canvas id="donut-chart" width="140" height="140"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="weekday.title">Статистика по дням недели</div>
+    <div class="weekday-stats" id="weekday-stats"></div>
+
+    <div class="row-2">
+        <div class="panel">
+            <div class="panel-title" data-i18n="analysis.title">Анализ режима</div>
+            <div>
+                <div class="profile-item">
+                    <span class="p-key" data-i18n="analysis.avgBedtime">Среднее время отхода</span>
+                    <span class="p-val" id="avg-bedtime">—</span>
+                </div>
+                <div class="profile-item">
+                    <span class="p-key" data-i18n="analysis.avgWaketime">Среднее время пробуждения</span>
+                    <span class="p-val" id="avg-waketime">—</span>
+                </div>
+                <div class="profile-item">
+                    <span class="p-key">
+                        <span data-i18n="analysis.consistency">Консистентность режима</span>
+                        <span class="info-icon">
+                            i
+                            <span class="info-tooltip" data-i18n="analysis.consistencyHint">Согласованность данных. По простому: насколько твой идеальный график совпадает с реальным</span>
+                        </span>
+                    </span>
+                    <span class="p-val" id="consistency">—</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title" data-i18n="records.title">Рекорды</div>
+            <div class="records-flex records-flex--two-cols">
+                <div class="sleep-stat-card sleep-stat-card--compact">
+                    <div class="sleep-stat-label" data-i18n="records.longestSingle">Самый долгий непрерывный сон</div>
+                    <div class="sleep-stat-value" id="longest-single-sleep">0 <span class="sleep-stat-unit" data-i18n="unit.hour">ч</span></div>
+                    <div class="sleep-stat-label sleep-stat-label--sub" id="longest-single-date"></div>
+                </div>
+                <div class="sleep-stat-card sleep-stat-card--compact">
+                    <div class="sleep-stat-label" data-i18n="records.longestInterrupted">Самый долгий прерывистый сон</div>
+                    <div class="sleep-stat-value" id="longest-sleep">0 <span class="sleep-stat-unit" data-i18n="unit.hour">ч</span></div>
+                    <div class="sleep-stat-label sleep-stat-label--sub" id="longest-date"></div>
+                </div>
+                <div class="sleep-stat-card sleep-stat-card--compact">
+                    <div class="sleep-stat-label" data-i18n="records.maxWake">Макс. бодрствование</div>
+                    <div class="sleep-stat-value" id="max-wake">0 <span class="sleep-stat-unit" data-i18n="unit.hour">ч</span></div>
+                    <div class="sleep-stat-label sleep-stat-label--sub" id="max-wake-date"></div>
+                </div>
+                <div class="sleep-stat-card sleep-stat-card--compact">
+                    <div class="sleep-stat-label" data-i18n="records.maxEfficiency">Макс. эффективность</div>
+                    <div class="sleep-stat-value" id="max-efficiency">0 <span class="sleep-stat-unit" data-i18n="unit.percent">%</span></div>
+                    <div class="sleep-stat-label sleep-stat-label--sub" id="max-efficiency-date"></div>
+                </div>
+                <div class="sleep-stat-card sleep-stat-card--compact sleep-stat-card--span-2">
+                    <div class="sleep-stat-label" data-i18n="records.totalHours">Всего часов сна</div>
+                    <div class="sleep-stat-value" id="total-hours">0 <span class="sleep-stat-unit" data-i18n="unit.hour">ч</span></div>
+                    <div class="sleep-stat-label sleep-stat-label--sub" id="total-hours-percent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="week.title">Последняя неделя</div>
+    <div class="panel">
+        <div class="week-table-wrap">
+            <table class="week-table" id="week-table">
+                <thead>
+                    <tr><th data-i18n="week.date">Дата</th><th data-i18n="week.start">Засыпание</th><th data-i18n="week.end">Пробуждение</th><th data-i18n="week.duration">Длительность</th><th data-i18n="week.match">Совпадение</th><th data-i18n="week.efficiency">Эффективность</th><th></th></tr>
+                </thead>
+                <tbody id="week-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="logs.title">Все записи сна</div>
+    <div class="panel">
+        <div class="search-panel">
+            <div class="search-field">
+                <label data-i18n="logs.search">ПОИСК ПО ДАТЕ</label>
+                <input type="date" id="search-date">
+            </div>
+            <button class="add-data-btn add-data-btn--compact" id="search-btn" data-i18n="logs.searchBtn">ПОИСК</button>
+            <button class="add-data-btn add-data-btn--secondary add-data-btn--compact" id="reset-search-btn" data-i18n="logs.reset">СБРОС</button>
+        </div>
+        <div class="logs-container" id="logs-container"></div>
+    </div>
+</main>
+</body>
+</html>

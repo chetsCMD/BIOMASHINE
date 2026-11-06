@@ -1,0 +1,11 @@
+{
+  "id": "sleep",
+  "kind": "page",
+  "title": "Сон",
+  "version": "1.0.0",
+  "description": "Дневник сна, идеальный график, календарь и статистика",
+  "order": 30,
+  "entry": "index.html",
+  "channels": ["sleep:*"],
+  "i18n": true
+}

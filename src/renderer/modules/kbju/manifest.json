@@ -1,0 +1,13 @@
+{
+  "id": "kbju",
+  "kind": "page",
+  "title": "КБЖУ",
+  "version": "1.0.0",
+  "description": "Калькулятор калорий и БЖУ по параметрам и последнему весу",
+  "order": 20,
+  "entry": "index.html",
+  "channels": [
+    "profile:*"
+  ],
+  "i18n": true
+}

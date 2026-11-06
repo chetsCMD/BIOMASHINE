@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page.title">Бег</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="./module.css">
+    <script src="bm://app/vendor/chart.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main>
+    <div class="add-panel">
+        <div class="add-panel-title" data-i18n="add.title">Добавить тренировку</div>
+        <div class="add-form" id="add-running-form">
+            <div class="field-group">
+                <label data-i18n="add.date">ДАТА</label>
+                <input type="date" id="run-date">
+            </div>
+            <div class="field-group">
+                <label data-i18n="add.time">ВРЕМЯ (ММ:СС)</label>
+                <input type="text" id="run-time" placeholder="35:20">
+            </div>
+            <div class="field-group">
+                <label data-i18n="add.distance">ДИСТАНЦИЯ (КМ)</label>
+                <input type="number" id="run-distance" placeholder="5.2" step="0.01">
+            </div>
+            <div class="field-group">
+                <label data-i18n="add.calories">КАЛОРИИ (ОПЦ)</label>
+                <input type="number" id="run-calories" placeholder="300" step="1">
+            </div>
+            <div class="field-group">
+                <label data-i18n="add.startSpeed">НАЧ. СКОРОСТЬ (КМ/Ч)</label>
+                <input type="number" id="run-start-speed" placeholder="8.5" step="0.1">
+            </div>
+            <div class="field-group">
+                <label data-i18n="add.maxSpeed">МАКС. СКОРОСТЬ (КМ/Ч)</label>
+                <input type="number" id="run-max-speed" placeholder="12.0" step="0.1">
+            </div>
+            <div class="field-group">
+                <label data-i18n="add.incline">УКЛОН (%)</label>
+                <input type="number" id="run-incline" placeholder="2" step="0.5">
+            </div>
+            <button class="btn btn-add" id="add-run-btn" data-i18n="add.submit">ДОБАВИТЬ</button>
+        </div>
+        <div class="run-status" id="run-status"></div>
+    </div>
+
+    <div class="stats-section" id="stats-section"></div>
+
+    <div class="section-sep" data-i18n="section.goals">Цели</div>
+    <div class="goals-container" id="goals-container">
+        <div class="goal-card">
+            <div class="goal-title" data-i18n="goals.distance.title">🏃 Цель по дистанции</div>
+            <div class="goal-progress">
+                <div class="goal-progress-bar"><div class="goal-progress-fill" id="dist-progress"></div></div>
+                <div class="goal-values">
+                    <span id="dist-current">—</span>
+                    <span id="dist-target-text">—</span>
+                </div>
+            </div>
+            <div class="goal-input-row">
+                <div class="field-group">
+                    <label data-i18n="goals.distance.label">Цель (км)</label>
+                    <input type="number" id="dist-target" placeholder="100" step="1">
+                </div>
+                <div class="field-group">
+                    <label data-i18n="goals.deadline">Дедлайн</label>
+                    <input type="date" id="dist-deadline">
+                </div>
+                <button class="btn secondary" id="dist-set-btn" data-i18n="goals.set">Установить</button>
+            </div>
+        </div>
+        <div class="goal-card">
+            <div class="goal-title" data-i18n="goals.time.title">⏱️ Цель по времени</div>
+            <div class="goal-progress">
+                <div class="goal-progress-bar"><div class="goal-progress-fill" id="time-progress"></div></div>
+                <div class="goal-values">
+                    <span id="time-current">—</span>
+                    <span id="time-target-text">—</span>
+                </div>
+            </div>
+            <div class="goal-input-row">
+                <div class="field-group">
+                    <label data-i18n="goals.time.label">Цель (сек)</label>
+                    <input type="text" id="time-target" placeholder="3600">
+                </div>
+                <div class="field-group">
+                    <label data-i18n="goals.deadline">Дедлайн</label>
+                    <input type="date" id="time-deadline">
+                </div>
+                <button class="btn secondary" id="time-set-btn" data-i18n="goals.set">Установить</button>
+            </div>
+        </div>
+        <div class="goal-card">
+            <div class="goal-title" data-i18n="goals.calories.title">🔥 Цель по калориям</div>
+            <div class="goal-progress">
+                <div class="goal-progress-bar"><div class="goal-progress-fill" id="cal-progress"></div></div>
+                <div class="goal-values">
+                    <span id="cal-current">—</span>
+                    <span id="cal-target-text">—</span>
+                </div>
+            </div>
+            <div class="goal-input-row">
+                <div class="field-group">
+                    <label data-i18n="goals.calories.label">Цель (ккал)</label>
+                    <input type="number" id="cal-target" placeholder="5000" step="100">
+                </div>
+                <div class="field-group">
+                    <label data-i18n="goals.deadline">Дедлайн</label>
+                    <input type="date" id="cal-deadline">
+                </div>
+                <button class="btn secondary" id="cal-set-btn" data-i18n="goals.set">Установить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.week">Неделя</div>
+    <div class="panel-card">
+        <div class="week-grid" id="week-grid"></div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.charts">Графики</div>
+    <div class="charts-row">
+        <div class="chart-card">
+            <div class="panel-title" data-i18n="charts.distance">Дистанция (км)</div>
+            <div class="chart-wrap"><canvas id="distance-chart"></canvas></div>
+        </div>
+        <div class="chart-card">
+            <div class="panel-title" data-i18n="charts.time">Время (мин)</div>
+            <div class="chart-wrap"><canvas id="time-chart"></canvas></div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.allTimeCharts">Графики за всё время</div>
+    <div class="charts-row">
+        <div class="chart-card">
+            <div class="panel-title" data-i18n="charts.allDistance">Дистанция (км) — всё время</div>
+            <div class="chart-wrap"><canvas id="all-distance-chart"></canvas></div>
+        </div>
+        <div class="chart-card">
+            <div class="panel-title" data-i18n="charts.allTime">Время (мин) — всё время</div>
+            <div class="chart-wrap"><canvas id="all-time-chart"></canvas></div>
+        </div>
+    </div>
+
+    <div class="section-sep" data-i18n="section.achievements">Достижения</div>
+    <div class="panel-card" id="achievements-panel"></div>
+
+    <div class="section-sep" data-i18n="section.allRuns">Все тренировки</div>
+    <div class="panel-card">
+        <div class="search-panel">
+            <div class="search-field">
+                <label data-i18n="search.label">ПОИСК ПО ДАТЕ</label>
+                <input type="date" id="search-date">
+            </div>
+            <button class="btn secondary btn-search" id="search-btn" data-i18n="search.submit">ПОИСК</button>
+            <button class="btn secondary btn-search" id="reset-search-btn" data-i18n="search.reset">СБРОС</button>
+        </div>
+        <div class="running-list" id="running-list"></div>
+    </div>
+</main>
+</body>
+</html>
