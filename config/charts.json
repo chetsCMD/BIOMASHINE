@@ -1,0 +1,12 @@
+{
+  "reaction": {
+    "progress": {
+      "line": "#ffd93d",
+      "fill": "rgba(255, 217, 61, 0.1)"
+    },
+    "histogram": {
+      "line": "#6bcf7f",
+      "fill": "rgba(107, 207, 127, 0.7)"
+    }
+  }
+}

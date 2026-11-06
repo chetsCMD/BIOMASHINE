@@ -1,0 +1,36 @@
+{
+  "durationThresholds": { "good": 8, "warning": 6 },
+  "idealWindow": { "bedMinutes": 120, "wakeMinutes": 120, "wrapThreshold": 720, "wrapMinutes": 1440 },
+  "idealMinDuration": 6,
+  "efficiency": { "gapMinutes": 120, "goodRatio": 0.5, "warningRatio": 0.3 },
+  "consistency": { "highThreshold": 70, "mediumThreshold": 40, "maxDeviationMinutes": 120 },
+  "calendarHorizonDays": 730,
+  "weekTableDays": 7,
+  "statusHideMs": 3000,
+  "weekdays": [
+    { "labelKey": "weekday.sun" },
+    { "labelKey": "weekday.mon" },
+    { "labelKey": "weekday.tue" },
+    { "labelKey": "weekday.wed" },
+    { "labelKey": "weekday.thu" },
+    { "labelKey": "weekday.fri" },
+    { "labelKey": "weekday.sat" }
+  ],
+  "chart": {
+    "cutout": "60%",
+    "labels": [
+      { "labelKey": "chart.ideal" },
+      { "labelKey": "chart.good" },
+      { "labelKey": "chart.warning" },
+      { "labelKey": "chart.bad" },
+      { "labelKey": "chart.noSleep" }
+    ],
+    "colors": {
+      "ideal": "#ffd700",
+      "good": "#4caf50",
+      "warning": "#ff9800",
+      "bad": "#f44336",
+      "noSleep": "#222222"
+    }
+  }
+}

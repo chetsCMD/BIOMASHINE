@@ -1,0 +1,51 @@
+{
+  "default": "dark",
+  "themes": {
+    "dark": {
+      "titleKey": "theme.dark",
+      "colorScheme": "dark",
+      "variables": {
+        "--bg": "#121212",
+        "--s1": "#1c1c1c",
+        "--s2": "#242424",
+        "--s3": "#2c2c2c",
+        "--br": "#2e2e2e",
+        "--br2": "#262626",
+        "--t": "#e8e8e8",
+        "--td": "#a0a0a0",
+        "--tdd": "#6e6e6e",
+        "--tddd": "#3a3a3a",
+        "--wh": "#f0f0f0",
+        "--overlay": "rgba(0, 0, 0, 0.6)",
+        "--header-bg": "rgba(18, 18, 18, 0.92)"
+      },
+      "chart": {
+        "text": "#a0a0a0",
+        "grid": "#2e2e2e"
+      }
+    },
+    "light": {
+      "titleKey": "theme.light",
+      "colorScheme": "light",
+      "variables": {
+        "--bg": "#f4f4f2",
+        "--s1": "#ffffff",
+        "--s2": "#ececea",
+        "--s3": "#e2e2df",
+        "--br": "#d2d2ce",
+        "--br2": "#dededa",
+        "--t": "#1c1c1c",
+        "--td": "#5a5a5a",
+        "--tdd": "#8a8a8a",
+        "--tddd": "#c4c4c0",
+        "--wh": "#0d0d0d",
+        "--overlay": "rgba(0, 0, 0, 0.35)",
+        "--header-bg": "rgba(244, 244, 242, 0.92)"
+      },
+      "chart": {
+        "text": "#5a5a5a",
+        "grid": "#d2d2ce"
+      }
+    }
+  }
+}

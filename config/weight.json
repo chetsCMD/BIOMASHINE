@@ -1,0 +1,63 @@
+{
+  "bmi": [
+    { "max": 16, "labelKey": "bmi.veryLow", "quality": "bad" },
+    { "max": 18.5, "labelKey": "bmi.low", "quality": "warn" },
+    { "max": 25, "labelKey": "bmi.normal", "quality": "good" },
+    { "max": 30, "labelKey": "bmi.overweight", "quality": "warn" },
+    { "max": 35, "labelKey": "bmi.obesity1", "quality": "bad" },
+    { "max": 40, "labelKey": "bmi.obesity2", "quality": "bad" },
+    { "max": null, "labelKey": "bmi.morbid", "quality": "bad" }
+  ],
+  "fat": {
+    "teen": {
+      "ageMin": 15,
+      "ageMax": 19,
+      "thresholds": [
+        { "max": 9, "labelKey": "fat.athlete", "quality": "good" },
+        { "max": 15, "labelKey": "fat.sportNormal", "quality": "good" },
+        { "max": 19, "labelKey": "fat.limitNormal", "quality": "warn" },
+        { "max": 23, "labelKey": "fat.overweight", "quality": "bad" },
+        { "max": null, "labelKey": "fat.obesity", "quality": "bad" }
+      ]
+    },
+    "adult": {
+      "thresholds": [
+        { "max": 8, "labelKey": "fat.athlete", "quality": "good" },
+        { "max": 15, "labelKey": "fat.sportNormal", "quality": "good" },
+        { "max": 19, "labelKey": "fat.limitNormal", "quality": "warn" },
+        { "max": 24, "labelKey": "fat.overweight", "quality": "bad" },
+        { "max": null, "labelKey": "fat.obesity", "quality": "bad" }
+      ]
+    }
+  },
+  "water": [
+    { "type": "exact", "value": 60, "labelKey": "water.ideal", "quality": "good" },
+    { "type": "range", "min": 55, "max": 65, "labelKey": "water.normal", "quality": "good" },
+    { "type": "lt", "value": 55, "labelKey": "water.below", "quality": "warn" },
+    { "type": "gt", "value": 65, "labelKey": "water.above", "quality": "warn" }
+  ],
+  "idealWeights": [
+    { "id": "broca", "nameKey": "ideal.broca.name", "descKey": "ideal.broca.desc" },
+    { "id": "lorenz", "nameKey": "ideal.lorenz.name", "descKey": "ideal.lorenz.desc" },
+    { "id": "cooper", "nameKey": "ideal.cooper.name", "descKey": "ideal.cooper.desc" },
+    { "id": "bmi22", "nameKey": "ideal.bmi22.name", "descKey": "ideal.bmi22.desc" }
+  ],
+  "charts": {
+    "weight": { "labelKey": "metric.weight", "unitKey": "unit.kg", "color": "#ffffff" },
+    "fat": { "labelKey": "metric.fatPercent", "unitKey": "unit.percent", "color": "#aaaaaa" },
+    "water": { "labelKey": "metric.waterPercent", "unitKey": "unit.percent", "color": "#666666" }
+  },
+  "chartSettings": {
+    "height": 140,
+    "tension": 0.35,
+    "borderWidth": 1.5,
+    "pointRadius": 3,
+    "maxPointRadiusThreshold": 30,
+    "pointBorderWidth": 2,
+    "pointBorderColor": "#080808",
+    "maxTicksX": 8,
+    "maxTicksY": 5,
+    "animationDuration": 600
+  },
+  "statusHideMs": 3000
+}

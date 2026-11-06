@@ -1,0 +1,115 @@
+{
+  "window": {
+    "width": 1280,
+    "height": 820,
+    "minWidth": 960,
+    "minHeight": 640,
+    "backgroundColor": "#121212",
+    "icon": "build/biomashine.ico"
+  },
+  "protocol": {
+    "scheme": "bm",
+    "appHost": "app"
+  },
+  "startPage": "shell/index.html",
+  "database": {
+    "fileName": "biomashine.sqlite"
+  },
+  "settingsDefaults": {
+    "theme": "dark",
+    "autostart": false,
+    "language": null,
+    "timezone": "system"
+  },
+  "modules": {
+    "directory": "modules",
+    "userDirectory": "modules",
+    "defaultOrder": 1000,
+    "reservedIds": [
+      "app",
+      "shell",
+      "shared"
+    ]
+  },
+  "auth": {
+    "keyLength": 64,
+    "minPasswordLength": 4
+  },
+  "ipc": {
+    "channel": "api",
+    "openPrefixes": [
+      "auth:",
+      "settings:get",
+      "config:get",
+      "i18n:bundle",
+      "i18n:languages",
+      "window:"
+    ]
+  },
+  "export": {
+    "fileName": "biomashine-export",
+    "excludeSettingsPrefix": "auth."
+  },
+  "privateConfigs": [
+    "app"
+  ],
+  "storage": {
+    "maxDocumentBytes": 262144,
+    "collectionPattern": "^[a-z][a-z0-9_-]{0,39}$"
+  },
+  "portable": {
+    "dataDirectoryName": "BIOMASHINE-data",
+    "directoryEnvironment": [
+      "PORTABLE_EXECUTABLE_DIR"
+    ],
+    "fileEnvironment": [
+      "APPIMAGE"
+    ]
+  },
+  "shortcuts": {
+    "fullscreen": {
+      "code": "F11",
+      "ctrlOrMeta": false
+    },
+    "quickSwitch": {
+      "code": "KeyP",
+      "ctrlOrMeta": true
+    }
+  },
+  "i18n": {
+    "directory": "locales",
+    "default": "en",
+    "builtin": [
+      {
+        "code": "ru",
+        "name": "Русский",
+        "locale": "ru-RU"
+      },
+      {
+        "code": "en",
+        "name": "English",
+        "locale": "en-US"
+      }
+    ],
+    "codePattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$",
+    "pluralForms": [
+      "zero",
+      "one",
+      "two",
+      "few",
+      "many",
+      "other"
+    ]
+  },
+  "timezones": {
+    "aliases": {
+      "Asia/Calcutta": "Asia/Kolkata",
+      "Europe/Kiev": "Europe/Kyiv",
+      "Asia/Saigon": "Asia/Ho_Chi_Minh",
+      "Asia/Rangoon": "Asia/Yangon",
+      "America/Godthab": "America/Nuuk",
+      "Pacific/Enderbury": "Pacific/Kanton",
+      "Asia/Katmandu": "Asia/Kathmandu"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "bmr": {
+    "weight": 10,
+    "height": 6.25,
+    "age": 5,
+    "constant": 5
+  },
+  "activityLevels": [
+    {
+      "titleKey": "activity.sedentary",
+      "maxTrainings": 0,
+      "multipliers": {
+        "loss": 1.02,
+        "maintain": 1.2,
+        "gain": 1.38
+      }
+    },
+    {
+      "titleKey": "activity.light",
+      "maxTrainings": 2,
+      "multipliers": {
+        "loss": 1.16,
+        "maintain": 1.375,
+        "gain": 1.58
+      }
+    },
+    {
+      "titleKey": "activity.medium",
+      "maxTrainings": 4,
+      "multipliers": {
+        "loss": 1.317,
+        "maintain": 1.55,
+        "gain": 1.782
+      }
+    },
+    {
+      "titleKey": "activity.high",
+      "maxTrainings": 6,
+      "multipliers": {
+        "loss": 1.47,
+        "maintain": 1.73,
+        "gain": 1.99
+      }
+    },
+    {
+      "titleKey": "activity.veryHigh",
+      "maxTrainings": null,
+      "multipliers": {
+        "loss": 1.615,
+        "maintain": 1.9,
+        "gain": 2.184
+      }
+    }
+  ],
+  "nutrients": {
+    "protein": {
+      "titleKey": "nutrient.protein",
+      "perKgMin": 1.6,
+      "perKgMax": 2.2,
+      "thermicFactor": 1.25,
+      "icon": "🥩"
+    },
+    "fat": {
+      "titleKey": "nutrient.fat",
+      "perKgMin": 0.8,
+      "perKgMax": 1.0,
+      "thermicFactor": 1.01,
+      "icon": "🥑"
+    },
+    "carbs": {
+      "titleKey": "nutrient.carbs",
+      "perKgMin": 5,
+      "perKgMax": 10,
+      "thermicFactor": 1.07,
+      "icon": "flag-pl"
+    }
+  },
+  "statusHideMs": 3000
+}

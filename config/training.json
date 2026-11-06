@@ -1,0 +1,21 @@
+{
+  "statusHideMs": 3000,
+  "chart": {
+    "tension": 0.3,
+    "pointRadius": 3,
+    "maxRotation": 45,
+    "maxTicksLimit": 10,
+    "datasets": {
+      "weight": {
+        "labelKey": "chart.weight",
+        "borderColor": "#ffd93d",
+        "backgroundColor": "rgba(255,217,61,0.1)"
+      },
+      "reps": {
+        "labelKey": "chart.reps",
+        "borderColor": "#6bcf7f",
+        "backgroundColor": "rgba(107,207,127,0.1)"
+      }
+    }
+  }
+}

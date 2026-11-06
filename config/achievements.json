@@ -1,0 +1,16 @@
+{
+  "running": [
+    {
+      "id": "marathon",
+      "required": 42.195,
+      "nameKey": "achievement.marathon.name",
+      "descriptionKey": "achievement.marathon.description"
+    },
+    {
+      "id": "saratov_moscow",
+      "required": 800,
+      "nameKey": "achievement.saratov_moscow.name",
+      "descriptionKey": "achievement.saratov_moscow.description"
+    }
+  ]
+}

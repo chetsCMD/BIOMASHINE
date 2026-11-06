@@ -1,0 +1,9 @@
+{
+  "stages": 5,
+  "waitMinMs": 1000,
+  "waitMaxMs": 5000,
+  "failDelayMs": 1000,
+  "successDelayMs": 800,
+  "maxHistogramBins": 10,
+  "chartMaxTicks": 10
+}

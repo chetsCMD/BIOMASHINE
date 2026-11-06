@@ -1,0 +1,13 @@
+CREATE TRIGGER trg_sleep_logs_stamp AFTER INSERT ON sleep_logs BEGIN UPDATE sleep_logs SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_nutrition_logs_stamp AFTER INSERT ON nutrition_logs BEGIN UPDATE nutrition_logs SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_running_logs_stamp AFTER INSERT ON running_logs BEGIN UPDATE running_logs SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_workouts_stamp AFTER INSERT ON workouts BEGIN UPDATE workouts SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_workout_templates_stamp AFTER INSERT ON workout_templates BEGIN UPDATE workout_templates SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_transactions_stamp AFTER INSERT ON transactions BEGIN UPDATE transactions SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_reaction_tests_stamp AFTER INSERT ON reaction_tests BEGIN UPDATE reaction_tests SET date = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_pills_stamp AFTER INSERT ON pills BEGIN UPDATE pills SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_pill_intake_logs_stamp AFTER INSERT ON pill_intake_logs BEGIN UPDATE pill_intake_logs SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_mood_entries_stamp AFTER INSERT ON mood_entries BEGIN UPDATE mood_entries SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_jobs_stamp AFTER INSERT ON jobs BEGIN UPDATE jobs SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_shifts_stamp AFTER INSERT ON shifts BEGIN UPDATE shifts SET created_at = bm_now() WHERE id = NEW.id; END;
+CREATE TRIGGER trg_module_documents_stamp AFTER INSERT ON module_documents BEGIN UPDATE module_documents SET created_at = bm_now(), updated_at = bm_now() WHERE id = NEW.id; END;
