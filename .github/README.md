@@ -72,6 +72,8 @@ The current version includes several ready-made example pages:
 - **Workouts** — sessions and workout templates.
 - **Reaction** — reaction speed test and results history.
 
+[![Example of a page for recording sleep:](media/sleep.png)](media/sleep.png)
+
 This is not a complete list of what BIOMASHINE should be, nor a recommendation to track exactly these things. The composition of the application can and **should** be changed and expanded to suit your tasks.
 > You can follow the project's development and the creation of new pages in the [roadmap](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/en/ROADMAP.md)
 
