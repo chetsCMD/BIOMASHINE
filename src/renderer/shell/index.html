@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIOMASHINE</title>
+    <link rel="stylesheet" href="../vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="../shared/base.css">
+    <link rel="stylesheet" href="../shared/components.css">
+    <link rel="stylesheet" href="shell.css">
+    <script type="module" src="./main.js"></script>
+</head>
+<body class="shell-body">
+    <div id="boot" class="boot">BIOMASHINE<span class="boot-sub" data-i18n="boot.loading">загрузка…</span></div>
+    <div id="app" class="shell hidden">
+        <header class="shell-header">
+            <div class="logo">BIOMASHINE</div>
+            <nav id="nav" class="nav"></nav>
+            <div class="header-right">
+                <div id="pills" class="pills"></div>
+                <button id="lock-btn" class="logout-btn hidden" data-i18n="lock.button">ВЫЙТИ</button>
+            </div>
+        </header>
+        <div id="stage" class="stage">
+            <section id="settings-view" class="settings-view hidden"></section>
+        </div>
+    </div>
+    <div id="window-controls" class="window-controls hidden">
+        <button id="fullscreen-btn" class="window-btn" data-i18n-title="window.exitFullscreen" data-i18n-aria-label="window.exitFullscreen" title="Выйти из полноэкранного режима" aria-label="Выйти из полноэкранного режима">&#x2922;</button>
+        <button id="close-btn" class="window-btn window-close" data-i18n-title="window.close" data-i18n-aria-label="window.close" title="Закрыть приложение" aria-label="Закрыть приложение">&#x2715;</button>
+    </div>
+    <div id="login-view" class="login-view hidden"></div>
+    <div id="dialog-root"></div>
+</body>
+</html>

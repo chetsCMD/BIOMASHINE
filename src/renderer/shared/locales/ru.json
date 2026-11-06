@@ -1,0 +1,14 @@
+{
+  "theme.dark": "Тёмная",
+  "theme.light": "Светлая",
+  "unit.ms": "мс",
+  "unit.g": "г",
+  "unit.kcal": "ккал",
+  "common.delete": "Удалить",
+  "common.cancel": "Отмена",
+  "common.save": "Сохранить",
+  "achievement.marathon.name": "Марафон",
+  "achievement.marathon.description": "Пройти 42 км 195 метров",
+  "achievement.saratov_moscow.name": "Саратов — Москва",
+  "achievement.saratov_moscow.description": "Пройти 800 км"
+}
