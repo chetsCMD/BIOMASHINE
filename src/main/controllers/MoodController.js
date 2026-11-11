@@ -17,13 +17,13 @@ class MoodController extends BaseController {
             list: () => this.mood.list(),
             save: (entry) => {
                 if (!entry.date || !entry.time || !entry.mood) {
-                    throw AppError.badRequest('Дата, время и настроение обязательны');
+                    throw AppError.badRequest('mood.dateTimeMoodRequired');
                 }
                 this.mood.upsert({ ...entry, date: Dates.day(entry.date), time: Dates.time(entry.time) });
             },
             remove: ({ id }) => {
                 if (this.mood.remove(BaseController.id(id)) === 0) {
-                    throw AppError.notFound('Запись не найдена');
+                    throw AppError.notFound('mood.notFound');
                 }
             }
         };

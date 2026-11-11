@@ -24,7 +24,7 @@ class ProfileController extends BaseController {
                 const values = [height, age, trainings_count].map(Number);
                 const valid = values.every((value) => Number.isInteger(value)) && values[0] > 0 && values[1] > 0 && values[2] >= 0;
                 if (!valid) {
-                    throw AppError.badRequest('Рост и возраст должны быть положительными целыми, число тренировок — целым от нуля');
+                    throw AppError.badRequest('profile.invalidParams');
                 }
                 this.profile.updateParams({ height: values[0], age: values[1], trainings_count: values[2] });
                 return this.profile.get();

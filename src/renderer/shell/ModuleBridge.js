@@ -14,6 +14,7 @@ export class ModuleBridge {
         this.origin = null;
         this.moduleId = null;
         this.policy = null;
+        this.permissions = new Set();
         this.listener = (event) => this.handle(event);
         this.themeListener = (current) => this.send({ type: MessageType.THEME, theme: current });
     }
@@ -23,6 +24,7 @@ export class ModuleBridge {
         this.moduleId = descriptor.id;
         this.origin = descriptor.url.split('/').slice(0, 3).join('/');
         this.policy = new ChannelPolicy(descriptor.channels);
+        this.permissions = new Set(Array.isArray(descriptor.permissions) ? descriptor.permissions : []);
         window.addEventListener('message', this.listener);
         this.theme.onChange(this.themeListener);
     }
@@ -31,6 +33,7 @@ export class ModuleBridge {
         window.removeEventListener('message', this.listener);
         this.theme.listeners.delete(this.themeListener);
         this.frame = null;
+        this.permissions = new Set();
     }
 
     send(message) {
@@ -78,6 +81,12 @@ export class ModuleBridge {
         }
     }
 
+    deny(channel) {
+        const denied = new Error(this.i18n.t('bridge.denied', { channel }));
+        denied.status = 403;
+        return denied;
+    }
+
     async execute(message) {
         if (message.type === MessageType.CONFIG) {
             return this.api.invoke('config:get', { name: message.name });
@@ -88,10 +97,14 @@ export class ModuleBridge {
         if (typeof message.channel === 'string' && message.channel.startsWith('storage:')) {
             return this.api.invoke(message.channel, { ...(message.payload || {}), module: this.moduleId });
         }
+        if (typeof message.channel === 'string' && message.channel.startsWith('notifications:')) {
+            if (!this.permissions.has('notifications')) {
+                throw this.deny(message.channel);
+            }
+            return this.api.invoke(message.channel, { ...(message.payload || {}), module: this.moduleId });
+        }
         if (!this.policy.allows(message.channel)) {
-            const denied = new Error(this.i18n.t('bridge.denied', { channel: message.channel }));
-            denied.status = 403;
-            throw denied;
+            throw this.deny(message.channel);
         }
         return this.api.invoke(message.channel, message.payload);
     }

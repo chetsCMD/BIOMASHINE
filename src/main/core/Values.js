@@ -1,4 +1,18 @@
 class Values {
+    static collator = new Intl.Collator('en');
+
+    static setLocale(locale) {
+        try {
+            Values.collator = new Intl.Collator(locale || 'en');
+        } catch {
+            Values.collator = new Intl.Collator('en');
+        }
+    }
+
+    static compare(a, b) {
+        return Values.collator.compare(String(a), String(b));
+    }
+
     static orNull(value) {
         return value === undefined || value === null || value === '' ? null : value;
     }
@@ -24,7 +38,7 @@ class Values {
     }
 
     static byName(rows) {
-        return rows.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+        return rows.sort((a, b) => Values.compare(a.name, b.name));
     }
 }
 

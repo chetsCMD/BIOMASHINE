@@ -17,20 +17,20 @@ class StorageController extends BaseController {
     scope({ module, collection }) {
         const owner = this.registry.get(module);
         if (!owner || owner.kind !== 'page') {
-            throw AppError.badRequest('Неизвестный модуль');
+            throw AppError.badRequest('storage.unknownModule');
         }
         if (typeof collection !== 'string' || !this.collectionPattern.test(collection)) {
-            throw AppError.badRequest('Имя коллекции: строчные латинские буквы, цифры, _ и -, начинается с буквы, до 40 символов');
+            throw AppError.badRequest('storage.invalidCollection');
         }
         return { module, collection };
     }
 
     document(data) {
         if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-            throw AppError.badRequest('data должен быть объектом');
+            throw AppError.badRequest('storage.dataObjectRequired');
         }
         if (Buffer.byteLength(JSON.stringify(data), 'utf8') > this.maxBytes) {
-            throw AppError.badRequest(`Документ больше ${this.maxBytes} байт`);
+            throw AppError.badRequest('storage.documentTooLarge', { maxBytes: this.maxBytes });
         }
         return data;
     }
@@ -45,7 +45,7 @@ class StorageController extends BaseController {
                 const { module, collection } = this.scope(payload);
                 const found = this.storage.get(module, collection, BaseController.id(payload.id));
                 if (!found) {
-                    throw AppError.notFound('Документ не найден');
+                    throw AppError.notFound('storage.notFound');
                 }
                 return found;
             },
@@ -56,13 +56,13 @@ class StorageController extends BaseController {
             update: (payload) => {
                 const { module, collection } = this.scope(payload);
                 if (this.storage.update(module, collection, BaseController.id(payload.id), this.document(payload.data)) === 0) {
-                    throw AppError.notFound('Документ не найден');
+                    throw AppError.notFound('storage.notFound');
                 }
             },
             remove: (payload) => {
                 const { module, collection } = this.scope(payload);
                 if (this.storage.remove(module, collection, BaseController.id(payload.id)) === 0) {
-                    throw AppError.notFound('Документ не найден');
+                    throw AppError.notFound('storage.notFound');
                 }
             },
             clear: (payload) => {

@@ -1,0 +1,14 @@
+{
+  "theme.dark": "Oscuro",
+  "theme.light": "Claro",
+  "unit.ms": "ms",
+  "unit.g": "g",
+  "unit.kcal": "kcal",
+  "common.delete": "Eliminar",
+  "common.cancel": "Cancelar",
+  "common.save": "Guardar",
+  "achievement.marathon.name": "Maratón",
+  "achievement.marathon.description": "Cubre 42 km 195 metros",
+  "achievement.saratov_moscow.name": "Saratov — Moscú",
+  "achievement.saratov_moscow.description": "Cubre 800 km"
+}

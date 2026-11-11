@@ -18,7 +18,7 @@ class AboutController extends BaseController {
             info: () => ({ author: Attribution.author, version: this.appVersion, links: Object.keys(Attribution.links) }),
             open: async ({ link }) => {
                 if (typeof link !== 'string' || !Object.prototype.hasOwnProperty.call(Attribution.links, link)) {
-                    throw AppError.badRequest('Неизвестная ссылка');
+                    throw AppError.badRequest('about.unknownLink');
                 }
                 await this.system.openExternal(Attribution.links[link]);
             }

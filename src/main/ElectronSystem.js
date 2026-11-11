@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { app, dialog, shell } = require('electron');
+const { app, dialog, shell, Notification } = require('electron');
 
 class ElectronSystem {
     constructor(getWindow) {
@@ -82,6 +82,14 @@ class ElectronSystem {
             fs.writeFileSync(path.join(target, path.basename(name)), `\uFEFF${content}`, 'utf8');
         }
         return { saved: true, path: target };
+    }
+
+    showNotification({ title, body }) {
+        if (!Notification.isSupported()) {
+            return false;
+        }
+        new Notification({ title, body: body || '' }).show();
+        return true;
     }
 }
 

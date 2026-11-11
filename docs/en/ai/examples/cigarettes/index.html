@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title data-i18n="page.title">Cigarettes</title>
+    <link rel="stylesheet" href="bm://app/vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="bm://app/shared/base.css">
+    <link rel="stylesheet" href="bm://app/shared/components.css">
+    <script src="bm://app/vendor/chart.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+</head>
+<body>
+<main class="bm-page">
+    <div class="bm-card">
+        <div class="bm-row">
+            <button class="bm-btn" id="add-btn" data-i18n="btn.add">+1 cigarette</button>
+            <div class="bm-spacer"></div>
+            <div>
+                <label class="bm-label" for="goal-input" data-i18n="goal.label">Daily limit</label>
+                <input class="bm-input" id="goal-input" type="number" min="0" step="1">
+            </div>
+        </div>
+    </div>
+
+    <div class="bm-title" data-i18n="section.stats">Statistics</div>
+    <div class="bm-stats" id="stats"></div>
+
+    <div class="bm-title" data-i18n="section.week">Last 7 days</div>
+    <div class="bm-card">
+        <div class="bm-chart"><canvas id="week-chart"></canvas></div>
+    </div>
+
+    <div class="bm-title" data-i18n="section.journal">Journal</div>
+    <div class="bm-card">
+        <div class="bm-list" id="journal"></div>
+    </div>
+</main>
+</body>
+</html>

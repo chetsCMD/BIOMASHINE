@@ -1,12 +1,12 @@
 const path = require('path');
 const { BrowserWindow } = require('electron');
-const ShortcutService = require('./ShortcutService');
 
 class WindowManager {
-    constructor({ config, settings, preloadPath, root }) {
+    constructor({ config, settings, shortcuts, preloadPath, root }) {
         this.root = root;
         this.config = config;
         this.settings = settings;
+        this.shortcuts = shortcuts;
         this.preloadPath = preloadPath;
         this.window = null;
         this.scheme = config.get('app.protocol.scheme');
@@ -35,20 +35,18 @@ class WindowManager {
             }
         });
         this.secure();
-        this.shortcuts().attach(this.window.webContents);
+        this.shortcuts.bind({
+            fullscreen: () => this.window.setFullScreen(!this.window.isFullScreen()),
+            quickSwitch: () => this.window.webContents.send('shortcut', 'quickSwitch'),
+            moduleHub: () => this.window.webContents.send('shortcut', 'moduleHub')
+        });
+        this.shortcuts.attach(this.window.webContents);
         this.window.once('ready-to-show', () => this.window.show());
         this.window.on('enter-full-screen', () => this.announceFullscreen(true));
         this.window.on('leave-full-screen', () => this.announceFullscreen(false));
         this.window.on('close', () => this.settings.set('window.bounds', this.window.getBounds()));
         this.window.loadURL(this.startUrl);
         return this.window;
-    }
-
-    shortcuts() {
-        return new ShortcutService(this.config.get('app.shortcuts'), {
-            fullscreen: () => this.window.setFullScreen(!this.window.isFullScreen()),
-            quickSwitch: () => this.window.webContents.send('shortcut', 'quickSwitch')
-        });
     }
 
     announceFullscreen(fullscreen) {

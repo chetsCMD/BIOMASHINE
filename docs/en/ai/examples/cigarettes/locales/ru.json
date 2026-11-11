@@ -1,0 +1,22 @@
+{
+  "module.title": "Сигареты",
+  "module.description": "Счётчик выкуренных сигарет с дневной нормой и графиком за 7 дней",
+  "page.title": "Сигареты",
+  "btn.add": "+1 сигарета",
+  "goal.label": "Норма в день",
+  "section.stats": "Статистика",
+  "section.week": "Последние 7 дней",
+  "section.journal": "Журнал",
+  "stat.today": "Сегодня",
+  "stat.week": "За 7 дней",
+  "stat.average": "В среднем в день",
+  "journal.empty": "Записей нет",
+  "journal.confirmDelete": "Удалить запись?",
+  "chart.label": "Сигарет в день",
+  "pill.entries": {
+    "one": "{count} запись",
+    "few": "{count} записи",
+    "many": "{count} записей",
+    "other": "{count} записи"
+  }
+}

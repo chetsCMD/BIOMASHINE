@@ -18,7 +18,7 @@ class NutritionController extends BaseController {
             list: () => this.nutrition.list(),
             add: ({ date, name, weight, calories, protein, fat, carbs }) => {
                 if (!name || !weight) {
-                    throw AppError.badRequest('Название и вес обязательны');
+                    throw AppError.badRequest('nutrition.nameAndWeightRequired');
                 }
                 const id = this.nutrition.add({
                     date: Dates.day(date),
@@ -33,7 +33,7 @@ class NutritionController extends BaseController {
             },
             remove: ({ id }) => {
                 if (this.nutrition.remove(BaseController.id(id)) === 0) {
-                    throw AppError.notFound('Запись не найдена');
+                    throw AppError.notFound('nutrition.notFound');
                 }
             }
         };

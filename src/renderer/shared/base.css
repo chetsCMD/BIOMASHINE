@@ -10,13 +10,15 @@
   --tdd:      #6e6e6e;
   --tddd:     #3a3a3a;
   --wh:       #f0f0f0;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, Cambria, 'Times New Roman', serif;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--t);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.6;
   min-height: 100vh;
@@ -72,7 +74,7 @@ main {
   margin-bottom: 16px;
 }
 .hcard-val {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 52px;
   line-height: 1;
   color: var(--wh);
@@ -128,7 +130,7 @@ main {
   color: var(--td);
 }
 .chart-cur {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 24px;
   color: var(--wh);
 }
@@ -176,7 +178,7 @@ main {
   border: none;
   border-right: 1px solid var(--br);
   color: var(--tdd);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -193,7 +195,7 @@ main {
 .ctable td { padding: 10px 0; font-size: 11px; }
 .ctable td:first-child { color: var(--td); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
 .ctable td:last-child { text-align: right; }
-.cdelta { font-family: 'Playfair Display', serif; font-size: 18px; }
+.cdelta { font-family: var(--font-serif); font-size: 18px; }
 .cdelta.pos { color: #c0c0c0; }
 .cdelta.neg { color: #e0e0e0; }
 .cdelta.zer { color: var(--tdd); }
@@ -216,7 +218,7 @@ main {
   background: var(--s2);
   border: 1px solid var(--br);
   color: var(--t);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
   padding: 8px 10px;
   outline: none;
@@ -230,7 +232,7 @@ main {
   background: none;
   border: 1px solid var(--br);
   color: var(--td);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -269,7 +271,7 @@ main {
   margin-bottom: 10px;
 }
 .goal-cur {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 34px;
   color: var(--wh);
 }
@@ -283,7 +285,7 @@ main {
   color: var(--td);
 }
 .goal-diff-v {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 14px;
   color: var(--tdd);
   margin-left: auto;
@@ -299,7 +301,7 @@ main {
 .f-name { color: var(--t); font-size: 11px; }
 .f-desc { color: var(--tdd); font-size: 9px; margin-top: 2px; }
 .f-val {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 24px;
   color: var(--wh);
 }
@@ -338,7 +340,7 @@ main {
   margin-bottom: 6px;
 }
 .rec-val {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 28px;
   color: var(--wh);
 }
@@ -389,7 +391,7 @@ main {
   border-bottom: 1px solid var(--br2);
 }
 .kbju-main-value {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 48px;
   color: var(--wh);
   margin-bottom: 16px;
@@ -415,7 +417,7 @@ main {
   letter-spacing: 1px;
 }
 .kbju-range-value {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-size: 20px;
   color: var(--t);
 }
@@ -435,7 +437,7 @@ main {
   background: var(--s2);
   border: 1px solid var(--br);
   color: var(--t);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 14px;
   padding: 12px;
   outline: none;

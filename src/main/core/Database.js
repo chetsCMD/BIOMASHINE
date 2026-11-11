@@ -31,6 +31,14 @@ class Database {
         return this.connection.transaction(work)();
     }
 
+    transactionDeferred(work) {
+        const runner = this.connection.transaction(() => {
+            this.connection.pragma('defer_foreign_keys = ON');
+            return work();
+        });
+        return runner();
+    }
+
     close() {
         if (this.connection) {
             this.connection.close();

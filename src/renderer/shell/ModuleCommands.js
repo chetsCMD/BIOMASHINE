@@ -15,6 +15,13 @@ export class ModuleCommands {
             keywords: [page.id, page.description],
             run: () => this.navigate(`module/${page.id}`)
         }));
+        const hub = {
+            id: 'hub',
+            title: this.i18n.t('nav.allModules'),
+            hint: this.i18n.t('palette.hint.section'),
+            keywords: ['hub', 'modules', 'catalog', this.i18n.t('palette.hubKeywords')],
+            run: () => this.navigate(Navigation.HUB_ID)
+        };
         const settings = {
             id: 'settings',
             title: this.i18n.t('nav.settings'),
@@ -22,6 +29,6 @@ export class ModuleCommands {
             keywords: [this.i18n.t('palette.settingsKeywords')],
             run: () => this.navigate(Navigation.SETTINGS_ID)
         };
-        return [...modules, settings];
+        return [...modules, hub, settings];
     }
 }

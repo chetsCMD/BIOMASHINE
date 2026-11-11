@@ -70,6 +70,7 @@ class Application {
         this.windows = new WindowManager({
             config: container.config,
             settings: container.settingsRepository,
+            shortcuts: container.shortcuts,
             preloadPath: path.join(this.root, 'src', 'preload', 'preload.js'),
             root: this.root
         });

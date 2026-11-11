@@ -54,12 +54,14 @@ Plugin:
 | `version`, `description` | both | Optional strings |
 | `order` | both | Position in the menu; default `1000`, so user modules come last |
 | `hideable` | both | Default `true`; the user may hide the page or switch the plugin off |
+| `category` | both | Optional built-in category id (`body`, `mind`, `finance`, `knowledge`, `environment`, `other` or a user category); defaults to `other` |
 | `entry` | page | Entry HTML file, default `index.html` |
 | `channels` | page | IPC channels the module may call: `domain:*` or `domain:action` |
+| `permissions` | page | Optional `["notifications"]` to allow the notification channels |
 | `i18n` | page | `true` when the module has `locales/` dictionaries; its title and description are then taken from the keys `module.title` and `module.description` |
 | `css` | plugin | One or more CSS files inside the folder |
 
-A broken manifest never crashes the app: the module is skipped and the reason is shown in Settings.
+A broken manifest never crashes the app: the module is skipped and the reason is shown in Settings. `modules:errors` returns the reasons as structured objects (`{ dir, source, key, params }`) that the controller translates to the current language.
 
 ## 3. Isolation and loading
 
@@ -84,11 +86,12 @@ await bm.ready;
 | Member | Description |
 |---|---|
 | `bm.ready` | Promise that resolves when the connection, theme, language and time zone are initialized. Do not use `bm` before it resolves |
-| `bm.invoke(channel, payload)` | Calls an IPC channel. Resolves with the result; rejects with an `Error` that has `message` and `status` |
+| `bm.invoke(channel, payload)` | Calls an IPC channel. Resolves with the result; rejects with an `Error` that has `message`, `status` and, when present, `code` |
 | `bm.config(name)` | Reads a configuration object (any config except the private `app`) |
 | `bm.confirm(text, options)` | Styled confirmation dialog; `options`: `confirmText`, `cancelText`, `danger`. Resolves with a boolean |
 | `bm.setPills(items)` | Sets the small labels on the right side of the header (array of strings, empty array clears) |
 | `bm.storage` | Document storage (section 5) |
+| `bm.notify` | Module notifications (`schedule`, `cancel`, `list`), requires `"permissions": ["notifications"]` |
 | `bm.t(key, params)` | Translates a key (section 6) |
 | `bm.locale`, `bm.language` | The BCP 47 locale (for `toLocaleString`) and the language code |
 | `bm.clock` | Time in the user's time zone (section 7) |
@@ -116,16 +119,18 @@ System modules with their own tables use dedicated channels instead (a repositor
 
 ## 6. Localization in modules
 
-A module that sets `"i18n": true` ships `locales/ru.json` and `locales/en.json` and contains no hard-coded user-visible text.
+A module that sets `"i18n": true` ships `locales/ru.json` and `locales/en.json` and contains no hard-coded user-visible text. The full guide for the whole system is in [Localization.md](Localization.md).
 
+- **Required languages.** Every module must ship `locales/ru.json` and `locales/en.json` — those are the languages in `app.json` → `i18n.required`. Other built-in languages are optional; when a file for another language is present it must cover the same keys as the reference language (`i18n.reference`, currently `ru`). A partial file is an error: `npm test` and `npm run i18n -- check` fail. Missing keys fall back at runtime along the chain described in [Localization.md](Localization.md) §3.
 - **JavaScript:** `bm.t('status.saved')`, `bm.t('total', { n: 5 })` for `"Total: {n}"`, `bm.t('items', { count: 5 })` for plural forms.
 - **HTML:** `data-i18n="key"` replaces the element's text; `data-i18n-placeholder`, `data-i18n-title` and `data-i18n-aria-label` replace the matching attributes. Keep the default text inside the element as a fallback.
-- **Plural forms:** a value may be an object with the forms `zero`, `one`, `two`, `few`, `many`, `other` (`other` required); the form is chosen with `Intl.PluralRules` from the `count` parameter. Russian needs `one`, `few`, `many`, `other`; English needs `one`, `other`.
+- **Plural forms:** a value may be an object with the CLDR forms `zero`, `one`, `two`, `few`, `many`, `other` (`other` is required; a value may use only the forms its locale actually defines). The form is chosen with `Intl.PluralRules` from the `count` parameter. Russian needs `one`, `few`, `many`, `other`; English needs `one`, `other`; Polish needs `one`, `few`, `many`, `other`; Arabic needs `zero`, `one`, `two`, `few`, `many`, `other`.
 - **Dates and numbers:** use `toLocaleString(bm.locale)`; never hard-code a locale.
 - **Config texts:** a config that contains user-visible names stores dictionary keys in fields ending with `Key` (for example `titleKey`) and the code calls `bm.t(item.titleKey)`.
 - **Required keys:** `module.title` and `module.description`.
 - **Shared dictionary:** the keys in `src/renderer/shared/locales` (`common.*`, `unit.*`, theme and achievement titles) are available to every module without being declared.
 - **One key per sentence:** never assemble a sentence from translated fragments.
+- **Backend errors:** if the module calls an IPC channel, the reply on failure carries `code` (the dictionary key) next to `message`. Prefer `error.code` when you need a stable hook; `error.message` is already translated to the user's language.
 
 Users can add languages by dropping a language file into `userData/locales`; a module's dictionaries are included in the template exported from Settings.
 
@@ -143,7 +148,7 @@ The recommended pattern is a single clock class per module that wraps `bm.clock`
 
 ## 8. Theming and the UI kit
 
-Colors come from CSS variables defined by the active theme: `--bg`, `--s1`, `--s2`, `--s3`, `--br`, `--br2`, `--t`, `--td`, `--tdd`, `--tddd`, `--wh`, `--overlay`, `--header-bg`. Use them instead of literal colors so the module works in every theme. The attribute `data-theme` on `<html>` holds the theme name.
+Colors come from CSS variables defined by the active theme: `--bg`, `--s1`, `--s2`, `--s3`, `--br`, `--br2`, `--t`, `--td`, `--tdd`, `--tddd`, `--wh`, `--overlay`, `--header-bg`. Using them keeps a module readable in every theme, so they are the default choice; they are not a restriction. The application does not force users into one style: a module (or a user's request to an assistant) may use any literal colors, fonts and sizes. The attribute `data-theme` on `<html>` holds the theme name.
 
 `bm://app/shared/components.css` provides a small UI kit:
 

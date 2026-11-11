@@ -1,0 +1,8 @@
+{
+  "id": "rounded",
+  "kind": "plugin",
+  "title": "Rounded corners",
+  "version": "1.0.0",
+  "description": "Rounds cards, buttons, and input fields",
+  "css": ["style.css"]
+}

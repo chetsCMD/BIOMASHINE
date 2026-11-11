@@ -1,0 +1,20 @@
+{
+  "module.title": "Cigarettes",
+  "module.description": "Cigarette counter with a daily limit and a 7-day chart",
+  "page.title": "Cigarettes",
+  "btn.add": "+1 cigarette",
+  "goal.label": "Daily limit",
+  "section.stats": "Statistics",
+  "section.week": "Last 7 days",
+  "section.journal": "Journal",
+  "stat.today": "Today",
+  "stat.week": "Last 7 days",
+  "stat.average": "Daily average",
+  "journal.empty": "No entries",
+  "journal.confirmDelete": "Delete this entry?",
+  "chart.label": "Cigarettes per day",
+  "pill.entries": {
+    "one": "{count} entry",
+    "other": "{count} entries"
+  }
+}

@@ -1,6 +1,7 @@
 import { MARK, MessageType } from './protocol.js';
 import { BmClock } from './BmClock.js';
 import { DomTranslator } from './DomTranslator.js';
+import { ModuleNotifications } from './ModuleNotifications.js';
 import { ModuleStorage } from './ModuleStorage.js';
 import { ThemeStyle } from './ThemeStyle.js';
 import { Translator } from './Translator.js';
@@ -12,6 +13,7 @@ export class ModuleClient {
         this.counter = 0;
         this.theme = null;
         this.storage = new ModuleStorage(this);
+        this.notify = new ModuleNotifications(this);
         this.i18n = new Translator();
         this.clock = new BmClock();
         this.t = (key, params) => this.i18n.t(key, params);

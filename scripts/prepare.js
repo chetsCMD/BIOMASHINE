@@ -6,12 +6,28 @@ class VendorBuilder {
         { pkg: '@fontsource/playfair-display', styles: ['700.css', '400-italic.css'] },
         { pkg: '@fontsource/jetbrains-mono', styles: ['300.css', '400.css', '500.css'] }
     ];
-    static SUBSETS = ['latin', 'cyrillic'];
+    static DEFAULT_SUBSETS = ['latin', 'latin-ext', 'cyrillic'];
 
     constructor(root) {
         this.root = root;
         this.target = path.join(root, 'src', 'renderer', 'vendor');
         this.modules = path.join(root, 'node_modules');
+        this.configFile = path.join(root, 'config', 'app.json');
+    }
+
+    subsets() {
+        try {
+            const data = JSON.parse(fs.readFileSync(this.configFile, 'utf8').replace(/^\uFEFF/, ''));
+            const list = data && data.fonts && Array.isArray(data.fonts.subsets) ? data.fonts.subsets : null;
+            if (list && list.length > 0) {
+                const clean = list.filter((item) => typeof item === 'string' && item.length > 0);
+                if (clean.length > 0) {
+                    return clean;
+                }
+            }
+        } catch (error) {
+        }
+        return [...VendorBuilder.DEFAULT_SUBSETS];
     }
 
     needsBuild() {
@@ -29,7 +45,7 @@ class VendorBuilder {
 
     keepBlock(block) {
         const name = (block.match(/\/\*\s*(\S+)\s*\*\//) || [])[1] || '';
-        return VendorBuilder.SUBSETS.some((subset) => new RegExp(`-${subset}-\\d+-(normal|italic)$`).test(name));
+        return this.subsets().some((subset) => new RegExp(`-${subset}-\\d+-(normal|italic)$`).test(name));
     }
 
     buildFonts() {

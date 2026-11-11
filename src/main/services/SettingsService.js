@@ -1,4 +1,5 @@
 const AppError = require('../core/AppError');
+const Values = require('../core/Values');
 
 class SettingsService {
     constructor(repository, config, system, catalog, locales, clock) {
@@ -15,7 +16,10 @@ class SettingsService {
             timezone: (value) => typeof value === 'string' && this.clock.isValid(value),
             language: (value) => typeof value === 'string' && this.locales.has(value),
             theme: (value) => this.themes.includes(value),
-            autostart: (value) => typeof value === 'boolean'
+            autostart: (value) => typeof value === 'boolean',
+            menuLayout: (value) => value === 'top' || value === 'sidebar',
+            menuCollapsed: (value) => Array.isArray(value) && value.every((id) => typeof id === 'string'),
+            shortcuts: (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
         };
     }
 
@@ -34,10 +38,10 @@ class SettingsService {
     set(key, value) {
         const validator = this.validators[key];
         if (!validator) {
-            throw AppError.badRequest(`Неизвестная настройка: ${key}`);
+            throw AppError.badRequest('settings.unknown', { key });
         }
         if (!validator(value)) {
-            throw AppError.badRequest(`Недопустимое значение настройки: ${key}`);
+            throw AppError.badRequest('settings.invalidValue', { key });
         }
         this.repository.set(key, value);
         if (key === 'timezone') {
@@ -45,6 +49,9 @@ class SettingsService {
         }
         if (key === 'autostart') {
             this.system.applyAutostart(value);
+        }
+        if (key === 'language') {
+            this.applyLocale();
         }
         return this.getAll();
     }
@@ -57,6 +64,11 @@ class SettingsService {
         const detected = this.locales.detect(systemLocale);
         this.repository.set('language', detected);
         return detected;
+    }
+
+    applyLocale() {
+        const language = this.getAll().language;
+        Values.setLocale(this.locales.localeOf(language));
     }
 
     relaunch() {

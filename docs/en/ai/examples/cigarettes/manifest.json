@@ -1,0 +1,11 @@
+{
+  "id": "cigarettes",
+  "kind": "page",
+  "title": "Cigarettes",
+  "version": "1.0.0",
+  "description": "Cigarette counter with a daily limit and a 7-day chart",
+  "order": 500,
+  "entry": "index.html",
+  "channels": [],
+  "i18n": true
+}

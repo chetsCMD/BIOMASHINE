@@ -1,3 +1,5 @@
+const AppError = require('../core/AppError');
+
 class ThemeCatalog {
     static SCHEMES = ['dark', 'light'];
     static REQUIRED_VARIABLES = ['--bg', '--s1', '--s2', '--s3', '--br', '--br2', '--t', '--td', '--tdd', '--tddd', '--wh', '--overlay', '--header-bg'];
@@ -9,22 +11,22 @@ class ThemeCatalog {
 
     check(name, theme) {
         if (!theme || typeof theme !== 'object') {
-            return 'не объект';
+            return { key: 'theme.notObject' };
         }
         const hasTitle = typeof theme.title === 'string' && theme.title.trim();
         const hasKey = typeof theme.titleKey === 'string' && theme.titleKey.trim();
         if (!hasTitle && !hasKey) {
-            return 'нет title или titleKey';
+            return { key: 'theme.titleRequired' };
         }
         if (!ThemeCatalog.SCHEMES.includes(theme.colorScheme)) {
-            return `colorScheme должен быть ${ThemeCatalog.SCHEMES.join(' или ')}`;
+            return { key: 'theme.invalidScheme', params: { schemes: ThemeCatalog.SCHEMES.join(', ') } };
         }
         const missing = ThemeCatalog.REQUIRED_VARIABLES.filter((variable) => typeof (theme.variables || {})[variable] !== 'string');
         if (missing.length > 0) {
-            return `нет переменных: ${missing.join(', ')}`;
+            return { key: 'theme.missingVariables', params: { variables: missing.join(', ') } };
         }
         if (!theme.chart || typeof theme.chart.text !== 'string' || typeof theme.chart.grid !== 'string') {
-            return 'нет chart.text и chart.grid';
+            return { key: 'theme.chartRequired' };
         }
         return null;
     }
@@ -36,13 +38,17 @@ class ThemeCatalog {
         for (const [name, theme] of Object.entries(source.themes || {})) {
             const problem = this.check(name, theme);
             if (problem) {
-                this.problems.push({ file: 'themes.json', message: `тема «${name}»: ${problem}` });
+                this.problems.push({
+                    file: 'themes.json',
+                    key: 'theme.invalid',
+                    params: { name, reasonKey: problem.key, reasonParams: problem.params }
+                });
             } else {
                 themes[name] = theme;
             }
         }
         if (Object.keys(themes).length === 0) {
-            throw new Error('В themes.json нет ни одной корректной темы');
+            throw AppError.badRequest('theme.noValidThemes');
         }
         const fallback = themes[source.default] ? source.default : Object.keys(themes)[0];
         return { default: fallback, themes };

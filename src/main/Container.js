@@ -3,6 +3,8 @@ const ConfigService = require('./core/ConfigService');
 const Database = require('./core/Database');
 const Migrator = require('./core/Migrator');
 const IpcRouter = require('./core/IpcRouter');
+const OperationLog = require('./core/OperationLog');
+const Values = require('./core/Values');
 const SettingsRepository = require('./repositories/SettingsRepository');
 const ProfileRepository = require('./repositories/ProfileRepository');
 const MeasurementRepository = require('./repositories/MeasurementRepository');
@@ -12,6 +14,8 @@ const RunningRepository = require('./repositories/RunningRepository');
 const WorkoutRepository = require('./repositories/WorkoutRepository');
 const ReactionTestRepository = require('./repositories/ReactionTestRepository');
 const MoodRepository = require('./repositories/MoodRepository');
+const ModuleStorageRepository = require('./repositories/ModuleStorageRepository');
+const NotificationRepository = require('./repositories/NotificationRepository');
 const AuthService = require('./services/AuthService');
 const SettingsService = require('./services/SettingsService');
 const SeedService = require('./services/SeedService');
@@ -19,6 +23,11 @@ const ModuleRegistry = require('./services/ModuleRegistry');
 const ModuleService = require('./services/ModuleService');
 const AssetResolver = require('./core/AssetResolver');
 const ExportService = require('./services/ExportService');
+const ThemeCatalog = require('./services/ThemeCatalog');
+const LocaleService = require('./services/LocaleService');
+const ClockService = require('./services/ClockService');
+const NotificationService = require('./services/NotificationService');
+const MessageService = require('./services/MessageService');
 const AuthController = require('./controllers/AuthController');
 const SettingsController = require('./controllers/SettingsController');
 const ProfileController = require('./controllers/ProfileController');
@@ -32,19 +41,19 @@ const MoodController = require('./controllers/MoodController');
 const ExportController = require('./controllers/ExportController');
 const ModulesController = require('./controllers/ModulesController');
 const ConfigController = require('./controllers/ConfigController');
-const ThemeCatalog = require('./services/ThemeCatalog');
-const LocaleService = require('./services/LocaleService');
 const I18nController = require('./controllers/I18nController');
 const AboutController = require('./controllers/AboutController');
-const ClockService = require('./services/ClockService');
 const ClockController = require('./controllers/ClockController');
 const WindowController = require('./controllers/WindowController');
 const StorageController = require('./controllers/StorageController');
-const ModuleStorageRepository = require('./repositories/ModuleStorageRepository');
+const NotificationController = require('./controllers/NotificationController');
+const TrashController = require('./controllers/TrashController');
+const ShortcutService = require('./ShortcutService');
+const ShortcutController = require('./controllers/ShortcutController');
 
 class Container {
-    constructor({ dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, system, appVersion, now }) {
-        this.options = { dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, system, appVersion, now };
+    constructor({ dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, mainLocalesDir, system, appVersion, now }) {
+        this.options = { dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, mainLocalesDir, system, appVersion, now };
     }
 
     build() {
@@ -56,6 +65,10 @@ class Container {
 
         const db = this.database;
         this.settingsRepository = new SettingsRepository(db);
+        this.shortcuts = new ShortcutService({
+            defaults: this.config.get('app.shortcuts'),
+            settings: this.settingsRepository
+        });
         this.clock = new ClockService(this.settingsRepository, now, this.config.get('app.timezones.aliases'));
         db.useClock(this.clock);
         const profile = new ProfileRepository(db);
@@ -67,6 +80,7 @@ class Container {
         const reactionTests = new ReactionTestRepository(db);
         const mood = new MoodRepository(db);
         const moduleStorage = new ModuleStorageRepository(db);
+        const notificationRepository = new NotificationRepository(db);
 
         new SeedService(this.config, profile).run();
 
@@ -80,14 +94,45 @@ class Container {
         if (userModulesDir) {
             roots.push({ dir: userModulesDir, source: 'user' });
         }
-        this.registry = new ModuleRegistry(roots, this.config).scan();
+        this.registry = new ModuleRegistry(roots, this.config, (a, b) => Values.compare(a, b)).scan();
         this.assets = new AssetResolver({ appRoot: rendererRoot, appHost: protocol.appHost, registry: this.registry });
-        this.locales = new LocaleService({ config: this.config, registry: this.registry, rendererRoot, userLocalesDir: userLocalesDir || path.join(rendererRoot, '__no_user_locales__') });
+        const localesDir = this.options.mainLocalesDir === undefined ? path.join(__dirname, 'locales') : this.options.mainLocalesDir;
+        this.locales = new LocaleService({
+            config: this.config,
+            registry: this.registry,
+            rendererRoot,
+            userLocalesDir: userLocalesDir || path.join(rendererRoot, '__no_user_locales__'),
+            mainLocalesDir: localesDir
+        });
         this.settingsService = new SettingsService(this.settingsRepository, this.config, system, this.themeCatalog, this.locales, this.clock);
         this.settingsService.ensureLanguage(system.systemLocale ? system.systemLocale() : null);
-        this.moduleService = new ModuleService(this.registry, this.settingsRepository, protocol.scheme, this.locales, () => this.settingsService.getAll().language);
+        this.settingsService.applyLocale();
+        this.messages = new MessageService({
+            locales: this.locales,
+            language: () => this.settingsService.getAll().language
+        });
+        this.moduleService = new ModuleService(this.registry, this.settingsRepository, protocol.scheme, this.locales, () => this.settingsService.getAll().language, this.config);
+        this.notificationsRepository = notificationRepository;
+        this.notifications = new NotificationService({
+            repository: notificationRepository,
+            clock: this.clock,
+            settings: this.settingsRepository,
+            registry: this.registry,
+            system
+        });
 
-        this.router = new IpcRouter(this.auth, this.config);
+        let operationsMap = {};
+        try {
+            operationsMap = this.config.get('operations', {}) || {};
+        } catch (error) {
+            operationsMap = {};
+        }
+        this.operationLog = new OperationLog(db, {
+            max: this.config.get('app.trash.max', 10),
+            operations: operationsMap
+        }).install();
+
+        this.router = new IpcRouter(this.auth, this.config, this.operationLog, this.messages);
         [
             new AuthController(this.auth),
             new SettingsController(this.settingsService),
@@ -100,19 +145,27 @@ class Container {
             new ReactionController(reactionTests),
             new MoodController(mood),
             new ExportController(this.exporter, system, this.config),
-            new ModulesController(this.moduleService, system, userModulesDir),
+            new ModulesController(this.moduleService, system, userModulesDir, this.messages),
             new StorageController(moduleStorage, this.registry, this.config),
-            new ConfigController(this.config, this.themeCatalog, system, overridesDir),
-            new I18nController(this.locales, this.settingsService, system, userLocalesDir),
+            new ConfigController(this.config, this.themeCatalog, system, overridesDir, this.messages),
+            new I18nController(this.locales, this.settingsService, system, userLocalesDir, this.messages),
             new WindowController(system),
             new ClockController(this.clock),
-            new AboutController(system, appVersion)
+            new AboutController(system, appVersion),
+            new ShortcutController(this.shortcuts),
+            new NotificationController(this.notifications),
+            new TrashController(this.operationLog)
         ].forEach((controller) => this.router.register(controller));
+
+        this.notifications.start();
 
         return this;
     }
 
     close() {
+        if (this.notifications) {
+            this.notifications.stop();
+        }
         if (this.database) {
             this.database.close();
         }

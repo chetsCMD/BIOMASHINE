@@ -12,10 +12,10 @@
 </head>
 <body class="shell-body">
     <div id="boot" class="boot">BIOMASHINE<span class="boot-sub" data-i18n="boot.loading">загрузка…</span></div>
-    <div id="app" class="shell hidden">
+    <div id="app" class="shell hidden" data-menu-layout="top">
         <header class="shell-header">
             <div class="logo">BIOMASHINE</div>
-            <nav id="nav" class="nav"></nav>
+            <nav id="nav" class="nav" aria-label="BIOMASHINE"></nav>
             <div class="header-right">
                 <div id="pills" class="pills"></div>
                 <button id="lock-btn" class="logout-btn hidden" data-i18n="lock.button">ВЫЙТИ</button>
@@ -23,6 +23,7 @@
         </header>
         <div id="stage" class="stage">
             <section id="settings-view" class="settings-view hidden"></section>
+            <section id="hub-view" class="hub-view hidden"></section>
         </div>
     </div>
     <div id="window-controls" class="window-controls hidden">

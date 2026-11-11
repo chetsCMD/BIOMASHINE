@@ -2,10 +2,11 @@ const fs = require('fs');
 const path = require('path');
 
 class LocaleService {
-    constructor({ config, registry, rendererRoot, userLocalesDir }) {
+    constructor({ config, registry, rendererRoot, userLocalesDir, mainLocalesDir }) {
         this.registry = registry;
         this.rendererRoot = rendererRoot;
         this.userLocalesDir = userLocalesDir;
+        this.mainLocalesDir = mainLocalesDir === undefined ? path.join(rendererRoot, '..', 'main', 'locales') : mainLocalesDir;
         const settings = config.get('app.i18n');
         this.defaultCode = settings.default;
         this.builtin = settings.builtin;
@@ -19,8 +20,8 @@ class LocaleService {
         return [...this.found.values()];
     }
 
-    report(file, message) {
-        this.found.set(`${file}|${message}`, { file, message });
+    report(file, key, params) {
+        this.found.set(`${file}|${key}|${JSON.stringify(params || {})}`, { file, key, params });
     }
 
     readJson(file) {
@@ -34,12 +35,12 @@ class LocaleService {
             try {
                 cached.value = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
             } catch (error) {
-                cached.problem = `некорректный JSON: ${error.message}`;
+                cached.problem = error.message;
             }
             this.cache.set(file, cached);
         }
         if (cached.problem) {
-            this.report(path.basename(file), cached.problem);
+            this.report(path.basename(file), 'locale.invalidJson', { message: cached.problem });
         }
         return cached.value;
     }
@@ -48,12 +49,31 @@ class LocaleService {
         return this.builtin.find((entry) => entry.code === code) || null;
     }
 
-    scopeFile(scope, code) {
+    scopeDir(scope) {
         if (scope === 'shell' || scope === 'shared') {
-            return path.join(this.rendererRoot, scope, 'locales', `${code}.json`);
+            return path.join(this.rendererRoot, scope, 'locales');
+        }
+        if (scope === 'backend') {
+            return this.mainLocalesDir && fs.existsSync(this.mainLocalesDir) ? this.mainLocalesDir : null;
         }
         const module = this.registry.get(scope);
-        return module ? path.join(module.dir, 'locales', `${code}.json`) : null;
+        return module ? path.join(module.dir, 'locales') : null;
+    }
+
+    scopeFile(scope, code) {
+        const dir = this.scopeDir(scope);
+        return dir ? path.join(dir, `${code}.json`) : null;
+    }
+
+    catalog() {
+        return this.scopeNames().map((scope) => {
+            const dir = this.scopeDir(scope);
+            return {
+                scope,
+                dir,
+                file: (code) => (dir ? path.join(dir, `${code}.json`) : null)
+            };
+        });
     }
 
     validateStrings(strings, label) {
@@ -67,7 +87,7 @@ class LocaleService {
             } else if (value && typeof value === 'object' && !Array.isArray(value) && typeof value.other === 'string' && Object.entries(value).every(([form, text]) => this.pluralForms.includes(form) && typeof text === 'string')) {
                 clean[key] = value;
             } else {
-                this.report(label, `ключ «${key}»: значение должно быть строкой или набором форм множественного числа с обязательной формой other`);
+                this.report(label, 'locale.invalidStringFormat', { key });
             }
         }
         return clean;
@@ -88,11 +108,11 @@ class LocaleService {
             }
             const meta = data.meta || {};
             if (typeof meta.code !== 'string' || !this.codePattern.test(meta.code) || typeof meta.name !== 'string' || !meta.name.trim()) {
-                this.report(file, 'meta.code (например "de") и meta.name обязательны');
+                this.report(file, 'locale.metaRequired');
                 continue;
             }
             if (found.has(meta.code)) {
-                this.report(file, `язык «${meta.code}» уже описан другим файлом`);
+                this.report(file, 'locale.duplicateLanguage', { code: meta.code });
                 continue;
             }
             found.set(meta.code, { meta, scopes: data.scopes && typeof data.scopes === 'object' ? data.scopes : {}, file });
@@ -152,7 +172,7 @@ class LocaleService {
         const user = this.userLanguages();
         const strings = {};
         for (const item of [...this.chain(code)].reverse()) {
-            if (scope !== 'shared') {
+            if (scope !== 'shared' && scope !== 'backend') {
                 Object.assign(strings, this.stringsOf('shared', item, user));
             }
             Object.assign(strings, this.stringsOf(scope, item, user));
@@ -161,7 +181,7 @@ class LocaleService {
     }
 
     scopeNames() {
-        return ['shell', 'shared', ...this.registry.all().filter((module) => module.kind === 'page').map((module) => module.id)];
+        return ['backend', 'shell', 'shared', ...this.registry.all().filter((module) => module.kind === 'page').map((module) => module.id)];
     }
 
     master(code) {

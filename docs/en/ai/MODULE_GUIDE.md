@@ -11,13 +11,15 @@ Nothing else. Do not suggest changing the application's source code.
 
 ## 2. Hard rules
 
+**The user's explicit request always wins.** The users of this application are never forced into a fixed style. Everything about appearance in this guide (variables, the UI kit, the default look) is a default that keeps a module consistent with the rest of the app, not a restriction. If the user asks for a specific color, font, size, layout or look (for example, "make this block purple"), do exactly that with custom CSS, even if it differs from the application's style. Do not refuse, argue or lecture about consistency; if it helps, mention in one sentence that the result deviates from the default theme. Only technical limits (no network, the sandbox, storage rules) cannot be bypassed.
+
 Do:
 - One module, one folder. The folder name equals `id` in `manifest.json`.
 - Plain JavaScript (ES modules), HTML and CSS. No build step, no npm.
 - Store data only through `bm.storage` (section 7).
-- Take colors from CSS variables (section 10) so both themes work.
+- Unless the user asks for specific colors, take colors from CSS variables (section 10) so both themes work.
 - Ask for confirmations with `bm.confirm`.
-- Put every user-visible text into dictionaries and read it with `bm.t` (section 8). Add `"i18n": true` to `manifest.json` if you translate into two languages.
+- Put every user-visible text into dictionaries and read it with `bm.t` (section 8). A module must ship `locales/ru.json` and `locales/en.json`; other languages are optional and can be added by the user later.
 - Take the current time only from `bm.clock` (section 9).
 - Write classes, one per file; keep logic that needs no DOM in separate classes.
 
@@ -108,7 +110,7 @@ Always wait for `bm.ready` before touching `bm`.
 | `bm.onTheme(fn)` | unsubscribe function | `fn` runs when the theme changes; rebuild charts in it |
 | `bm.config(name)` | `Promise<object>` | Reads an application config. Usually not needed |
 
-Every promise-returning call rejects with an `Error` that has a `message` and a numeric `status`.
+Every promise-returning call rejects with an `Error` that has a `message` and a numeric `status`; when the failure came from a translated dictionary key, the error also has `code`.
 
 ## 7. Storage: `bm.storage`
 
@@ -137,12 +139,15 @@ Rules:
 The application is multilingual: the user chooses the language, so no user-visible text may be hard-coded in JavaScript or HTML. Before writing, clarify with the user if they need a translation into two languages.
 
 - `locales/ru.json` and `locales/en.json`: flat objects `"key": "text"`. The keys in both files must be identical. `module.title` and `module.description` are required.
-- JavaScript: `bm.t('key')`; with parameters `bm.t('key', { n: 5 })` (the text contains `{n}`); with plural forms `bm.t('key', { count: 5 })` (the dictionary value is an object: `one`, `few`, `many`, `other` for Russian; `one`, `other` for English).
+- **`ru` and `en` are required.** Both files must exist and be complete. The application also supports other languages (the built-in registry is `config/app.json` → `i18n.builtin`): those files are optional in a module, but if a file for a built-in language is present, it must cover the same keys as `ru` and pass the same completeness check. The user can also drop a translation into `userData/locales/<code>.json` at runtime — the module picks it up automatically through the fallback chain.
+- JavaScript: `bm.t('key')`; with parameters `bm.t('key', { n: 5 })` (the text contains `{n}`); with plural forms `bm.t('key', { count: 5 })` (the dictionary value is an object: `one`, `few`, `many`, `other` for Russian; `one`, `other` for English; other languages use the forms their locale defines — never mix forms from one language into another).
 - HTML: `data-i18n="key"` replaces the element's text, `data-i18n-placeholder="key"` and `data-i18n-title="key"` replace the attributes. Keep a default text inside the element.
 - Dates and numbers: `toLocaleString(bm.locale)`, never a hard-coded locale such as `'en-US'`.
 - Common words are available without declaring them: `common.delete`, `common.cancel`, `common.save`, `unit.ms`, `unit.g`, `unit.kcal`.
 - Never build a sentence from translated pieces: one key per sentence.
 - A property named `key` is reserved for dictionary keys; use another name for anything else.
+
+The full localization guide for the whole application (scopes, registry, `npm run i18n` tool, plural forms, scripts and fonts) is `docs/en/Developers/Localization.md`. That document is for contributors; a module author only needs the rules above.
 
 ## 9. Time: `bm.clock`
 
@@ -158,7 +163,7 @@ Parsing dates read from storage (`new Date('2026-11-02 14:00:00')`) and formatti
 
 ## 10. Styling
 
-Style the page like the rest of the app. Use only the variables below for colors; the fonts are already loaded (`JetBrains Mono` for text, `Playfair Display` for big numbers).
+By default, style the page like the rest of the app and take colors from the variables below; the fonts are already loaded (`JetBrains Mono` for text, `Playfair Display` for big numbers). When the user asks for something different, follow the user (see the rule at the top of section 2): write the CSS they ask for in `module.css`, with any colors, fonts or sizes.
 
 | Variable | Meaning | Dark | Light |
 |---|---|---|---|
@@ -176,7 +181,7 @@ Style the page like the rest of the app. Use only the variables below for colors
 | `--overlay` | dim layer under dialogs | `rgba(0, 0, 0, 0.6)` | `rgba(0, 0, 0, 0.35)` |
 | `--header-bg` | header background | `rgba(18, 18, 18, 0.92)` | `rgba(244, 244, 242, 0.92)` |
 
-Usage: `color: var(--td); background: var(--s1); border: 1px solid var(--br);`. Do not write your own colors except data colors on charts. The current theme name is the `data-theme` attribute on `<html>`.
+Usage: `color: var(--td); background: var(--s1); border: 1px solid var(--br);`. Variables keep the page readable in every theme, so prefer them when the user has no color preference; literal colors are fine whenever the user wants them and for data colors on charts. The current theme name is the `data-theme` attribute on `<html>`.
 
 The UI kit from `components.css`. Prefer it over custom CSS:
 
@@ -216,6 +221,7 @@ Chart.js 3.8.0 is available as `window.Chart` when `index.html` contains `<scrip
 - Naming the folder one thing and `id` another: the module is rejected.
 - Using capital letters in `id`.
 - Leaving text in the code or in HTML without a dictionary key.
+- Shipping only one dictionary file: `locales/ru.json` and `locales/en.json` are both required.
 
 ## 13. Full example: a cigarette counter
 
@@ -539,7 +545,6 @@ export class DayCounter {
 }
 ```
 
-
 ## 14. Installation instructions (give these to the user)
 
 1. Open the app, go to **Settings**, find the **Modules** block and click **Open modules folder**.
@@ -548,6 +553,7 @@ export class DayCounter {
 4. If it does not appear, the reason is shown in red under the module list. Send it to me and I will fix it.
 5. If the page opens but says the module crashed, send me the error text shown on screen.
 6. To remove the module, delete its folder and click **Rescan**. The data it saved stays in the database.
+7. To add another language later, drop a `<code>.json` file into `userData/locales` (Settings → Languages → Open languages folder) — the module picks it up automatically.
 
 ## 15. Pre-delivery checklist
 
@@ -555,11 +561,11 @@ export class DayCounter {
 - In `manifest.json`: `kind` is `"page"`, `channels` is `[]`, `i18n` is `true`.
 - `index.html` links fonts.css, base.css, components.css and `main.js` as `type="module"`.
 - `main.js` waits for `bm.ready`.
-- `locales/ru.json` and `locales/en.json` have identical keys, including `module.title` and `module.description`.
+- `locales/ru.json` and `locales/en.json` exist and have identical keys, including `module.title` and `module.description`. Those two are the required languages; a third file is optional but, if present, must be complete.
 - No hard-coded user-visible text, no hard-coded locale.
 - No `fetch`, `localStorage`, `alert`, `confirm`, external links, `new Date()` or `Date.now()` for the current moment.
 - Every `getElementById` has a matching `id` in the HTML.
 - Data goes only through `bm.storage`; collection names match the pattern.
-- Colors only through variables.
+- Colors through variables, unless the user asked for specific colors (then their request is implemented exactly).
 - Every file is delivered in full.
 - The installation instructions are included with the real `<id>`.

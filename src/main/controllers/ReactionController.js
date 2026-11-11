@@ -16,7 +16,7 @@ class ReactionController extends BaseController {
             list: () => this.tests.list(),
             add: ({ values, average }) => {
                 if (!Array.isArray(values) || values.length === 0 || !Number.isFinite(Number(average))) {
-                    throw AppError.badRequest('Значения и среднее обязательны');
+                    throw AppError.badRequest('reaction.valuesAndAverageRequired');
                 }
                 return { id: this.tests.add(values, Number(average)) };
             },

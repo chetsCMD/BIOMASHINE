@@ -2,7 +2,7 @@ const AppError = require('./AppError');
 
 class BaseController {
     get prefix() {
-        throw new Error('prefix не задан');
+        throw new Error('prefix is not defined');
     }
 
     routes() {
@@ -12,7 +12,7 @@ class BaseController {
     static id(value) {
         const number = Number(value);
         if (!Number.isInteger(number) || number <= 0) {
-            throw AppError.badRequest('Некорректный идентификатор');
+            throw AppError.badRequest('common.invalidId');
         }
         return number;
     }

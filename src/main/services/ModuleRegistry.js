@@ -1,14 +1,17 @@
 const fs = require('fs');
 const path = require('path');
+const AppError = require('../core/AppError');
 
 class ModuleRegistry {
     static KINDS = ['page', 'plugin'];
     static ID_PATTERN = /^[a-z][a-z0-9-]*$/;
+    static PERMISSIONS = ['notifications'];
 
-    constructor(roots, config) {
+    constructor(roots, config, compare) {
         this.roots = roots;
         this.defaultOrder = config.get('app.modules.defaultOrder');
         this.reservedIds = config.get('app.modules.reservedIds');
+        this.compare = typeof compare === 'function' ? compare : (a, b) => String(a).localeCompare(String(b));
         this.modules = new Map();
         this.errors = [];
     }
@@ -33,35 +36,39 @@ class ModuleRegistry {
             return;
         }
         if (!fs.existsSync(manifestPath)) {
-            this.errors.push({ dir: dirName, source, message: 'нет файла manifest.json' });
+            this.errors.push({ dir: dirName, source, key: 'module.missingManifest' });
             return;
         }
         try {
             const manifest = this.validate(JSON.parse(fs.readFileSync(manifestPath, 'utf8')), dirName);
             if (this.modules.has(manifest.id)) {
-                throw new Error(`id "${manifest.id}" уже занят модулем из ${this.modules.get(manifest.id).source === 'system' ? 'системной поставки' : 'пользовательской папки'}`);
+                throw AppError.badRequest('module.idTaken', { id: manifest.id, source: this.modules.get(manifest.id).source });
             }
             this.modules.set(manifest.id, { ...manifest, dir, source });
         } catch (error) {
-            this.errors.push({ dir: dirName, source, message: error.message });
+            if (error.name === 'AppError') {
+                this.errors.push({ dir: dirName, source, key: error.key, params: error.params });
+            } else {
+                this.errors.push({ dir: dirName, source, key: 'module.invalidJson', params: { message: error.message } });
+            }
         }
     }
 
     validate(manifest, dirName) {
         if (typeof manifest.id !== 'string' || !ModuleRegistry.ID_PATTERN.test(manifest.id)) {
-            throw new Error('id модуля: строчные латинские буквы, цифры и дефис');
+            throw AppError.badRequest('module.invalidId');
         }
         if (manifest.id !== dirName) {
-            throw new Error(`id "${manifest.id}" не совпадает с именем папки "${dirName}"`);
+            throw AppError.badRequest('module.idMismatch', { id: manifest.id, dir: dirName });
         }
         if (this.reservedIds.includes(manifest.id)) {
-            throw new Error(`id "${manifest.id}" зарезервирован`);
+            throw AppError.badRequest('module.reservedId', { id: manifest.id });
         }
         if (!ModuleRegistry.KINDS.includes(manifest.kind)) {
-            throw new Error(`kind должен быть одним из: ${ModuleRegistry.KINDS.join(', ')}`);
+            throw AppError.badRequest('module.invalidKind', { kinds: ModuleRegistry.KINDS.join(', ') });
         }
         if (typeof manifest.title !== 'string' || !manifest.title.trim()) {
-            throw new Error('title обязателен');
+            throw AppError.badRequest('module.titleRequired');
         }
         const base = {
             id: manifest.id,
@@ -71,22 +78,49 @@ class ModuleRegistry {
             description: String(manifest.description || ''),
             order: Number.isFinite(manifest.order) ? manifest.order : this.defaultOrder,
             hideable: manifest.hideable !== false,
-            i18n: manifest.i18n === true
+            i18n: manifest.i18n === true,
+            category: this.category(manifest.category),
+            permissions: []
         };
         if (manifest.kind === 'page') {
-            return { ...base, entry: this.relativePath(manifest.entry || 'index.html'), channels: this.channels(manifest.channels) };
+            return {
+                ...base,
+                entry: this.relativePath(manifest.entry || 'index.html'),
+                channels: this.channels(manifest.channels),
+                permissions: this.permissions(manifest.permissions)
+            };
         }
         const css = Array.isArray(manifest.css) ? manifest.css : [];
         if (css.length === 0) {
-            throw new Error('plugin должен перечислить css-файлы');
+            throw AppError.badRequest('module.cssRequired');
         }
         return { ...base, css: css.map((file) => this.relativePath(file)) };
+    }
+
+    category(value) {
+        if (value === undefined || value === null) {
+            return null;
+        }
+        if (typeof value !== 'string' || !ModuleRegistry.ID_PATTERN.test(value)) {
+            throw AppError.badRequest('module.invalidCategory');
+        }
+        return value;
+    }
+
+    permissions(value) {
+        if (value === undefined) {
+            return [];
+        }
+        if (!Array.isArray(value) || value.some((item) => typeof item !== 'string' || !ModuleRegistry.PERMISSIONS.includes(item))) {
+            throw AppError.badRequest('module.invalidPermissions', { permissions: ModuleRegistry.PERMISSIONS.join(', ') });
+        }
+        return [...new Set(value)];
     }
 
     relativePath(value) {
         const normalized = path.posix.normalize(String(value));
         if (normalized.startsWith('..') || path.posix.isAbsolute(normalized)) {
-            throw new Error(`Недопустимый путь в манифесте: ${value}`);
+            throw AppError.badRequest('module.invalidPath', { value });
         }
         return normalized;
     }
@@ -96,7 +130,7 @@ class ModuleRegistry {
             return [];
         }
         if (!Array.isArray(value) || value.some((item) => typeof item !== 'string' || !/^[a-zA-Z]+:(\*|[a-zA-Z]+)$/.test(item))) {
-            throw new Error('channels: массив строк вида "домен:*" или "домен:действие"');
+            throw AppError.badRequest('module.invalidChannels');
         }
         return value;
     }
@@ -106,7 +140,7 @@ class ModuleRegistry {
     }
 
     all() {
-        return [...this.modules.values()].sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, 'ru'));
+        return [...this.modules.values()].sort((a, b) => a.order - b.order || this.compare(a.title, b.title));
     }
 }
 

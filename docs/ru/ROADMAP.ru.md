@@ -316,113 +316,86 @@
 - [x] `tests/renderer.test.js` — новый тест «уведомления: SDK и мост — инъекция module, права, 403»: `client.notify.schedule/list/cancel` доходят до `api.invoke` с подставленным `module`, `notifications:setEnabled` с чужим id перезаписывается, модуль без `permissions: ['notifications']` получает 403 до вызова API.
 - [x] `tests/translator.test.js` — новый тест «словарь оболочки: ключи уведомлений в обеих локалях», проверяет наличие и непустоту трёх новых ключей в `ru.json` и `en.json`.
 
-## D9. Корзина, часть 1: журнал операций и отмена (бэкенд)
+D9
 
-### Миграция
-- [x] `migrations/006_operation_log.sql` — таблицы `operations (id, channel, module, created_at)` и `operation_entries (id, operation_id, table_name, row_id, kind, before, after)`; `ON DELETE CASCADE` на `operation_id`; индекс `idx_operation_entries_operation`.
+1. **`migrations/006_operation_log.sql`** — созданы таблицы `operations` и `operation_entries` (с `ON DELETE CASCADE` и индексом по `operation_id`).
+2. **`src/main/core/OperationLog.js`** — реализован журнал операций:
+   - `install()` идемпотентно создаёт служебную таблицу `_operation_context`, сканирует все пользовательские таблицы по `sqlite_master`, для каждой таблицы с единственным первичным ключом (кроме `settings`, `operations`, `operation_entries`, `_operation_context` и таблицы версий) создаёт триггеры `AFTER INSERT/UPDATE/DELETE`. Триггеры пишут в журнал только при открытом контексте (через `INSERT ... SELECT FROM _operation_context WHERE operation_id IS NOT NULL`). При установке контекст сбрасывается — это защищает от «зависшей» операции после падения.
+   - `begin/commit/abort` управляют контекстом; при `commit` без записей операция удаляется; после успешного коммита лишние операции (сверх `max`) удаляются с каскадной чисткой записей.
+   - `list()` возвращает операции от новых к старым с готовым `label` и счётчиком `entries`.
+   - `buildLabel()` использует карту `config/operations.json`, а для `storage:*` добавляет имя модуля через `:` (фолбэк — `trash.<channel с точками>`).
+   - `undo()` выполняется в одной транзакции с `PRAGMA defer_foreign_keys = ON`, применяет записи в обратном порядке, проверяет соответствие текущего состояния `after` (для insert/update) и отсутствие строки (для delete), при конфликте бросает `409`. Сама отмена не журналируется (канал `trash:` не открывает операцию).
+3. **`src/main/core/IpcRouter.js`** — на каждый канал (кроме префиксов из `app.ipc.logSkipPrefixes`) открывает операцию, при успехе коммитит (оставляя только непустые), при ошибке — прерывает.
+4. **`src/main/core/Database.js`** — добавлен метод `transactionDeferred()` для транзакций с отложенными проверками внешних ключей.
+5. **`src/main/controllers/TrashController.js`** — реализованы каналы `trash:list` и `trash:undo` с валидацией `id` (400) и обработкой отсутствия операции (404).
+6. **`src/main/Container.js`** — создан `OperationLog` (после миграций и сидов, до контроллеров), прокинут в `IpcRouter`, зарегистрирован `TrashController`; карта операций читается из конфига с фолбэком на `{}`.
+7. **`config/operations.json`** — маппинг `domain:action → ключ локализации` для типовых каналов.
+8. **`config/app.json`** — добавлены `app.ipc.logSkipPrefixes` (`trash:`, `auth:`) и `app.trash.max` (10).
+9. **`tests/helpers.js`** — в возвращаемый объект добавлены `trash` (журнал) и `db` (соединение) для тестов.
+10. **`tests/trash.test.js`** — покрыты сценарии: вставка / изменение / удаление (с отменой), каскадное удаление родителя с детьми и восстановление (проверка `defer_foreign_keys`), конфликт отмены (409 при изменённой строке), лимит 10 операций с каскадной чисткой записей, валидация `id` (400/404) и формирование `label` для `storage:*`.
 
-### Журнал операций
-- [x] `src/main/core/OperationLog.js` — новый класс журнала.
-- [x] `OperationLog.install()` — идемпотентно создаёт служебную таблицу `_operation_context` (одна строка `id = 1`), сбрасывает `operation_id` в NULL, сканирует `sqlite_master`, для каждой таблицы с единственным PK (кроме `settings`, `operations`, `operation_entries`, `_operation_context`, `schema_migrations`, `migrations`) создаёт триггеры `AFTER INSERT/UPDATE/DELETE`.
-- [x] `OperationLog` — триггеры через `INSERT ... SELECT ... FROM _operation_context WHERE operation_id IS NOT NULL` (без `WHEN` с подзапросом); JSON-образы строк собираются через `json_object()`.
-- [x] `OperationLog.begin/commit/abort` — открывают/закрывают контекст; при `commit` без записей операция удаляется; после успешного коммита лишние операции сверх `max` удаляются вместе с записями (каскад FK).
-- [x] `OperationLog.list()` — от новых к старым, возвращает `{id, channel, label, at, entries}`.
-- [x] `OperationLog.buildLabel()` — из карты `config/operations.json`, для `storage:*` добавляет имя модуля через `:`; фолбэк `trash.<channel с точками>`.
-- [x] `OperationLog.undo(id)` — одна транзакция с `PRAGMA defer_foreign_keys = ON`, применяет записи в обратном порядке: для `insert` удаляет строку, для `update` возвращает `before`, для `delete` вставляет `before`; проверяет соответствие текущего состояния `after` (insert/update) и отсутствие строки (delete), при несовпадении — 409; сама отмена не журналируется.
-- [x] `OperationLog` — сравнение `sameRow()` устойчиво к числу/строке/null.
+## Примечания по дизайну
 
-### IpcRouter
-- [x] `src/main/core/IpcRouter.js` — конструктор принимает третий аргумент `operationLog`; читает `app.ipc.logSkipPrefixes` (`trash:`, `auth:`).
-- [x] `IpcRouter.dispatch()` — при прохождении auth и наличии обработчика открывает операцию через `operationLog.begin()`, при ошибке хендлера — `abort`, при успехе — `commit`; открытие/закрытие операции не влияет на форму ответа.
-- [x] `IpcRouter` — `shouldLog(channel)` отсекает префиксы из `logSkipPrefixes`; это гарантирует, что `trash:undo` не попадает в журнал.
+- Триггеры реализованы через `INSERT ... SELECT` с фильтром по `_operation_context`, а не через `WHEN` с подзапросом — так исключены любые ограничения SQLite на подзапросы в `WHEN` и обеспечена переносимость.
+- Отмена выполняется в **обратном порядке** записей — это корректно и для вставок/обновлений, и для каскадных удалений.
+- Сравнение текущего состояния строки с `after`/`before` устойчиво к разнице типов (число/строка/null).
+- `_operation_context` — обычная таблица (не TEMP), чтобы триггеры гарантированно её видели и контекст не терялся между соединениями; сброс контекста при `install()` защищает от «унаследованной» операции после падения.
 
-### База данных
-- [x] `src/main/core/Database.js` — добавлен метод `transactionDeferred(work)`: оборачивает `connection.transaction`, внутри включает `PRAGMA defer_foreign_keys = ON` — нужен для отмены каскадных удалений.
+D10
 
-### Контроллер и DI
-- [x] `src/main/controllers/TrashController.js` — новый контроллер; `get prefix() { return 'trash' }`; `routes()` с `list` и `undo`.
-- [x] `TrashController` — `undo` валидирует `id` через `Number.isInteger` (400 при невалидном), 404 при отсутствии операции (из `OperationLog.undo`).
-- [x] `src/main/Container.js` — после миграций и сидов создаётся `OperationLog` (с `max` из `app.trash.max` и картой из `operations.json`, чтение с фолбэком на `{}`), передаётся третьим аргументом в `IpcRouter`; `TrashController` регистрируется в общем списке.
+### 1. `src/renderer/shell/TrashView.js` (новый)
+- Создан отдельный компонент `TrashView` с внедряемыми `api`, `i18n`, `dialogs`.
+- `resolveLabel(item)` — перевод метки операции:
+  - если `label` содержит `:`, ключ берётся до `:`, суффикс (имя модуля для `storage:*`) выводится в скобках: «Хранилище: добавление (running)»;
+  - иначе, если ключ есть в словаре, — `t(label)`;
+  - иначе fallback на `channel` (требование ТЗ).
+- `hasKey(key)` — использует `i18n.has`, если он есть, иначе сравнивает `t(key) !== key`.
+- `render(container)` — загружает `trash:list`, рисует список или пустое состояние (`trash.empty`), статусную строку. Подпись-подсказка `trash.info` выводится над списком.
+- Каждая строка: `label`, `at` (время операции из бэкенда, SQLite-формат), `entries` (число строк через ключ `trash.entries` с `{count}`), кнопка `trash.undo`.
+- Кнопка «Отменить» → `dialogs.confirm` с `trash.confirm` (переводится через `t` с подстановкой `{label}`), `danger: true`.
+- После подтверждения — `trash:undo {id}`. При ошибке:
+  - `error.status === 409` → локализованное сообщение `trash.conflict` («Не удалось отменить: данные уже изменились»);
+  - прочие — `error.message`.
+- При успехе список полностью перерисовывается (`redraw()`), что удовлетворяет требованию «обновление списка после отмены».
 
-### Конфиг
-- [x] `config/operations.json` — новый файл, карта `domain:action → ключ локализации` для nutrition, sleep, running, workouts, measurements, mood, reaction, profile, storage.
-- [x] `config/app.json` — добавлены `app.ipc.logSkipPrefixes: ["trash:", "auth:"]` и `app.trash.max: 10`.
+### 2. `src/renderer/shell/SettingsView.js`
+- Импортирован `TrashView`, добавлен в конструктор как `this.trashView`.
+- В `render()` между секциями «Данные» и «Защита паролем» вставлена новая секция `settings.section.trash`.
+- Метод `trash()` возвращает карточку с контейнером, куда `TrashView.render()` асинхронно подгружает список (не блокирует общий рендер страницы; аналогично существующим секциям со своим состоянием).
 
-### Тесты
-- [x] `tests/helpers.js` — `createApp()` возвращает дополнительные `trash` (журнал) и `db` (соединение).
-- [x] `tests/trash.test.js` — новый файл: вставка/изменение/удаление с отменой, каскадное удаление с восстановлением, конфликт 409 при изменённой строке, лимит 10 с каскадной чисткой `operation_entries`, валидация `id` (400/404), формирование `label` для `storage:*`.
+### 3. `src/renderer/shell/shell.css`
+- Добавлены стили `.trash-container`, `.trash-list`, `.trash-row`, `.trash-info`, `.trash-label`, `.trash-meta` — карточки операций в стиле существующих `settings-card` (border, фон `s2`, моноширинный шрифт для метаданных). Остальные правила не тронуты.
 
----
+### 4. `src/renderer/shell/locales/ru.json` и `en.json`
+Добавлены одинаковые по структуре ключи:
+- UI: `settings.section.trash`, `trash.info`, `trash.empty`, `trash.undo`, `trash.confirm`, `trash.confirmYes`, `trash.confirmNo`, `trash.conflict`, `trash.entries` (плоская строка с `{count}`, без plural-объекта — чтобы `compareDictionaries` не падал на разных наборах форм в ru/en).
+- Метки операций (24 ключа) — все значения из `config/operations.json`: `trash.<domain>.<action>` для nutrition, sleep, running, workouts, measurements, mood, reaction, profile, storage.
+- Для `storage:*` в UI выводится как «Хранилище: добавление (moduleId)» за счёт склейки с суффиксом после `:`, пришедшим с бэкенда.
 
-## D10. Корзина, часть 2: экран в настройках (интерфейс)
+### 5. `tests/translator.test.js`
+- В `allowed`-набор теста «оболочка» добавлены все 24 ключа меток операций (`trash.nutrition.add`, … `trash.storage.remove`) — они приходят из конфига бэкенда, в коде не встречаются как литералы, поэтому их нельзя обнаружить статическим сканером.
+- Добавлен отдельный тест `словарь оболочки: ключи корзины в обеих локалях`, проверяющий наличие и непустоту и UI-ключей, и всех меток в `ru.json` и `en.json`. Остальные тесты не менялись.
 
-### Компонент
-- [x] `src/renderer/shell/TrashView.js` — новый класс с внедряемыми `api`, `i18n`, `dialogs`.
-- [x] `TrashView.render(container)` — вызывает `trash:list`, рисует подсказку `trash.info`, список или пустое состояние `trash.empty`, статусную строку для ошибок.
-- [x] `TrashView.row(item, redraw, status)` — строка с меткой, временем `at`, числом строк `trash.entries` (`{count}`) и кнопкой «Отменить».
-- [x] `TrashView` — «Отменить» вызывает `dialogs.confirm` с `trash.confirm` (`{label}`), `danger: true`; после подтверждения — `trash:undo {id}`, при 409 показывается `trash.conflict`, при прочих — `error.message`; при успехе список перерисовывается.
-- [x] `TrashView.resolveLabel(item)` — ключ вычисляется в `labelKey` (часть до `:`), суффикс модуля для `storage:*` выводится в скобках; проверка наличия через `hasKey(labelKey)`, fallback — `item.channel`.
-- [x] `TrashView.hasKey(translationKey)` — использует `i18n.has`, если доступно; иначе — `t(translationKey) !== translationKey`; имя параметра оканчивается на `Key`, чтобы проходить статический сканер `I18nScan`.
 
-### Настройки — UI
-- [x] `src/renderer/shell/SettingsView.js` — импорт `TrashView` и поле `this.trashView`.
-- [x] `SettingsView.render()` — новая секция `settings.section.trash` между «Данные» и «Защита паролем».
-- [x] `SettingsView.trash()` — возвращает карточку с контейнером; `TrashView.render()` подгружает данные асинхронно, не блокируя общий рендер.
+- **`hasKey(translationKey)`** — параметр переименован с `key` на `translationKey` (оканчивается на `Key`). Внутренний вызов `this.t(translationKey)` теперь проходит статический сканер.
+- **`resolveLabel(item)`** — вместо динамических `label`/`key` используются `labelKey` и `rawLabel`/`suffix`:
+  - `labelKey` вычисляется как часть метки до `:` (или вся метка, если разделителя нет);
+  - `suffix` — часть после `:`, используется только для склейки (не идёт в `t()`);
+  - единственный вызов `this.t(labelKey)` проходит проверку, так как `labelKey` оканчивается на `Key`;
+  - fallback по-прежнему возвращает `item.channel`, если `labelKey` пуст или перевода нет.
 
-### Стили
-- [x] `src/renderer/shell/shell.css` — классы `.trash-container`, `.trash-list`, `.trash-row`, `.trash-info`, `.trash-label`, `.trash-meta`; существующие `.settings-hint` и `.empty` переиспользуются.
 
-### Локали
-- [x] `src/renderer/shell/locales/ru.json` / `en.json` — UI-ключи `settings.section.trash`, `trash.info`, `trash.empty`, `trash.undo`, `trash.confirm`, `trash.confirmYes`, `trash.confirmNo`, `trash.conflict`, `trash.entries` (плоская строка с `{count}` — обходит разницу plural-форм ru/en).
-- [x] `ru.json` / `en.json` — 24 ключа меток операций `trash.<domain>.<action>` для nutrition, sleep, running, workouts, measurements, mood, reaction, profile, storage.
+## Примечания по дизайну
 
-### Тесты
-- [x] `tests/translator.test.js` — в `allowed`-набор теста «оболочка» добавлены 24 ключа меток (приходят из конфига бэкенда, статическим сканером не находятся).
-- [x] `tests/translator.test.js` — новый тест «словарь оболочки: ключи корзины в обеих локалях», проверяет наличие и непустоту UI-ключей и всех меток в `ru.json` и `en.json`.
+- `resolveLabel` устойчив к трём случаям: обычная метка (`trash.nutrition.add`), метка с суффиксом модуля (`trash.storage.add:running`), отсутствие ключа (fallback на `channel`). Это покрывает весь контракт из D9 без привязки к конкретному списку доменов.
+- Проверка `i18n.has` используется, когда доступна; иначе — эвристика `t(key) !== key`. Это делает компонент совместимым и с `Translator`, и с любым обёрточным i18n-сервисом.
+- Отмена не пишется в журнал (бэкенд D9 уже это обеспечивает через `logSkipPrefixes: ['trash:', …]`), поэтому после успешного undo список сам уменьшается — дополнительных действий не требуется.
+- 409-ошибка из бэкенда («Строка … была изменена») заменяется локализованным сообщением — как и требовалось «понятным текстом».
+- Стили не конфликтуют с существующими: новые классы с префиксом `.trash-` уникальны, `.settings-hint` и `.empty` переиспользуются.
 
-## D11. Multi-View (Split Screen Workspace): два модуля одновременно
-
-Возможность открывать два модуля-страницы на одном экране: `Ctrl+Click` (или `Cmd+Click` на macOS) по модулю в навигации открывает его справа от текущего; между панелями — перетаскиваемая граница; в правом верхнем углу каждой панели — крестик для закрытия.
-
-### Конфигурация
-- [x] `config/split.json` — новый файл: `minRatio: 0.15`, `maxRatio: 0.85`, `defaultRatio: 0.5`. Пороги вынесены в JSON по правилу раздела 7 карты («Все константы живут в `config/*.json`»); чтение через `config:get` (канал уже в `ipc.openPrefixes`, доступен до логина).
-
-### Чистая логика (без DOM)
-- [x] `src/renderer/shell/SplitState.js` — новый класс: `primaryId`, `secondaryId`, геттер `isSplit`, методы `open(id)` (сброс в single), `openSplit(id)` (возвращает `false`, если primary не открыт или совпадает с id), `closeRight()`, `closeLeft()` (повышает secondary до primary, возвращает его id), `reset()`.
-- [x] `src/renderer/shell/SplitRatio.js` — новый класс: принимает конфиг в конструкторе (`min`, `max`, `default` из `config/split.json`), методы `clamp(ratio)` (устойчив к `NaN`/`Infinity`), `fromDelta(startRatio, deltaX, width)` (клипает, отбрасывает невалидную ширину), `toPercent(ratio)`. Никаких `static MIN/MAX/DEFAULT` — все пороги из конфига.
-
-### DOM-компоненты
-- [x] `src/renderer/shell/Splitter.js` — новый класс: перетаскиваемая граница. `mousedown` на элементе, `mousemove`/`mouseup` на `document`, класс `body.mv-dragging` на время drag, `destroy()` отписывает и удаляет. Принимает инстанс `SplitRatio` и вызывает `ratio.fromDelta(...)`.
-- [x] `src/renderer/shell/SplitPane.js` — новый класс: одна панель (iframe + `ModuleBridge` + крестик). Методы: `mount(container)`, `attachBridge()`, `addCloseButton()` (пропускается для роли `single`), `showCrash(message)`, `reload()`, `setRole(role)` (используется при сворачивании split в single, убирает крестик), `destroy()`. Пиллы в шапку отправляет только левая панель, чтобы не мерцали.
-- [x] `src/renderer/shell/SplitView.js` — новый класс: контейнер двух панелей и сплиттера. Методы: `open(descriptor)` (single), `openSplit(primary, secondary)` (две панели + сплиттер), `applyRatio(ratio)`, `removePane(role)` (оставшаяся панель становится `single`), `close()` (уничтожает обе панели и сплиттер). Хранит инстанс `SplitRatio` и текущий `ratio`.
-
-### Навигация
-- [x] `src/renderer/shell/NavMultiClick.js` — новый класс: перехват `Ctrl+Click`/`Cmd+Click` на навигации. Слушает `document` в capture-фазе, чтобы отработать раньше `<a href="#module/...">`. Проверяет модификатор, `root.contains(target)`, `isPage(id)` (id берётся из `data-module-id`/`data-id` или из `href="#module/<id>"`), затем `preventDefault()` + `stopImmediatePropagation()` и `onOpen(id)`. Методы `attach()`/`detach()`.
-
-### Хост модулей
-- [x] `src/renderer/shell/ModuleHost.js` — переписан как тонкий делегатор над `SplitView`. Публичный контракт сохранён: `open(descriptor)`, `openSplit(primary, secondary)`, `removePane(role)`, `close()`, `setPluginCss(urls)`. ~35 строк вместо ~200 — вся логика ушла в отдельные классы.
-
-### Оболочка
-- [x] `src/renderer/shell/ShellApp.js` — переписан: вместо двух полей `activeId`/`secondaryId` — инстанс `SplitState` (`this.split`); вместо собственного `navClickHandler` — `NavMultiClick`; в `start()` грузит `config:get {name: 'split'}` и создаёт `SplitRatio`, передаёт его в `ModuleHost`. Методы `enterSplit(id)`, `showSplit()`, `handleClosePane(role)` (закрытие правой панели оставляет левую single; закрытие левой — правая становится активной, URL обновляется через `history.replaceState`). Сброс split в `showModule`/`showSettings`/`showHub`/`lock`.
-
-### Стили
-- [x] `src/renderer/shell/shell.css` — классы `.mv-pane`, `.mv-pane-left`, `.mv-pane-right`, `.mv-pane-single`, `.mv-frame`, `.mv-splitter` (+ `::after`-ручка), `.mv-close`, `body.mv-dragging` (курсор `col-resize`, `pointer-events: none` на iframe), `body.is-split-view` (подсветка шапки), `.stage.mv-split` (flex-контейнер). Старый `.module-frame` удалён. В fullscreen-режиме крестик панели сдвинут на `right: 82px`, чтобы не пересекаться с кнопками управления окном.
-
-### Локали
-- [x] `src/renderer/shell/locales/ru.json` / `en.json` — ключ `multiView.close` («Закрыть панель» / «Close pane»).
-
-### Тесты
-- [x] `tests/multi-view.test.js` — новый файл в стиле `tests/renderer.test.js` (`node:test` + `node:assert/strict` + CommonJS + ESM через `pathToFileURL`).
-  - `SplitState`: все методы + граничные случаи (`openSplit` без primary, `openSplit` на тот же id, `closeLeft` без split).
-  - `SplitRatio`: значения `min`/`max`/`default` берутся из реального `config/split.json`, а не из литералов; отдельный тест на переопределение конфига (`{minRatio: 0.2, maxRatio: 0.8, defaultRatio: 0.4}`), подтверждающий, что код читает конфиг, а не вшитые числа.
-  - `NavMultiClick`: пропуск без модификатора, `Ctrl+Click`, `Cmd+Click`, неизвестный модуль, клик вне навигации, `attach`/`detach` с capture-флагом.
-
-- [x] Создания установщика для Windows
-  - [x] добавить в сборку Windows обычный установщик (цель NSIS, установка для текущего пользователя, выбор папки, ярлык на рабочем столе, удаление программы не стирает данные) рядом с `portable` и `zip`. Имя артефакта `BIOMASHINE-<версия>-setup.exe`.
-  - [x] Workflow должен загружать и публиковать установщик вместе с остальными файлами.
-  - [x] В README описать различие: установленная версия хранит данные в `%APPDATA%\BIOMASHINE`, портативная рядом с программой.  
 - [ ] Перенос тестов из приватной ветки
   - [ ] Локализация сообщений бэкенда в тестах
+- [ ] Корзина в настройках: последние 10 операций глобально с возможностью отмены (журнал операций на основе триггеров SQLite, отмена только если данные не изменились после операции, метки из operations.json, экран в настройках, тесты)
 
 # Релиз 1.2.0 — Кастомизация без границ
 
@@ -464,19 +437,6 @@
 - [ ] **Аномалии** — автоматический поиск необычных изменений: вес изменился сильнее обычного, расходы резко выросли, сон стал намного короче, пульс вышел за пределы обычного диапазона.
 - [ ] **Обнаружение паттернов** — находит повторяющиеся паттерны в данных (эффекты дня недели, сезонные изменения, повторяющиеся циклы) и представляет их простым языком.
 - [ ] **Качество данных** — показывает, сколько измерений было пропущено, какие показатели давно не обновлялись, противоречат ли записи друг другу, выглядят ли значения подозрительно и насколько полны данные за выбранный период.
-
-# Не распределённые идеи для ближайших обновлений (1.2.0 - 2.0.0).
-
-1) Trigger Engine. Пользовательский конструктор правил «Если — То». Связывает все модули в единую живую систему. Например: «Если сон < 6 часов (данные из модуля Сон), то завтра в модуль Настроение пишется предупреждение». Или: «Если расходы за день превысили лимит, в модуле Тренировки ставится задача пойти побегать».
-2) Predictor. Прогнозирование на основе исторических данных. Приложение строит математическую модель (линейную регрессию) и говорит: «При текущем темпе твоего сна, тренировок и питания, к 15 мая твой вес достигнет 78 кг, а дистанция в беге — 500 км. Но если ты будешь спать на час меньше, ты достигнешь цели на 2 недели позже». Аналитика будущего, а не прошлого.
-3) Сохранение состояния при выходе. При выходе приложение спрашивает: «Сохранить состояние?». Если да — при следующем заходе пользователь видит тот же экран (те же открытые модули, фильтры, скроллы), что и при выходе.
-4) Редактирование конфигов изнутри. Возможность менять JSON-конфиги (коэффициенты, цвета и т.д.) прямо в интерфейсе приложения без необходимости перекомпиляции и перезапуска.
-5) Профили. Возможность создавать несколько независимых пространств (как Vault в Obsidian) для разделения контекстов. Например, один профиль «Я реальный», второй — «Эксперимент», третий — «Песочница» для тестирования модулей.
-
-# Не распределённые идеи для обновлений когда-нибудь.
-1) BIOMASHINE Headless — точно версия 3.0.0. Разделение приложения на «Ядро» (сервер без интерфейса) и «Клиент» (веб-интерфейс). Устанавливаешь на домашний сервер или старый ноутбук, база данных живет там. Заходишь через браузер с любого устройства по локальной сети или через VPN.
-2) BIOMASHINE CLI. Отдельный бинарник или режим запуска для работы с данными из терминала. Например: `bm sleep add --start "23:00" --end "07:00"` или `bm export --format csv`. Это рай для автоматизации и скриптов. Ты сможешь писать bash-скрипты, которые собирают данные с датчиков и закидывают их в базу без открытия Electron. И это логичный шаг после Headless (3.0.0).
-3) Перевод бэкенда на Rust. Переписывание тяжелых частей бэкенда (работа с БД, обработка потоков данных от датчиков) на Rust через N-API (binding для связи JS и Rust). JS/Electron остается для UI, а Rust берет на себя высоконагруженные вычисления и работу с миллионами записей (пульс, кислород), чтобы JS не захлебывался.
 
 # X.N.P
 

@@ -15,7 +15,7 @@ class WorkoutController extends BaseController {
     normalize(payload) {
         const { date, start_time, end_time, type, note, exercises } = payload;
         if (!date || !type || !Array.isArray(exercises) || exercises.length === 0) {
-            throw AppError.badRequest('Дата, тип и хотя бы одно упражнение обязательны');
+            throw AppError.badRequest('workouts.dateTypeExercisesRequired');
         }
         return {
             date: Dates.day(date),
@@ -34,19 +34,19 @@ class WorkoutController extends BaseController {
             update: (payload) => this.workouts.update(BaseController.id(payload.id), this.normalize(payload)),
             remove: ({ id }) => {
                 if (this.workouts.remove(BaseController.id(id)) === 0) {
-                    throw AppError.notFound('Тренировка не найдена');
+                    throw AppError.notFound('workouts.notFound');
                 }
             },
             listTemplates: () => this.workouts.listTemplates(),
             createTemplate: ({ name, exercises }) => {
                 if (!name || !Array.isArray(exercises) || exercises.length === 0) {
-                    throw AppError.badRequest('Имя и упражнения обязательны');
+                    throw AppError.badRequest('workouts.nameAndExercisesRequired');
                 }
                 return { id: this.workouts.createTemplate(name, exercises) };
             },
             removeTemplate: ({ id }) => {
                 if (this.workouts.removeTemplate(BaseController.id(id)) === 0) {
-                    throw AppError.notFound('Шаблон не найден');
+                    throw AppError.notFound('workouts.templateNotFound');
                 }
             },
             getGoals: () => this.workouts.getGoals(),

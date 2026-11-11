@@ -1,0 +1,5 @@
+{
+  "minRatio": 0.15,
+  "maxRatio": 0.85,
+  "defaultRatio": 0.5
+}

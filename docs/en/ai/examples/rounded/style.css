@@ -1,0 +1,16 @@
+.bm-card,
+.bm-stat,
+.bm-btn,
+.bm-input,
+.panel-card,
+.dialog,
+.dialog-btn,
+.nav-link {
+  border-radius: 10px;
+}
+:root {
+  --br: #3a3a3a;
+}
+:root[data-theme="light"] {
+  --br: #bdbdb8;
+}

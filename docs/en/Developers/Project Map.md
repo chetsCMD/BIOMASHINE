@@ -43,6 +43,7 @@ build/                    application icons (ico, png, icns) and the portable-la
 config/                   all settings and constants as JSON
 migrations/               SQL migrations, applied in order, version stored in PRAGMA user_version
 scripts/prepare.js        copies Chart.js and fonts from node_modules into src/renderer/vendor
+scripts/i18n.js           npm run i18n: status, files, add, check
 src/main/
   main.js                 entry point
   Application.js          Electron lifecycle: single instance, privileged scheme, window creation
@@ -53,11 +54,12 @@ src/main/
   ShortcutService.js      global shortcuts (F11, Ctrl/Cmd+P)
   PortablePaths.js        data folder next to the program in portable builds
   core/                   Database, Migrator, ConfigService, IpcRouter, AssetResolver, BaseRepository,
-                          BaseController, AppError, Attribution, Dates, Values, MimeTypes
+                          BaseController, AppError, Attribution, Dates, Values, MimeTypes, MessageTranslator
   repositories/           the only place where SQL lives
   services/               AuthService, SettingsService, ClockService, LocaleService, ModuleRegistry,
-                          ModuleService, ThemeCatalog, ExportService, SeedService
+                          ModuleService, ThemeCatalog, ExportService, SeedService, MessageService
   controllers/            IPC handlers: validation and business rules
+  locales/                backend dictionaries (ru.json, en.json, ...): error messages, problems
 src/preload/preload.js    window.api
 src/renderer/
   shell/                  menu, login, settings, command palette, bridge, dialogs, themes
@@ -96,9 +98,9 @@ In portable builds (Windows `portable`, Linux AppImage) the same layout is creat
 const data = await window.api.invoke('domain:action', payload);
 ```
 
-The router answers with `{ ok: true, data }` or `{ ok: false, status, error }`; the preload script turns the failure into a thrown `Error` carrying `message` and `status`. Common statuses: `400` invalid input, `401` locked, `403` forbidden, `404` not found.
+The router answers with `{ ok: true, data }` or `{ ok: false, status, error, code? }`; the preload script turns the failure into a thrown `Error` carrying `message`, `status` and, when present, `code`. Common statuses: `400` invalid input, `401` locked, `403` forbidden, `404` not found. The optional `code` is the dictionary key the message was translated from (see section 10); an unexpected error hides the details behind `error.internal` and never carries `code`.
 
-**Authentication gate.** When a password is set, every channel except those whose name starts with a prefix listed in `app.json` → `ipc.openPrefixes` (`auth:`, `settings:get`, `config:get`, `i18n:bundle`, `i18n:languages`, `window:`) returns `401` until the user logs in.
+**Authentication gate.** When a password is set, every channel except those whose name starts with a prefix listed in `app.json` → `ipc.openPrefixes` (`auth:`, `settings:get`, `config:get`, `i18n:bundle`, `i18n:languages`, `window:`, `shortcuts:`) returns `401` until the user logs in.
 
 **Data conventions.**
 
@@ -166,11 +168,14 @@ Parameters marked `?` are optional. Successful write channels return `null` unle
 | `auth:status`, `auth:setup`, `auth:login`, `auth:lock`, `auth:change`, `auth:remove` | Optional login and password protection |
 | `settings:get`, `settings:set`, `settings:relaunch` | Settings (`theme`, `autostart`, `language`, `timezone`) and application restart |
 | `config:get`, `config:errors`, `config:openFolder` | Read a configuration (any except private ones), list problems in user overrides, open the overrides folder |
-| `modules:list`, `modules:errors`, `modules:rescan`, `modules:openFolder`, `modules:setHidden` | Module registry |
+| `modules:list`, `modules:errors`, `modules:rescan`, `modules:openFolder`, `modules:setHidden`, `modules:setPinned`, `modules:reorderPinned`, `modules:setCategory`, `modules:categories`, `modules:createCategory`, `modules:removeCategory` | Module registry and navigation |
 | `storage:list`, `get`, `insert`, `update`, `remove`, `clear` | Per-module document storage (the shell injects the module id) |
 | `i18n:languages`, `bundle`, `master`, `export`, `openFolder`, `errors` | Languages and dictionaries |
 | `clock:zones`, `clock:now` | Time zone list and current time in the selected zone |
 | `window:state`, `window:toggleFullscreen`, `window:close` | Window controls |
+| `shortcuts:list`, `set`, `reset` | Global shortcut registry and overrides |
+| `notifications:schedule`, `cancel`, `list`, `setEnabled`, `modules` | Module notifications |
+| `trash:list`, `undo` | Operation log and undo |
 | `about:info`, `about:open` | Author information and whitelisted external links |
 | `export:json`, `export:csv` | Export all data through a save dialog |
 
@@ -188,6 +193,8 @@ Parameters marked `?` are optional. Successful write channels return `null` unle
 | `profile`, `weight_goals`, `running_goals`, `training_goals`, `sleep_schedule` | Single-row tables (`id = 1`) |
 | `measurements`, `sleep_logs`, `no_sleep_days`, `nutrition_logs`, `running_logs`, `workouts`, `workout_exercises`, `workout_templates`, `template_exercises`, `exercise_goals`, `reaction_tests`, `mood_entries` | Health data |
 | `module_documents` | JSON documents of user modules, scoped by `module_id` and `collection` |
+| `notifications` | Scheduled notifications from modules |
+| `operations`, `operation_entries` | Operation log: one row per request that wrote to the database, one row per affected record |
 
 **Timestamps.** Tables with a creation timestamp are stamped by `AFTER INSERT` triggers (migration `003`) that call the SQLite function `bm_now()`. The application registers that function on every connection and implements it with `ClockService`, so every `created_at` (and the date of a reaction test) is written in the selected time zone. The function must not query the database because SQLite forbids re-entrant queries from inside a user function; the selected zone is therefore cached in memory.
 
@@ -199,18 +206,20 @@ All constants live in `config/*.json`.
 
 | File | Content |
 |---|---|
-| `app.json` | Window, protocol, start page, database file name, setting defaults, module rules, private configs, storage limits, authentication, IPC, shortcuts, portable mode, language list, time zone aliases |
+| `app.json` | Window, protocol, start page, database file name, setting defaults, module rules, private configs, storage limits, authentication, IPC, shortcuts, portable mode, language list, time zone aliases, font subsets |
 | `themes.json` | Themes: CSS variables, chart colors, display title or title key |
 | `charts.json` | Chart series colors per module |
 | `health.json` | Default profile values (used on the first start only) |
 | `achievements.json` | Running achievements (`nameKey`, `descriptionKey`, `required`) |
+| `operations.json` | Human labels for the operation log (`domain:action` → dictionary key) |
+| `split.json` | Bounds of the split-view ratio |
 | `kbju.json`, `nutrition.json`, `reaction.json`, `running.json`, `sleep.json`, `training.json`, `weight.json` | Constants of the matching module |
 
 **Overrides.** Files with the same name in `userData/config` are merged over the base file: objects merge recursively, arrays and scalars are replaced. A new file name becomes a new config. A file with a JSON error is skipped and the reason is shown in Settings. Changes apply after a restart.
 
 **Access.** `config:get` serves every config except those listed in `app.json` → `privateConfigs` (currently `app`). Modules read configs through `bm.config(name)`.
 
-**Themes** are validated by `ThemeCatalog` (13 required CSS variables, `colorScheme`, a title, chart colors); an invalid theme is skipped and reported.
+**Themes** are validated by `ThemeCatalog` (13 required CSS variables, `colorScheme`, a title, chart colors); an invalid theme is skipped and reported through `config:errors` as `theme.invalid` with a nested `reasonKey` that the controller expands.
 
 ## 8. Authentication
 
@@ -218,37 +227,41 @@ Protection is optional. When enabled, the login and password are stored in `sett
 
 ## 9. Shell and environment
 
-- **Navigation.** The shell lists visible page modules and Settings in the header. Hiding a module removes it from the menu only; its data stays.
+- **Navigation.** The shell lists visible page modules and Settings in the header. Hiding a module removes it from the menu only; its data stays. Pinned pages appear first, in `pinOrder`; unpinned ones sit in categories. `Ctrl+Click` (`Cmd+Click` on macOS) opens a second module next to the current one (see section 11).
 - **Command palette.** `Ctrl+P` (`Cmd+P` on macOS) opens a quick switcher with fuzzy search over modules and Settings. Commands come from providers, so new kinds of commands can be added without changing the palette.
-- **Shortcuts** are intercepted in the main process through `before-input-event`, so they work even when focus is inside a module iframe. They are bound to physical keys (`KeyP`, `F11`), which makes them independent of the keyboard layout. Definitions live in `app.json` → `shortcuts`.
+- **Shortcuts** are intercepted in the main process through `before-input-event`, so they work even when focus is inside a module iframe. They are bound to physical keys (`KeyP`, `F11`), which makes them independent of the keyboard layout. Definitions and overrides live in `app.json` → `shortcuts` and `settings.shortcuts`.
 - **Fullscreen.** `F11` toggles fullscreen; while fullscreen, the shell shows buttons to leave it or close the app.
 - **Startup.** The window opens with a dark background and a loading screen; the portable Windows build shows `build/splash.bmp` while it unpacks.
 - **Attribution.** The author name and the three links shown in the About block of Settings are constants in `src/main/core/Attribution.js`. They are intentionally not configurable, and external links are opened only from this whitelist. They are required by the project license and must be preserved.
 
 ## 10. Localization
 
-Strings live in dictionaries named `locales/<code>.json`: flat objects mapping a key to a string, or to an object of plural forms.
+Strings live in dictionaries named `locales/<code>.json`: flat objects mapping a key to a string, or to an object of plural forms. The complete guide is in [Localization.md](Localization.md).
 
 | Scope | Location |
 |---|---|
 | `shell` | `src/renderer/shell/locales` |
 | `shared` | `src/renderer/shared/locales` (units, common buttons, theme and achievement titles) |
+| `backend` | `src/main/locales` (messages of the main process: errors, problems in configs, modules and dictionaries) |
 | module `<id>` | `<module folder>/locales` (modules with `"i18n": true` in the manifest) |
 
-`LocaleService` builds the string set for a scope and a language by walking a fallback chain (selected language, then the language's declared fallback, then English, then Russian) and layering `shared` underneath the scope. The result is delivered to a module in its `init` message and read through `bm.t(key, params)`.
+`LocaleService` builds the string set for a scope and a language by walking a fallback chain (the selected language, then the language's declared fallback, then `default`, then every language in `builtin`) and layering `shared` underneath the scope. The result is delivered to a module in its `init` message and read through `bm.t(key, params)`. The `backend` scope is delivered to the main process through `MessageService`; `AppError` carries a key and parameters, and `IpcRouter` translates the message before returning it.
 
 - **Languages.** Russian and English ship with the app. The interface language is stored in `settings`; on the first start it is chosen from the operating system, falling back to English.
+- **Registry.** `app.json` → `i18n.builtin` lists the shipped languages. `i18n.required` (default `["ru", "en"]`) lists the languages every scope must have a dictionary for. `i18n.reference` (default `"ru"`) is the dictionary other dictionaries are compared against. `i18n.source` (default `"en"`) is the language used to seed new translations. Other built-in languages are optional; when present they must be complete.
 - **User languages.** Settings can export a template that contains every scope with its keys. A translated copy is saved as `userData/locales/<code>.json`:
 
 ```json
 {
   "meta": { "code": "de", "name": "Deutsch", "locale": "de-DE", "fallback": "en" },
-  "scopes": { "shell": { "nav.settings": "Einstellungen" }, "shared": {}, "kbju": {} }
+  "scopes": { "shell": { "nav.settings": "Einstellungen" }, "shared": {}, "backend": {}, "kbju": {} }
 }
 ```
 
   A file whose code is `ru` or `en` patches the built-in strings instead of adding a language. Missing keys fall back along the chain. Problems (invalid JSON, missing `meta`, malformed plural objects) are listed in Settings.
-- **Plural forms.** A value may be an object with the forms `zero`, `one`, `two`, `few`, `many`, `other` (`other` is required). The form is chosen with `Intl.PluralRules` from the `count` parameter. Placeholders use `{name}`.
+- **Tool.** `npm run i18n` (`status`, `files <code>`, `add`, `check`) drives the whole flow: adding a language, seeing what is missing, checking that the dictionaries are complete and that the plural forms match `Intl.PluralRules`. See [Localization.md](Localization.md) for the exact output of each command.
+- **Plural forms.** A value may be an object with the CLDR forms `zero`, `one`, `two`, `few`, `many`, `other` (`other` is required; a value may use only the forms its locale actually defines). The form is chosen with `Intl.PluralRules` from the `count` parameter. Placeholders use `{name}`.
+- **Fonts.** `config/app.json` → `fonts.subsets` (default `["latin", "latin-ext", "cyrillic"]`) selects which `@fontsource` subsets `scripts/prepare.js` bundles. Scripts the bundled fonts do not cover (Chinese, Japanese, Korean, Arabic, Hebrew, Thai, Devanagari and others) are rendered by a system font through the fallback chain in `base.css`.
 
 ## 11. Time zones
 
@@ -260,15 +273,16 @@ The `timezone` setting is `system` or an IANA zone name. `ClockService` formats 
 npm install        installs dependencies and rebuilds native modules for Electron
 npm start          prepares assets and starts the app
 npm run dist       prepares assets and builds for the current operating system
+npm run i18n       localization tool (status, files, add, check)
 ```
 
-`scripts/prepare.js` copies `chart.min.js` and the required font files from `node_modules` into `src/renderer/vendor` and generates `fonts.css`; it is idempotent and runs before `start` and `dist`.
+`scripts/prepare.js` copies `chart.min.js` and the required font files from `node_modules` into `src/renderer/vendor` and generates `fonts.css`; it is idempotent and runs before `start` and `dist`. It reads `config/app.json` → `fonts.subsets` and falls back to `["latin", "latin-ext", "cyrillic"]` when the list is empty or the file is unreadable.
 
 electron-builder targets (`package.json` → `build`):
 
 | OS | Targets | Notes |
 |---|---|---|
-| Windows | `portable`, `zip` | Portable single executable with a splash image, plus an unpacked archive that starts without extraction |
+| Windows | `portable`, `zip`, `nsis` | Portable single executable with a splash image, an unpacked archive that starts without extraction, and an NSIS installer for the current user |
 | Linux | `AppImage` | Needs `libfuse2` to run |
 | macOS | `zip` | Not signed or notarized |
 
@@ -280,5 +294,6 @@ electron-builder targets (`package.json` → `build`):
 - Names and structure carry the meaning.
 - Constants, thresholds and colors belong to JSON configuration, texts belong to dictionaries.
 - SQL only in repositories; validation and business rules in controllers.
+- Every user-visible string, including errors and problem messages, comes from a dictionary. `AppError` carries a key and parameters, never a finished message.
 - The renderer never touches the database or the file system directly; everything goes through channels.
 - Every module folder has a `README.md` describing purpose, channels, configs, files and behavior.

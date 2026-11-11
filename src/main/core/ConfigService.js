@@ -25,7 +25,7 @@ class ConfigService {
                 if (!merge) {
                     throw error;
                 }
-                this.errors.push({ file, message: `некорректный JSON: ${error.message}` });
+                this.errors.push({ file, key: 'config.invalidJson', params: { message: error.message } });
                 continue;
             }
             this.data[key] = merge && this.data[key] ? ConfigService.merge(this.data[key], parsed) : parsed;

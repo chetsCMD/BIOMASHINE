@@ -1,20 +1,29 @@
 class AppError extends Error {
-    constructor(message, status = 500) {
-        super(message);
+    constructor(key, params, status) {
+        if (typeof params === 'number' && status === undefined) {
+            status = params;
+            params = undefined;
+        }
+        if (status === undefined) {
+            status = 500;
+        }
+        super(String(key));
         this.name = 'AppError';
+        this.key = String(key);
+        this.params = params || null;
         this.status = status;
     }
 
-    static badRequest(message) {
-        return new AppError(message, 400);
+    static badRequest(key, params) {
+        return new AppError(key, params, 400);
     }
 
-    static forbidden(message) {
-        return new AppError(message, 403);
+    static forbidden(key, params) {
+        return new AppError(key, params, 403);
     }
 
-    static notFound(message) {
-        return new AppError(message, 404);
+    static notFound(key, params) {
+        return new AppError(key, params, 404);
     }
 }
 

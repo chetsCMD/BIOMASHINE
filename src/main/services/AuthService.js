@@ -43,10 +43,10 @@ class AuthService {
 
     store(login, password) {
         if (!login || !String(login).trim()) {
-            throw AppError.badRequest('Логин не может быть пустым');
+            throw AppError.badRequest('auth.loginEmpty');
         }
         if (!password || String(password).length < this.minPasswordLength) {
-            throw AppError.badRequest(`Пароль должен быть не короче ${this.minPasswordLength} символов`);
+            throw AppError.badRequest('auth.passwordTooShort', { min: this.minPasswordLength });
         }
         const salt = crypto.randomBytes(16).toString('hex');
         this.settings.set('auth.login', String(login).trim());
@@ -56,7 +56,7 @@ class AuthService {
 
     setup(login, password) {
         if (this.isProtected()) {
-            throw AppError.badRequest('Защита уже включена');
+            throw AppError.badRequest('auth.alreadyProtected');
         }
         this.store(login, password);
         this.unlocked = true;
@@ -68,7 +68,7 @@ class AuthService {
             return;
         }
         if (!this.verify(login, password)) {
-            throw new AppError('Неверный логин или пароль', 401);
+            throw new AppError('auth.invalidCredentials', null, 401);
         }
         this.unlocked = true;
     }
@@ -79,14 +79,14 @@ class AuthService {
 
     change(currentLogin, currentPassword, newLogin, newPassword) {
         if (!this.verify(currentLogin, currentPassword)) {
-            throw new AppError('Неверный текущий логин или пароль', 401);
+            throw new AppError('auth.invalidCurrentCredentials', null, 401);
         }
         this.store(newLogin, newPassword);
     }
 
     remove(login, password) {
         if (!this.verify(login, password)) {
-            throw new AppError('Неверный логин или пароль', 401);
+            throw new AppError('auth.invalidCredentials', null, 401);
         }
         for (const key of ['auth.login', 'auth.salt', 'auth.hash']) {
             this.settings.remove(key);
