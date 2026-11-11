@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-8b7e6a" alt="Version 1.1.0">
+  <img src="https://img.shields.io/badge/version-1.1.0-8b7e6a" alt="Version 1.1.0">
   <img src="https://img.shields.io/badge/Electron-45-47848f?logo=electron&logoColor=white" alt="Electron 45">
   <img src="https://img.shields.io/badge/data-local%20%26%20offline-6b8e76" alt="Local data, offline operation">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-555" alt="Windows, Linux and macOS">
