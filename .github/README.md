@@ -77,6 +77,8 @@ The current version includes several ready-made example pages:
 This is not a complete list of what BIOMASHINE should be, nor a recommendation to keep exactly these records. The composition of the application can and **should** be changed and expanded to suit your own tasks.
 > You can follow the project’s development and the creation of new pages in the [roadmap](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/en/ROADMAP.en.md)
 
+[![split screen](media/split%20screen.png)](media/split%20screen.png)
+
 # Main feature of the program
 **Modular architecture**. You determine what you want to see in BIOMASHINE.
 
