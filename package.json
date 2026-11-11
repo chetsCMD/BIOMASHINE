@@ -1,7 +1,7 @@
 {
   "name": "biomashine",
   "productName": "BIOMASHINE",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Personal Health and Lifestyle Dashboard",
   "author": "chetsCMD",
@@ -11,7 +11,8 @@
     "start": "node scripts/prepare.js && electron .",
     "test": "node --test \"tests/**/*.test.js\"",
     "postinstall": "electron-builder install-app-deps",
-    "dist": "node scripts/prepare.js && electron-builder"
+    "dist": "node scripts/prepare.js && electron-builder",
+    "i18n": "node scripts/i18n.js"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",
@@ -38,10 +39,19 @@
     "win": {
       "target": [
         "portable",
-        "zip"
+        "zip",
+        "nsis"
       ],
       "artifactName": "${productName}-${version}-${os}.${ext}",
       "icon": "build/biomashine.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "${productName}-${version}-setup.${ext}"
     },
     "linux": {
       "target": [
