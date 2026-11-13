@@ -17,6 +17,7 @@
   <img src="https://img.shields.io/badge/Electron-45-47848f?logo=electron&logoColor=white" alt="Electron 45">
   <img src="https://img.shields.io/badge/data-local%20%26%20offline-6b8e76" alt="Datos locales, funcionamiento sin conexión">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-555" alt="Windows, Linux y macOS">
+  <a href="https://boosty.to/chetscmd"><img src="https://img.shields.io/badge/Boosty-Apoya%20al%20autor-orange" alt="Support on Boosty"></a>
 </p>
 
 <p align="center">
