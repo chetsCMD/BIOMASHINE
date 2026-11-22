@@ -9,15 +9,15 @@
 <p align="center">Entorno operativo para el registro personal</p>
 
 <p align="center">
-  <a href="README.md">English</a> / <a href="README.ru.md">Русский</a> / <a href="README.es.md">Español</a>
+  <a href="README.md">English</a> / <a href="README.ru.md">Русский</a> / <b>Español</b> / <a href="README.de.md">Deutsch</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.0-8b7e6a" alt="Versión 1.1.0">
+  <img src="https://img.shields.io/badge/version-1.2.0-8b7e6a" alt="Versión 1.2.0">
   <img src="https://img.shields.io/badge/Electron-45-47848f?logo=electron&logoColor=white" alt="Electron 45">
   <img src="https://img.shields.io/badge/data-local%20%26%20offline-6b8e76" alt="Datos locales, funcionamiento sin conexión">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-555" alt="Windows, Linux y macOS">
-  <a href="https://boosty.to/chetscmd"><img src="https://img.shields.io/badge/Boosty-Apoya%20al%20autor-orange" alt="Support on Boosty"></a>
+  <a href="https://boosty.to/chetscmd"><img src="https://img.shields.io/badge/Boosty-Apoyar%20al%20autor-orange" alt="Support on Boosty"></a>
 </p>
 
 <p align="center">
@@ -26,127 +26,128 @@
   <a href="https://boosty.to/chetscmd">Apoyar el proyecto</a>
 </p>
 
-<p align="center">
-  <a href="https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/es/ROADMAP.es.md">ROADMAP</a>
-</p>
-
 ---
 
 ## Qué es BIOMASHINE
 
 BIOMASHINE es un entorno operativo para el registro personal.
 
-La vida no se reduce a la salud. Es estado físico y psicológico, finanzas, actividad intelectual, observación del entorno — y mucho más. BIOMASHINE no prescribe qué exactamente hay que registrar ni cómo debería vivirse. El usuario elige por sí mismo qué registros necesita y qué significado tienen.
+La vida no se reduce a la salud. Es estado físico y psicológico, finanzas, actividad intelectual, observación del entorno — y mucho más. BIOMASHINE no prescribe qué debe registrarse ni cómo se debe vivir. El usuario elige qué registros necesita y qué significado tienen.
 
-Imagine una agenda-organizador de papel: tiene tapa, mecanismo de anillas, papel y separadores. Usted mismo inserta nuevas secciones, retira las innecesarias, reordena las páginas, crea las propias y anota en ellas lo que quiera. El fabricante del organizador no decide por usted qué debe haber en su diario.
+Imagine una agenda-organizador de papel: tiene cubierta, mecanismo de anillas, papel y separadores. Usted mismo inserta nuevas secciones, quita las innecesarias, reordena páginas, crea las propias y escribe en ellas lo que quiera. El fabricante del organizador no decide por usted qué debe haber en su diario.
 
 BIOMASHINE busca ofrecer la misma libertad en formato digital. La aplicación proporciona:
 
-- mecanismo de almacenamiento de datos;
-- mecanismo de visualización y procesamiento;
-- mecanismo de extensión con módulos de usuario;
-- interfaz de interacción;
-- sistema de gestión de módulos.
+- un mecanismo de almacenamiento de datos;
+- un mecanismo de visualización y procesamiento de esos datos;
+- un mecanismo de extensión con módulos de usuario;
+- una interfaz de interacción;
+- un sistema de gestión de módulos.
 
-Y el usuario define **qué exactamente registrar**.
+Y el usuario determina **qué registrar exactamente**.
+
+## Por qué BIOMASHINE
+
+- **Suyo.** Los datos no salen del ordenador. Sin telemetría, sin servicio de sincronización, sin registro.
+- **Personalizable hasta el píxel.** Nada está codificado de forma fija: ni la apariencia, ni los textos, ni los coeficientes. Idioma, colores, tamaños, fuentes, fórmulas y constantes están en ajustes y archivos de configuración que se pueden editar en la propia aplicación o manualmente.
+- **Modular.** Cada página es un módulo. Oculte lo que no necesite, añada lo suyo o describa la página que necesita a un asistente de IA y coloque el resultado en la carpeta de módulos.
+- **Abierto.** Software libre bajo licencia GPL.
 
 ## El usuario controla la aplicación
 
-La idea principal de BIOMASHINE es que **la persona controla el programa, y no el programa a la persona**. No es solo un conjunto listo de páginas que haya que usar «como está previsto». El usuario puede formar el entorno a su medida:
+La idea principal de BIOMASHINE es que **la persona controla el programa, no el programa a la persona**. No es solo un conjunto de páginas listo para usar «como se pretende». El usuario puede formar el entorno a su medida:
 
-- crear sus propios módulos para los tipos de registro que necesite;
-- conectar y ocultar módulos, gestionando la composición de la aplicación;
-- crear plugins y cambiar la apariencia de la interfaz — incluso desarrollar temas propios basados en el mecanismo de estilos y plugins;
-- traducir la interfaz a cualquier idioma: en la aplicación hay archivos de idioma y la posibilidad de añadir traducciones propias.
-
-Las secciones integradas son solo un punto de partida. Muestran cómo está organizado el entorno, pero no limitan su finalidad.
+- crear módulos propios para los tipos de registro que necesite;
+- activar y ocultar módulos, controlando la composición de la aplicación;
+- crear plugins y cambiar la apariencia de la interfaz, incluido el desarrollo de temas propios basados en el mecanismo de estilos y plugins;
+- traducir la interfaz a cualquier idioma: la aplicación incluye archivos de idioma y la posibilidad de añadir traducciones propias.
 
 ## Qué páginas básicas hay disponibles
 
-En la versión actual hay varios ejemplos listos de páginas:
+En la versión actual hay varias páginas de ejemplo ya preparadas:
 
 - **Peso** — mediciones y objetivos.
 - **Sueño** — diario de sueño y horario.
 - **Nutrición** — registros de comidas.
-- **KBJU (calorías, proteínas, grasas y carbohidratos)** — cálculo de referencias de calorías y macronutrientes a partir de los datos del perfil.
+- **Calorías y macros** — cálculo de objetivos de calorías y macronutrientes a partir de los datos del perfil.
 - **Carrera** — carreras, objetivos y estadísticas.
 - **Entrenamientos** — sesiones y plantillas de entrenamiento.
-- **Reacción** — prueba de velocidad de reacción e historial de resultados.
+- **Reacción** — test de velocidad de reacción e historial de resultados.
 
-[![Ejemplo de página para registrar el sueño:](media/sleep.png)](media/sleep.png)
+[![Ejemplo de una página para registrar el sueño:](media/sleep.png)](media/sleep.png)
 
-Esta no es una lista completa de lo que debería ser BIOMASHINE, ni una recomendación de llevar precisamente esos registros. La composición de la aplicación se puede y **se debe** cambiar y ampliar según las propias tareas.
-> Puede seguir el desarrollo del proyecto y la creación de nuevas páginas en la [hoja de ruta](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/es/ROADMAP.es.md)
+## Navegación
+
+- **Panel y hub de módulos.** Fije los módulos más necesarios en el panel superior; los demás esperan en el hub: una página de tarjetas con búsqueda, categorías y botones de fijación. ¿Prefiere un menú lateral? Cambie a una disposición vertical con categorías plegables.
+- **Salto rápido.** `Ctrl+P` (`Cmd+P` en macOS) abre cualquier módulo o sección de ajustes y funciona con cualquier distribución de teclado.
+- **Atajos propios.** Cualquier combinación se puede reasignar en los ajustes.
+- **Pantalla completa.** `F11` la activa, y los botones de control de la ventana quedan a mano.
+- **Restauración de sesión.** Al salir, la aplicación puede ofrecer recordar el módulo abierto, los valores de los campos y la posición de desplazamiento, y devolverle exactamente a esa pantalla en el siguiente inicio.
 
 # Función principal del programa
-**Arquitectura modular**. Usted mismo define qué quiere ver en BIOMASHINE.
+**Arquitectura modular**. Usted mismo determina qué quiere ver en BIOMASHINE.
 
-Si es desarrollador, tiene disponible la [documentación](https://github.com/chetsCMD/BIOMASHINE/blob/main/.github/README.es.md#documentación-para-desarrolladores-y-creadores-de-extensiones).
+Si es desarrollador, tiene disponible la [documentación](../.github/README.es.md#documentación).
 
-Pero si no sabe trabajar con código, no hay problema. Hay [documentación disponible para su agente de IA](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/es/ai). Entréguele el archivo y describa qué quiere ver, y él le guiará de forma totalmente autónoma desde la idea hasta un módulo terminado.
+Pero si no sabe trabajar con código, no hay problema. Hay [documentación disponible para su agente de IA](../docs/es/ai). Entréguele el archivo y describa lo que quiere ver, y le guiará de forma totalmente autónoma desde la idea hasta un módulo terminado.
 
-> [En el futuro](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/es/ROADMAP.es.md) está previsto añadir la creación de módulos a partir de bloques listos.
+## Hágalo a su medida
+
+- **Idiomas.** Integrados ruso, inglés, español y alemán. Exporte una plantilla de traducción en los ajustes, tradúzcala, coloque el archivo en la carpeta de idiomas y su idioma aparecerá en la lista.
+- **Diseño.** Temas claro y oscuro, y detrás un editor de diseño: cada color, tamaño, espaciado, radio, fuente y duración de animación es un token que se puede cambiar para toda la aplicación o para un módulo con vista previa en vivo. Escriba CSS propio para toda la aplicación o para un módulo, importe y exporte diseños listos y ordene los plugins como necesite.
+- **Editor de configuración.** Cambie cualquier configuración JSON (coeficientes, colores, límites) directamente en la aplicación. Los cambios se aplican de inmediato y solo se guardan sus diferencias respecto a los valores predeterminados.
+- **Zona horaria.** Elija en qué zona horaria se registran fechas y horas.
+- **Perfiles.** Mantenga varios espacios independientes, por ejemplo «vida real», «experimento» y «sandbox». Cada perfil tiene su propia base de datos; créelos, duplíquelos, renómbrelos, elimínelos y cámbielos en los ajustes.
 
 ## Principios
 
 - **El usuario establece las reglas.** La aplicación ayuda a recopilar y comprender información, pero no evalúa a la persona ni le impone objetivos.
-- **Los datos permanecen locales.** BIOMASHINE trabaja con una base SQLite en el dispositivo; no hacen falta una cuenta en la nube ni conexión a internet para llevar registros.
-- **Sistema personal, no servicio corporativo.** Es una herramienta «de personas a personas», creada para las tareas cotidianas de una persona concreta: el usuario.
-- **Libertad en lugar de un único escenario.** Las páginas listas son una base que el usuario puede complementar con sus propios módulos, temas y traducciones.
-- **Registro para uno mismo.** Los registros no sirven para demostrar algo a alguien. Su valor lo determina la propia persona.
+- **Los datos permanecen locales.** BIOMASHINE trabaja con una base de datos SQLite en el dispositivo; no se necesita una cuenta en la nube ni conexión a internet para llevar registros.
+- **Un sistema personal, no un servicio corporativo.** Es una herramienta «de personas a personas», creada para las tareas cotidianas de una persona concreta: el usuario.
+- **Libertad en lugar de un único escenario.** Las páginas listas son una base que el usuario puede complementar con módulos, temas y traducciones propios.
+- **Registro para uno mismo.** Los registros no existen para demostrar algo a alguien. Su valor lo determina la propia persona.
 
-## Descarga
+## Sus datos están seguros
 
-Las compilaciones listas se publican en la página [Releases](https://github.com/chetsCMD/BIOMASHINE/releases). La versión de escritorio se compila para Windows, Linux (AppImage) y macOS (`.zip`).
+- **Solo local.** Una base de datos SQLite por perfil, sin acceso a la red.
+- **Protección con contraseña.** Inicio de sesión y contraseña opcionales, almacenados como hash scrypt con sal.
+- **Papelera.** Deshaga las últimas diez operaciones directamente desde los ajustes.
+- **Exportación.** Guarde todo en JSON o CSV en cualquier momento.
+- **Notificaciones.** Los módulos pueden programar notificaciones del sistema, y usted puede desactivarlas para cada módulo.
+- **Aislamiento.** Cada módulo se ejecuta en su propio marco aislado y solo puede usar los canales declarados.
 
-### Windows: instalador y versión portátil
+## Descargar e instalar
 
-Para Windows hay tres formatos:
+Descargue la compilación más reciente en la [página de releases](https://github.com/chetsCMD/BIOMASHINE/releases).
 
-- **Instalador (NSIS, `BIOMASHINE-<versión>-setup.exe`)** — instalación normal para el usuario actual. Permite elegir la carpeta de instalación y crea un acceso directo en el escritorio. **Los datos de la aplicación se almacenan en `%APPDATA%\BIOMASHINE`** y no se eliminan al desinstalar el programa.
-- **Versión portátil (`.exe`)** — no requiere instalación. **Los datos se almacenan junto al archivo ejecutable del programa**, lo que permite llevar la aplicación en una unidad flash.
-- **Archivo ZIP** — contiene los mismos archivos que la versión portátil, para colocarlos manualmente.
+| Sistema | Archivo | Notas |
+|---|---|---|
+| Windows | `.exe` (portátil) o `.zip` | No hay que instalar nada. La versión portátil guarda los datos en la carpeta `BIOMASHINE-data` junto al programa, por lo que se puede llevar en una memoria USB. |
+| Linux | `.AppImage` | `chmod +x` y ejecutar. Requiere `libfuse2`. |
+| macOS | `.zip` | Sin firma: en el primer inicio, haga clic derecho en la aplicación y elija «Abrir». |
 
-La aplicación no requiere una cuenta en la nube. Como la base está localmente, al trasladarla a otro dispositivo hay que moverla por separado o usar la exportación de datos en los ajustes.
+## Compilar desde el código fuente
 
-## Ejecución desde el código fuente
+Requiere Node.js 22 o superior.
 
-Se requieren Node.js versión 22 o superior y npm.
+    npm install
+    npm start          # iniciar la aplicación
+    npm run dist       # compilar para el sistema operativo actual
 
-```bash
-npm install
-npm start
-```
+Los módulos nativos deben compilarse en el sistema operativo para el que se realiza la compilación. El repositorio incluye un flujo de trabajo funcional de GitHub Actions que compila paquetes para Windows, Linux y macOS.
 
-Preparar el distributivo para el sistema operativo actual:
+## Documentación
 
-```bash
-npm run dist
-```
+- [Mapa del proyecto: arquitectura, canales IPC, capa de datos](../docs/es/Developers/Project%20Map.md)
+- [Módulos: manifiesto, SDK, almacenamiento, diseño](../docs/es/Developers/Modules.md)
+- [Sistema de diseño: tokens, herramienta, editor](../docs/es/Developers/Design.md)
+- [Guía para asistentes de IA: creación de un módulo](../docs/es/ai/MODULE_GUIDE.md)
+- [Guía para asistentes de IA: creación de un plugin](../docs/es/ai/PLUGIN_GUIDE.md)
 
-Debe compilarse en el mismo sistema operativo para el que está destinado el distributivo: `better-sqlite3` contiene un módulo nativo. La preparación de los recursos de la aplicación se inicia automáticamente con los comandos `npm start` y `npm run dist`.
+## Apoyar el proyecto
 
-## Datos y seguridad
+BIOMASHINE es gratuito y lo crea una sola persona. Si le resulta útil, puede [apoyar al autor](https://boosty.to/chetscmd) o dar una estrella al repositorio.
 
-- En los ajustes se puede establecer un usuario y una contraseña para abrir el programa. No hay posibilidad de restablecer la contraseña si se pierde.
-- Los datos de la aplicación se almacenan localmente en una base SQLite en el directorio de datos de la aplicación. En la versión instalada de Windows, en `%APPDATA%\BIOMASHINE`; en la portátil, junto al programa.
-- En los ajustes están disponibles la exportación a JSON y CSV.
-- Las páginas de la aplicación funcionan como módulos. Los módulos de usuario y las configuraciones están previstos por la arquitectura del proyecto.
-- El almacenamiento local por sí mismo no es una copia de seguridad. Se recomienda guardar periódicamente la exportación y conservarla en un lugar seguro.
+## Licencia
 
-## Atajos de teclado
-
-- `Ctrl+P` (en macOS, `Cmd+P`) — salto rápido a una sección o a los ajustes.
-- `F11` — modo de pantalla completa.
-
-## Documentación para desarrolladores y creadores de extensiones
-
-- [`docs/Project Map.md`](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/es/Developers/Project%20Map.md) — estructura y mapa del proyecto.
-- [`docs/Modules.md`](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/es/Developers/Modules.md) — arquitectura de módulos y SDK interno.
-- [`docs/ai/`](https://github.com/chetsCMD/BIOMASHINE/tree/main/docs/es/ai) — guías y ejemplos para módulos, plugins y configuraciones.
-
-## Participación y comentarios
-
-¿Ha encontrado un error o quiere proponer una mejora? Cree un [issue](https://github.com/chetsCMD/BIOMASHINE/issues). Antes de enviarlo, compruebe si ya existe una discusión similar.
-El proyecto tiene la filosofía «De personas a personas», así que cree libremente actualizaciones y mejoras. También: sus propios módulos, temas, traducción a otros idiomas.
-La versión `1.0.0` es un ejemplo demostrativo de qué es este proyecto, no una versión final. Siga el desarrollo del proyecto/las ideas para ayudar a desarrollar el proyecto en la [ROADMAP](https://github.com/chetsCMD/BIOMASHINE/blob/main/docs/es/ROADMAP.es.md)
+BIOMASHINE es software libre bajo la GNU General Public License v3.0 con una condición adicional de atribución (sección 7b). El texto completo está en el archivo `LICENSE`.
