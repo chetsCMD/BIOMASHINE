@@ -1,40 +1,40 @@
 .kbju-card-main {
-  transition: opacity 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.4s ease;
-  animation: fadeUp 0.5s ease both;
+  transition: opacity var(--duration-400ms) var(--easing-1), transform var(--duration-400ms) ease;
+  animation: fadeUp var(--duration-500ms) ease both;
 }
-.kbju-card-main:nth-child(1) { animation-delay: 0.02s; }
+.kbju-card-main:nth-child(1) { animation-delay: var(--duration-20ms); }
 .kbju-card-main .bmr-block {
-  transition: transform 0.25s ease, box-shadow 0.2s ease;
+  transition: transform var(--duration-250ms) ease, box-shadow var(--duration-200ms) ease;
 }
 .kbju-card-main .bmr-block:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  transform: translateY(var(--distance-n2px));
+  box-shadow: var(--shadow-3);
 }
 .kbju-card-main .calorie-card {
-  transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  transition: all var(--duration-250ms) var(--easing-1);
   cursor: default;
 }
 .kbju-card-main .calorie-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(var(--distance-n3px));
   background: var(--s2);
   border-color: var(--tdd);
 }
 .kbju-card-main .nutrient-card {
-  transition: all 0.2s ease;
-  animation: fadeUp 0.45s ease both;
+  transition: all var(--duration-200ms) ease;
+  animation: fadeUp var(--duration-450ms) ease both;
 }
-.kbju-card-main .nutrient-card:nth-child(1) { animation-delay: 0.05s; }
-.kbju-card-main .nutrient-card:nth-child(2) { animation-delay: 0.12s; }
-.kbju-card-main .nutrient-card:nth-child(3) { animation-delay: 0.19s; }
+.kbju-card-main .nutrient-card:nth-child(1) { animation-delay: var(--duration-50ms); }
+.kbju-card-main .nutrient-card:nth-child(2) { animation-delay: var(--duration-120ms); }
+.kbju-card-main .nutrient-card:nth-child(3) { animation-delay: var(--duration-190ms); }
 .kbju-card-main .nutrient-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(var(--distance-n3px));
   background: var(--s1);
   border-color: var(--td);
 }
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(var(--distance-16px));
   }
   to {
     opacity: 1;
@@ -42,28 +42,28 @@
   }
 }
 .activity-pill {
-  transition: all 0.2s ease;
+  transition: all var(--duration-200ms) ease;
   background: var(--s3);
-  padding: 5px 12px;
-  border-radius: 40px;
+  padding: var(--space-5px) var(--space-12px);
+  border-radius: var(--radius-40px);
   display: inline-block;
 }
 .kbju-value-pulse {
-  transition: all 0.2s;
+  transition: all var(--duration-200ms);
 }
 
 .toggle-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-left: 20px;
+  gap: var(--space-12px);
+  margin-left: var(--space-20px);
 }
 .toggle-switch {
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 24px;
+  width: var(--size-44px);
+  height: var(--size-24px);
 }
 .toggle-switch input {
   opacity: 0;
@@ -78,19 +78,19 @@
   right: 0;
   bottom: 0;
   background-color: var(--s3);
-  border: 1px solid var(--br);
-  transition: 0.2s;
-  border-radius: 24px;
+  border: var(--border-1px) solid var(--br);
+  transition: var(--duration-200ms);
+  border-radius: var(--radius-24px);
 }
 .toggle-slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 2px;
-  bottom: 2px;
+  height: var(--size-18px);
+  width: var(--size-18px);
+  left: var(--space-2px);
+  bottom: var(--space-2px);
   background-color: var(--tdd);
-  transition: 0.2s;
+  transition: var(--duration-200ms);
   border-radius: 50%;
 }
 input:checked + .toggle-slider {
@@ -99,22 +99,22 @@ input:checked + .toggle-slider {
 }
 input:checked + .toggle-slider:before {
   background-color: var(--bg);
-  transform: translateX(20px);
+  transform: translateX(var(--distance-20px));
 }
 .info-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: var(--size-18px);
+  height: var(--size-18px);
   border-radius: 50%;
-  border: 1px solid var(--tdd);
+  border: var(--border-1px) solid var(--tdd);
   color: var(--tdd);
-  font-size: 10px;
+  font-size: var(--font-size-10px);
   font-weight: bold;
   cursor: help;
   background: var(--s2);
-  transition: all 0.2s ease;
+  transition: all var(--duration-200ms) ease;
   position: relative;
 }
 .info-icon:hover {
@@ -125,23 +125,23 @@ input:checked + .toggle-slider:before {
   visibility: hidden;
   opacity: 0;
   position: absolute;
-  top: 28px;
+  top: var(--space-28px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(var(--ratio-n50pct));
   background: var(--s1);
-  border: 1px solid var(--br);
-  border-radius: 8px;
-  padding: 10px 14px;
-  width: 260px;
-  font-size: 10px;
-  line-height: 1.5;
+  border: var(--border-1px) solid var(--br);
+  border-radius: var(--radius-8px);
+  padding: var(--space-10px) var(--space-14px);
+  width: var(--size-260px);
+  font-size: var(--font-size-10px);
+  line-height: var(--line-height-1p5);
   color: var(--td);
   text-align: center;
-  transition: opacity 0.2s, visibility 0.2s;
-  z-index: 200;
+  transition: opacity var(--duration-200ms), visibility var(--duration-200ms);
+  z-index: var(--z-200);
   pointer-events: none;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.3px;
+  font-family: var(--font-family-1);
+  letter-spacing: var(--tracking-0p3px);
 }
 .info-icon:hover .info-tooltip {
   visibility: visible;
@@ -151,53 +151,53 @@ input:checked + .toggle-slider:before {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin: 0 0 24px 0;
+  gap: var(--space-16px);
+  margin: 0 0 var(--space-24px) 0;
   flex-wrap: wrap;
 }
 .title-row h2 {
   margin: 0;
-  font-family: 'Playfair Display', serif;
-  font-size: 20px;
-  letter-spacing: 1px;
+  font-family: var(--font-family-2);
+  font-size: var(--font-size-20px);
+  letter-spacing: var(--tracking-1px);
   color: var(--wh);
 }
 
 .user-params-panel {
   background: var(--s2);
-  border-radius: 10px;
-  padding: 20px;
-  margin: 20px 0;
-  animation: fadeUp 0.5s ease both;
-  animation-delay: 0.04s;
+  border-radius: var(--radius-10px);
+  padding: var(--space-20px);
+  margin: var(--space-20px) 0;
+  animation: fadeUp var(--duration-500ms) ease both;
+  animation-delay: var(--duration-40ms);
 }
 .user-params-form {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: var(--space-16px);
   align-items: flex-end;
 }
 .param-field {
   flex: 1;
-  min-width: 120px;
+  min-width: var(--size-120px);
 }
 .param-field label {
   display: block;
-  font-size: 9px;
-  letter-spacing: 1.5px;
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-1p5px);
   text-transform: uppercase;
   color: var(--tdd);
-  margin-bottom: 6px;
+  margin-bottom: var(--space-6px);
 }
 .param-field input {
   width: 100%;
   background: var(--s1);
-  border: 1px solid var(--br);
+  border: var(--border-1px) solid var(--br);
   color: var(--t);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  padding: 10px 12px;
-  border-radius: 8px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-14px);
+  padding: var(--space-10px) var(--space-12px);
+  border-radius: var(--radius-8px);
   outline: none;
   box-sizing: border-box;
 }
@@ -208,60 +208,60 @@ input:checked + .toggle-slider:before {
   background: var(--wh);
   color: var(--bg);
   border: none;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-10px);
   font-weight: bold;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--tracking-1p5px);
   text-transform: uppercase;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: var(--space-10px) var(--space-20px);
+  border-radius: var(--radius-8px);
   cursor: pointer;
-  transition: all 0.2s;
-  height: 42px;
+  transition: all var(--duration-200ms);
+  height: var(--size-42px);
 }
 .save-params-btn:hover {
   background: var(--t);
-  transform: translateY(-1px);
+  transform: translateY(var(--distance-n1px));
 }
 .param-status {
-  margin-top: 12px;
-  font-size: 10px;
+  margin-top: var(--space-12px);
+  font-size: var(--font-size-10px);
   display: none;
 }
 .param-status.success {
-  color: #8bc34a;
+  color: var(--color-8bc34a);
 }
 .param-status.error {
-  color: #ff8888;
+  color: var(--color-ff8888);
 }
 
-.kbju-main-card { background: var(--s1); border: 1px solid var(--br); border-radius: 12px; padding: 28px; margin: 20px 0; }
-.kbju-panel { background: var(--s2); padding: 20px; border-radius: 10px; margin: 20px 0; animation: fadeUp 0.5s ease both; animation-delay: 0.06s; }
-.kbju-params-title { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--td); margin-bottom: 16px; }
-.kbju-tep-label { font-size: 11px; letter-spacing: 1px; color: var(--td); }
-.bmr-block { background: var(--s1); padding: 15px; border-radius: 8px; margin: 10px 0; text-align: center; transition: all 0.2s; }
-.bmr-title { font-size: 0.9em; font-weight: bold; opacity: 0.8; }
-.bmr-number { font-size: 2.2em; font-weight: bold; color: var(--wh); margin: 5px 0; }
-.bmr-hint { opacity: 0.6; font-size: 0.8em; }
-.kbju-heading { text-align: center; margin: 28px 0 16px 0; font-size: 13px; letter-spacing: 2px; opacity: 0.8; animation: fadeUp 0.5s ease both; }
-.kbju-heading.calories { animation-delay: 0.1s; }
-.kbju-heading.nutrients { animation-delay: 0.18s; }
-.calorie-box { padding: 20px; border: 1px solid var(--br); border-radius: 10px; background: var(--s2); margin: 15px 0; animation: fadeUp 0.5s ease both; animation-delay: 0.14s; }
-.activity-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; justify-content: center; }
-.activity-pill { font-weight: bold; font-size: 0.9em; letter-spacing: 1px; }
+.kbju-main-card { background: var(--s1); border: var(--border-1px) solid var(--br); border-radius: var(--radius-12px); padding: var(--space-28px); margin: var(--space-20px) 0; }
+.kbju-panel { background: var(--s2); padding: var(--space-20px); border-radius: var(--radius-10px); margin: var(--space-20px) 0; animation: fadeUp var(--duration-500ms) ease both; animation-delay: var(--duration-60ms); }
+.kbju-params-title { font-size: var(--font-size-9px); letter-spacing: var(--tracking-1p5px); text-transform: uppercase; color: var(--td); margin-bottom: var(--space-16px); }
+.kbju-tep-label { font-size: var(--font-size-11px); letter-spacing: var(--tracking-1px); color: var(--td); }
+.bmr-block { background: var(--s1); padding: var(--space-15px); border-radius: var(--radius-8px); margin: var(--space-10px) 0; text-align: center; transition: all var(--duration-200ms); }
+.bmr-title { font-size: var(--font-size-0p9em); font-weight: bold; opacity: var(--opacity-0p8); }
+.bmr-number { font-size: var(--font-size-2p2em); font-weight: bold; color: var(--wh); margin: var(--space-5px) 0; }
+.bmr-hint { opacity: var(--opacity-0p6); font-size: var(--font-size-0p8em); }
+.kbju-heading { text-align: center; margin: var(--space-28px) 0 var(--space-16px) 0; font-size: var(--font-size-13px); letter-spacing: var(--tracking-2px); opacity: var(--opacity-0p8); animation: fadeUp var(--duration-500ms) ease both; }
+.kbju-heading.calories { animation-delay: var(--duration-100ms); }
+.kbju-heading.nutrients { animation-delay: var(--duration-180ms); }
+.calorie-box { padding: var(--space-20px); border: var(--border-1px) solid var(--br); border-radius: var(--radius-10px); background: var(--s2); margin: var(--space-15px) 0; animation: fadeUp var(--duration-500ms) ease both; animation-delay: var(--duration-140ms); }
+.activity-row { display: flex; align-items: center; gap: var(--space-10px); margin-bottom: var(--space-18px); justify-content: center; }
+.activity-pill { font-weight: bold; font-size: var(--font-size-0p9em); letter-spacing: var(--tracking-1px); }
 .calorie-grid, .nutrient-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; text-align: center; }
-.calorie-grid { gap: 12px; }
-.nutrient-grid { gap: 15px; margin: 20px 0; }
-.calorie-card { padding: 14px; background: var(--s1); border-radius: 8px; border: 1px solid var(--br); }
-.calorie-label { font-size: 0.75em; opacity: 0.7; margin-bottom: 5px; }
-.calorie-number { font-size: 1.3em; font-weight: bold; color: var(--wh); }
-.calorie-unit { font-size: 0.7em; opacity: 0.6; }
-.nutrient-card { padding: 20px; border: 1px solid var(--br); border-radius: 10px; background: var(--s2); text-align: center; }
-.nutrient-icon { font-size: 2.2em; display: flex; justify-content: center; align-items: center; min-height: 1.2em; }
-.nutrient-name { font-weight: bold; font-size: 0.85em; margin: 10px 0; letter-spacing: 1px; }
-.nutrient-range { font-size: 1.4em; font-weight: bold; color: var(--wh); margin: 5px 0; }
-.nutrient-norm { opacity: 0.6; font-size: 0.7em; margin: 5px 0; }
-.nutrient-avg { background: var(--s3); padding: 4px 10px; border-radius: 20px; font-size: 0.7em; margin-top: 10px; display: inline-block; transition: background 0.2s; }
-.flag-pl { width: 20px; height: 15px; display: block; }
-.kbju-missing { display: none; margin: 16px 0; padding: 14px 16px; border: 1px dashed var(--br); border-radius: 8px; color: var(--td); font-size: 12px; line-height: 1.6; }
+.calorie-grid { gap: var(--space-12px); }
+.nutrient-grid { gap: var(--space-15px); margin: var(--space-20px) 0; }
+.calorie-card { padding: var(--space-14px); background: var(--s1); border-radius: var(--radius-8px); border: var(--border-1px) solid var(--br); }
+.calorie-label { font-size: var(--font-size-0p75em); opacity: var(--opacity-0p7); margin-bottom: var(--space-5px); }
+.calorie-number { font-size: var(--font-size-1p3em); font-weight: bold; color: var(--wh); }
+.calorie-unit { font-size: var(--font-size-0p7em); opacity: var(--opacity-0p6); }
+.nutrient-card { padding: var(--space-20px); border: var(--border-1px) solid var(--br); border-radius: var(--radius-10px); background: var(--s2); text-align: center; }
+.nutrient-icon { font-size: var(--font-size-2p2em); display: flex; justify-content: center; align-items: center; min-height: var(--size-1p2em); }
+.nutrient-name { font-weight: bold; font-size: var(--font-size-0p85em); margin: var(--space-10px) 0; letter-spacing: var(--tracking-1px); }
+.nutrient-range { font-size: var(--font-size-1p4em); font-weight: bold; color: var(--wh); margin: var(--space-5px) 0; }
+.nutrient-norm { opacity: var(--opacity-0p6); font-size: var(--font-size-0p7em); margin: var(--space-5px) 0; }
+.nutrient-avg { background: var(--s3); padding: var(--space-4px) var(--space-10px); border-radius: var(--radius-20px); font-size: var(--font-size-0p7em); margin-top: var(--space-10px); display: inline-block; transition: background var(--duration-200ms); }
+.flag-pl { width: var(--size-20px); height: var(--size-15px); display: block; }
+.kbju-missing { display: none; margin: var(--space-16px) 0; padding: var(--space-14px) var(--space-16px); border: var(--border-1px) dashed var(--br); border-radius: var(--radius-8px); color: var(--td); font-size: var(--font-size-12px); line-height: var(--line-height-1p6); }
 .kbju-missing.visible { display: block; }

@@ -1,0 +1,14 @@
+{
+  "theme.dark": "Dunkel",
+  "theme.light": "Hell",
+  "unit.ms": "ms",
+  "unit.g": "g",
+  "unit.kcal": "kcal",
+  "common.delete": "Löschen",
+  "common.cancel": "Abbrechen",
+  "common.save": "Speichern",
+  "achievement.marathon.name": "Marathon",
+  "achievement.marathon.description": "42 km 195 Meter zurücklegen",
+  "achievement.saratov_moscow.name": "Saratow — Moskau",
+  "achievement.saratov_moscow.description": "800 km zurücklegen"
+}

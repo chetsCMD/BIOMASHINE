@@ -208,6 +208,7 @@ All constants live in `config/*.json`.
 |---|---|
 | `app.json` | Window, protocol, start page, database file name, setting defaults, module rules, private configs, storage limits, authentication, IPC, shortcuts, portable mode, language list, time zone aliases, font subsets |
 | `themes.json` | Themes: CSS variables, chart colors, display title or title key |
+| `design.json` | Design tokens: every visual value of the interface (see [Design.md](Design.md)) |
 | `charts.json` | Chart series colors per module |
 | `health.json` | Default profile values (used on the first start only) |
 | `achievements.json` | Running achievements (`nameKey`, `descriptionKey`, `required`) |
@@ -297,3 +298,7 @@ electron-builder targets (`package.json` → `build`):
 - Every user-visible string, including errors and problem messages, comes from a dictionary. `AppError` carries a key and parameters, never a finished message.
 - The renderer never touches the database or the file system directly; everything goes through channels.
 - Every module folder has a `README.md` describing purpose, channels, configs, files and behavior.
+
+## 14. Design system
+
+Nothing visual is hard-coded: every style value is a token in `config/design.json`, generated into `bm://app/shared/design.css` by `DesignService`, and the user can override tokens or add custom CSS per application or per module. The `design:*` channels and the `npm run design` tool are described in [Design.md](Design.md).

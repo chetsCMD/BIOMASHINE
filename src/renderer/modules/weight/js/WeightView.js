@@ -85,7 +85,7 @@ export class WeightView {
                 badgeDiv.append(this.el('span', `hcard-badge ${c.badge.q}`, this.t(c.badge.labelKey)));
             } else {
                 badgeDiv = this.el('div');
-                badgeDiv.style.height = '24px';
+                badgeDiv.style.height = 'var(--size-24px)';
             }
 
             card.append(
@@ -106,13 +106,13 @@ export class WeightView {
 
         const createRow = (labelKey, valText, unitKey, isBold = false) => {
             const tr = this.el('tr');
-            if (isBold) tr.style.borderTop = '1px solid var(--br2)';
+            if (isBold) tr.style.borderTop = 'var(--border-1px) solid var(--br2)';
 
             const td1 = this.el('td', '', this.t(labelKey));
-            if (isBold) td1.style.paddingTop = '12px';
+            if (isBold) td1.style.paddingTop = 'var(--space-12px)';
 
             const td2 = this.el('td');
-            if (isBold) td2.style.paddingTop = '12px';
+            if (isBold) td2.style.paddingTop = 'var(--space-12px)';
 
             const span = this.el('span', 'cdelta zer', valText);
             td2.append(span, this.el('span', '', ` ${this.t(unitKey)}`));
@@ -131,7 +131,7 @@ export class WeightView {
                 const br = this.el('br');
                 const small = this.el('small', '', this.t('change.since', { date: calculator.formatDateToDisplay(ch.from) }));
                 small.style.color = 'var(--tdd)';
-                small.style.fontSize = '9px';
+                small.style.fontSize = 'var(--font-size-9px)';
                 td1.append(br, small);
             }
 
@@ -173,9 +173,9 @@ export class WeightView {
         const table = this.createChangeTable(ch, calculator);
         if (ch) {
             const dateInfo = this.el('div', '', `${calculator.formatDateToDisplay(ch.from)} — ${calculator.formatDateToDisplay(ch.to)}`);
-            dateInfo.style.fontSize = '9px';
+            dateInfo.style.fontSize = 'var(--font-size-9px)';
             dateInfo.style.color = 'var(--tdd)';
-            dateInfo.style.marginTop = '8px';
+            dateInfo.style.marginTop = 'var(--space-8px)';
             container.replaceChildren(table, dateInfo);
         } else {
             container.replaceChildren(table);

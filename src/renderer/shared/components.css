@@ -1,76 +1,76 @@
 .bm-page {
-  max-width: 960px;
+  max-width: var(--size-960px);
   margin: 0 auto;
-  padding: 32px 24px 48px;
+  padding: var(--space-32px) var(--space-24px) var(--space-48px);
 }
 .bm-title {
-  font-size: 9px;
-  letter-spacing: 3px;
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-3px);
   text-transform: uppercase;
   color: var(--tdd);
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin: 28px 0 16px;
+  gap: var(--space-14px);
+  margin: var(--space-28px) 0 var(--space-16px);
 }
-.bm-title::after { content: ''; flex: 1; height: 1px; background: var(--br); }
+.bm-title::after { content: ''; flex: 1; height: var(--size-1px); background: var(--br); }
 .bm-card {
   background: var(--s1);
-  border: 1px solid var(--br);
-  padding: 20px;
-  margin-bottom: 16px;
+  border: var(--border-1px) solid var(--br);
+  padding: var(--space-20px);
+  margin-bottom: var(--space-16px);
 }
-.bm-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bm-row { display: flex; align-items: center; gap: var(--space-12px); flex-wrap: wrap; }
 .bm-spacer { flex: 1; }
-.bm-muted { color: var(--tdd); font-size: 10px; }
+.bm-muted { color: var(--tdd); font-size: var(--font-size-10px); }
 .bm-label {
   display: block;
-  font-size: 9px;
-  letter-spacing: 2px;
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-2px);
   text-transform: uppercase;
   color: var(--tdd);
-  margin-bottom: 6px;
+  margin-bottom: var(--space-6px);
 }
 .bm-input {
   background: var(--s2);
-  border: 1px solid var(--br);
+  border: var(--border-1px) solid var(--br);
   color: var(--t);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  padding: 9px 11px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-12px);
+  padding: var(--space-9px) var(--space-11px);
   outline: none;
   min-width: 0;
 }
 .bm-input:focus { border-color: var(--td); }
 .bm-btn {
   background: var(--wh);
-  border: 1px solid var(--wh);
+  border: var(--border-1px) solid var(--wh);
   color: var(--bg);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 1.5px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-10px);
+  letter-spacing: var(--tracking-1p5px);
   text-transform: uppercase;
-  padding: 9px 16px;
+  padding: var(--space-9px) var(--space-16px);
   cursor: pointer;
 }
-.bm-btn:hover { opacity: 0.85; }
+.bm-btn:hover { opacity: var(--opacity-0p85); }
 .bm-btn.secondary { background: none; color: var(--td); border-color: var(--br); }
 .bm-btn.secondary:hover { color: var(--wh); border-color: var(--wh); opacity: 1; }
-.bm-btn.danger { background: none; color: #d66; border-color: #d66; }
+.bm-btn.danger { background: none; color: var(--color-d66); border-color: var(--color-d66); }
 .bm-list { display: flex; flex-direction: column; }
 .bm-list-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--br2);
-  font-size: 12px;
+  gap: var(--space-12px);
+  padding: var(--space-11px) 0;
+  border-bottom: var(--border-1px) solid var(--br2);
+  font-size: var(--font-size-12px);
 }
 .bm-list-item:last-child { border-bottom: none; }
-.bm-empty { color: var(--tdd); font-size: 11px; padding: 24px 0; text-align: center; }
-.bm-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-.bm-stat { background: var(--s2); border: 1px solid var(--br); padding: 14px 16px; }
-.bm-stat-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--tdd); margin-bottom: 8px; }
-.bm-stat-value { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--wh); line-height: 1; }
-.bm-chart { position: relative; height: 240px; }
+.bm-empty { color: var(--tdd); font-size: var(--font-size-11px); padding: var(--space-24px) 0; text-align: center; }
+.bm-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--size-150px), 1fr)); gap: var(--space-12px); }
+.bm-stat { background: var(--s2); border: var(--border-1px) solid var(--br); padding: var(--space-14px) var(--space-16px); }
+.bm-stat-label { font-size: var(--font-size-9px); letter-spacing: var(--tracking-2px); text-transform: uppercase; color: var(--tdd); margin-bottom: var(--space-8px); }
+.bm-stat-value { font-family: var(--font-family-2); font-size: var(--font-size-30px); color: var(--wh); line-height: var(--line-height-1); }
+.bm-chart { position: relative; height: var(--size-240px); }

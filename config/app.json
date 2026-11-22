@@ -149,6 +149,12 @@
         "name": "Español",
         "locale": "es-ES",
         "fallback": "en"
+      },
+      {
+        "code": "de",
+        "name": "Deutsch",
+        "locale": "de-DE",
+        "fallback": "en"
       }
     ],
     "codePattern": "^[a-z]{2,3}(-[A-Za-z0-9]{2,8})?$",
@@ -171,5 +177,23 @@
       "Pacific/Enderbury": "Pacific/Kanton",
       "Asia/Katmandu": "Asia/Kathmandu"
     }
+  },
+  "design": {
+    "virtualPath": "/shared/design.css"
+  },
+  "workspaces": {
+    "registryFile": "profiles.json",
+    "fileTemplate": "profile-{id}.sqlite",
+    "defaultId": "default",
+    "defaultNameKey": "workspace.default",
+    "maxNameLength": 60,
+    "idLength": 8,
+    "titleTemplate": "{app} - {name}"
+  },
+  "configEditor": {
+    "restartRequired": [
+      "app"
+    ],
+    "maxBytes": 500000
   }
 }

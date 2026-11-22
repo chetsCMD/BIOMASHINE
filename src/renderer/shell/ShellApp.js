@@ -1,5 +1,6 @@
 import { DomTranslator } from '../sdk/DomTranslator.js';
 import { Translator } from '../sdk/Translator.js';
+import { DesignRuntime } from './DesignRuntime.js';
 import { Dom } from './Dom.js';
 import { CommandPalette } from './CommandPalette.js';
 import { DialogService } from './DialogService.js';
@@ -77,6 +78,8 @@ export class ShellApp {
         this.plugins = new PluginStyles(this.document);
         await this.theme.load();
         this.theme.apply(this.settings.theme);
+        this.designRuntime = new DesignRuntime({ api: this.api, doc: this.document });
+        await this.designRuntime.load();
         this.dialogs = new DialogService(this.ui.dialogs, this.i18n);
         this.navigation = new Navigation(this.ui.nav, this.i18n);
         this.navigation.onReorder = (ids) => this.handleReorder(ids);
@@ -102,6 +105,7 @@ export class ShellApp {
             onModulesChanged: (list) => this.applyModules(list),
             onSecurityChanged: () => this.refreshStatus(),
             onLanguageChanged: () => this.changeLanguage(),
+            onDesignChanged: () => this.onDesignChanged(),
             onMenuLayoutChanged: (settings) => this.handleMenuLayoutChange(settings),
             onOpenHub: () => this.navigate(Navigation.HUB_ID)
         });
@@ -135,6 +139,14 @@ export class ShellApp {
     showWindowControls(fullscreen) {
         this.ui.windowControls.classList.toggle('hidden', !fullscreen);
         this.document.body.classList.toggle('is-fullscreen', fullscreen);
+    }
+
+    async onDesignChanged() {
+        await this.designRuntime.load();
+        const id = this.host && this.host.descriptor ? this.host.descriptor.id : null;
+        if (id) {
+            this.host.pushDesign(await this.designRuntime.forModule(id));
+        }
     }
 
     async changeLanguage() {
@@ -256,7 +268,7 @@ export class ShellApp {
     applyModules(list) {
         this.modules = list;
         this.pages = list.filter((module) => module.kind === 'page' && !module.hidden);
-        const pluginCss = list.filter((module) => module.kind === 'plugin' && !module.hidden).flatMap((module) => module.cssUrls);
+        const pluginCss = list.filter((module) => module.kind === 'plugin' && !module.hidden).sort((a, b) => (a.pluginOrder ?? 0) - (b.pluginOrder ?? 0)).flatMap((module) => module.cssUrls);
         this.host.setPluginCss(pluginCss);
         this.plugins.apply(pluginCss);
         this.navigation.render(this.pages, this.split.primaryId);

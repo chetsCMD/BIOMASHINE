@@ -25,6 +25,8 @@ const AssetResolver = require('./core/AssetResolver');
 const ExportService = require('./services/ExportService');
 const ThemeCatalog = require('./services/ThemeCatalog');
 const LocaleService = require('./services/LocaleService');
+const DesignService = require('./services/DesignService');
+const DesignController = require('./controllers/DesignController');
 const ClockService = require('./services/ClockService');
 const NotificationService = require('./services/NotificationService');
 const MessageService = require('./services/MessageService');
@@ -111,6 +113,7 @@ class Container {
             locales: this.locales,
             language: () => this.settingsService.getAll().language
         });
+        this.design = new DesignService({ config: this.config, catalog: this.themeCatalog, settings: this.settingsService, store: this.settingsRepository });
         this.moduleService = new ModuleService(this.registry, this.settingsRepository, protocol.scheme, this.locales, () => this.settingsService.getAll().language, this.config);
         this.notificationsRepository = notificationRepository;
         this.notifications = new NotificationService({
@@ -154,7 +157,8 @@ class Container {
             new AboutController(system, appVersion),
             new ShortcutController(this.shortcuts),
             new NotificationController(this.notifications),
-            new TrashController(this.operationLog)
+            new TrashController(this.operationLog),
+            new DesignController(this.design, this.registry)
         ].forEach((controller) => this.router.register(controller));
 
         this.notifications.start();

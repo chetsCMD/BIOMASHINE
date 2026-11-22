@@ -1,3 +1,5 @@
+import { DesignStyle } from '../sdk/DesignStyle.js';
+
 export class PluginStyles {
     static ATTRIBUTE = 'data-bm-plugin';
 
@@ -14,5 +16,6 @@ export class PluginStyles {
             link.setAttribute(PluginStyles.ATTRIBUTE, '');
             this.doc.head.append(link);
         }
+        DesignStyle.raise(this.doc);
     }
 }

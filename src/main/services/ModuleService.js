@@ -274,6 +274,33 @@ class ModuleService {
         this.settings.set(ModuleService.CATEGORY_OVERRIDES_KEY, overrides);
         return this.list();
     }
+
+    pluginOrder() {
+        const stored = this.settings.get('modules.pluginOrder');
+        return Array.isArray(stored) ? stored : [];
+    }
+
+    attachPluginOrder(list) {
+        const order = this.pluginOrder();
+        const rank = (id) => (order.includes(id) ? order.indexOf(id) : order.length);
+        const plugins = list.filter((module) => module.kind === 'plugin');
+        const sorted = [...plugins].sort((a, b) => rank(a.id) - rank(b.id) || plugins.indexOf(a) - plugins.indexOf(b));
+        return list.map((module) => (module.kind === 'plugin' ? { ...module, pluginOrder: sorted.findIndex((item) => item.id === module.id) } : module));
+    }
+
+    reorderPlugins(ids) {
+        const known = this.registry.all().filter((module) => module.kind === 'plugin').map((module) => module.id);
+        if (!Array.isArray(ids) || ids.some((id) => typeof id !== 'string' || !known.includes(id))) {
+            throw AppError.badRequest('plugin.invalidList');
+        }
+        const rest = known.filter((id) => !ids.includes(id));
+        this.settings.set('modules.pluginOrder', [...ids, ...rest]);
+        return this.list();
+    }
 }
 
 module.exports = ModuleService;
+const originalList = ModuleService.prototype.list;
+ModuleService.prototype.list = function list() {
+    return this.attachPluginOrder(originalList.call(this));
+};

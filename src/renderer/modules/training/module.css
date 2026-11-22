@@ -1,50 +1,36 @@
-:root {
-    --ok: #4caf50;
-    --ok-hover: #66bb6a;
-    --warn: #ffd93d;
-    --warn-hover: #ffe066;
-    --bad: #ff4444;
-    --bad-hover: #ff6666;
-    --bad-soft: #ff6b6b;
-    --good-soft: #6bcf7f;
-    --success-text: #8bc34a;
-    --error-text: #ff8888;
-    --overlay: rgba(0, 0, 0, 0.85);
-}
-
 .add-panel {
     background: var(--s1);
-    border: 1px solid var(--br);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 28px;
-    animation: fadeUp 0.4s ease both;
+    border: var(--border-1px) solid var(--br);
+    border-radius: var(--radius-12px);
+    padding: var(--space-20px) var(--space-24px);
+    margin-bottom: var(--space-28px);
+    animation: fadeUp var(--duration-400ms) ease both;
 }
 
 .add-panel-title {
-    font-size: 9px;
-    letter-spacing: 2.5px;
+    font-size: var(--font-size-9px);
+    letter-spacing: var(--tracking-2p5px);
     text-transform: uppercase;
     color: var(--td);
-    margin-bottom: 16px;
+    margin-bottom: var(--space-16px);
 }
 
 .add-form {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 12px;
+    gap: var(--space-12px);
     align-items: end;
 }
 
 .field-group {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--space-4px);
 }
 
 .field-group label {
-    font-size: 8px;
-    letter-spacing: 1.5px;
+    font-size: var(--font-size-8px);
+    letter-spacing: var(--tracking-1p5px);
     text-transform: uppercase;
     color: var(--tdd);
 }
@@ -52,12 +38,12 @@
 .field-group input,
 .field-group select {
     background: var(--s2);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    padding: 10px 12px;
-    border-radius: 8px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-12px);
+    padding: var(--space-10px) var(--space-12px);
+    border-radius: var(--radius-8px);
     outline: none;
     width: 100%;
 }
@@ -71,27 +57,27 @@
     background: var(--wh);
     color: var(--bg);
     border: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-9px);
     font-weight: bold;
-    letter-spacing: 1.5px;
+    letter-spacing: var(--tracking-1p5px);
     text-transform: uppercase;
-    padding: 10px 16px;
-    border-radius: 8px;
+    padding: var(--space-10px) var(--space-16px);
+    border-radius: var(--radius-8px);
     cursor: pointer;
-    transition: all 0.2s;
-    height: 40px;
+    transition: all var(--duration-200ms);
+    height: var(--size-40px);
     white-space: nowrap;
 }
 
 .btn:hover {
     background: var(--t);
-    transform: translateY(-1px);
+    transform: translateY(var(--distance-n1px));
 }
 
 .btn.secondary {
     background: var(--s2);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
 }
 
@@ -100,69 +86,69 @@
 }
 
 .btn.danger {
-    background: var(--bad);
-    color: #fff;
+    background: var(--training-bad);
+    color: var(--color-fff);
 }
 
 .btn.danger:hover {
-    background: var(--bad-hover);
+    background: var(--training-bad-hover);
 }
 
 .btn.success {
-    background: var(--ok);
-    color: #fff;
+    background: var(--training-ok);
+    color: var(--color-fff);
 }
 
 .btn.success:hover {
-    background: var(--ok-hover);
+    background: var(--training-ok-hover);
 }
 
 .btn.edit {
-    background: var(--warn);
-    color: #000;
+    background: var(--training-warn);
+    color: var(--color-000);
 }
 
 .btn.edit:hover {
-    background: var(--warn-hover);
+    background: var(--training-warn-hover);
 }
 
 .btn-sm {
-    height: 32px;
-    padding: 4px 12px;
-    font-size: 9px;
+    height: var(--size-32px);
+    padding: var(--space-4px) var(--space-12px);
+    font-size: var(--font-size-9px);
 }
 
 .btn-xs {
-    height: 28px;
-    padding: 2px 12px;
-    font-size: 9px;
+    height: var(--size-28px);
+    padding: var(--space-2px) var(--space-12px);
+    font-size: var(--font-size-9px);
 }
 
 .btn-icon {
-    height: 24px;
-    padding: 2px 8px;
+    height: var(--size-24px);
+    padding: var(--space-2px) var(--space-8px);
 }
 
 .exercise-row {
     display: grid;
     grid-template-columns: 1fr 0.5fr 0.5fr 0.5fr 0.5fr auto;
-    gap: 8px;
+    gap: var(--space-8px);
     align-items: center;
-    margin-top: 8px;
+    margin-top: var(--space-8px);
     background: var(--s2);
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--br);
+    padding: var(--space-8px) var(--space-12px);
+    border-radius: var(--radius-8px);
+    border: var(--border-1px) solid var(--br);
 }
 
 .exercise-row input {
     background: var(--s1);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 6px 8px;
-    border-radius: 6px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-11px);
+    padding: var(--space-6px) var(--space-8px);
+    border-radius: var(--radius-6px);
     outline: none;
     width: 100%;
 }
@@ -173,39 +159,39 @@
 
 .exercise-row .remove-exercise {
     background: none;
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--tdd);
-    padding: 2px 8px;
-    border-radius: 4px;
+    padding: var(--space-2px) var(--space-8px);
+    border-radius: var(--radius-4px);
     cursor: pointer;
-    font-size: 12px;
+    font-size: var(--font-size-12px);
 }
 
 .exercise-row .remove-exercise:hover {
-    border-color: var(--bad);
-    color: var(--bad);
+    border-color: var(--training-bad);
+    color: var(--training-bad);
 }
 
 .add-exercise-btn {
-    margin-top: 12px;
+    margin-top: var(--space-12px);
 }
 
 .template-selector {
-    margin: 12px 0;
+    margin: var(--space-12px) 0;
     display: flex;
-    gap: 12px;
+    gap: var(--space-12px);
     align-items: center;
     flex-wrap: wrap;
 }
 
 .template-selector select {
     background: var(--s2);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 6px 10px;
-    border-radius: 6px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-11px);
+    padding: var(--space-6px) var(--space-10px);
+    border-radius: var(--radius-6px);
     outline: none;
 }
 
@@ -214,92 +200,92 @@
 }
 
 .template-label {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--tdd);
-    letter-spacing: 1px;
+    letter-spacing: var(--tracking-1px);
 }
 
 .template-name-input {
     background: var(--s2);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    padding: 4px 8px;
-    border-radius: 6px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-10px);
+    padding: var(--space-4px) var(--space-8px);
+    border-radius: var(--radius-6px);
     outline: none;
-    width: 120px;
+    width: var(--size-120px);
 }
 
 .panel-title {
-    font-size: 9px;
-    letter-spacing: 2.5px;
+    font-size: var(--font-size-9px);
+    letter-spacing: var(--tracking-2p5px);
     text-transform: uppercase;
     color: var(--td);
-    margin-bottom: 16px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--br2);
+    margin-bottom: var(--space-16px);
+    padding-bottom: var(--space-8px);
+    border-bottom: var(--border-1px) solid var(--br2);
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: var(--space-12px);
 }
 
 .stat-card {
     background: var(--s2);
-    border-radius: 8px;
-    padding: 14px;
+    border-radius: var(--radius-8px);
+    padding: var(--space-14px);
     text-align: center;
 }
 
 .stat-card-label {
-    font-size: 8px;
-    letter-spacing: 1.5px;
+    font-size: var(--font-size-8px);
+    letter-spacing: var(--tracking-1p5px);
     text-transform: uppercase;
     color: var(--tdd);
 }
 
 .stat-card-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px;
+    font-family: var(--font-family-2);
+    font-size: var(--font-size-24px);
     color: var(--wh);
 }
 
 .stat-card-unit {
-    font-size: 12px;
+    font-size: var(--font-size-12px);
     color: var(--td);
 }
 
 .week-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    margin-bottom: 16px;
+    gap: var(--space-6px);
+    margin-bottom: var(--space-16px);
 }
 
 .week-day-header {
     text-align: center;
-    font-size: 8px;
-    letter-spacing: 1px;
+    font-size: var(--font-size-8px);
+    letter-spacing: var(--tracking-1px);
     text-transform: uppercase;
     color: var(--tdd);
-    padding: 4px;
+    padding: var(--space-4px);
 }
 
 .week-day {
     background: var(--s2);
-    border: 1px solid var(--br);
-    border-radius: 8px;
-    padding: 8px 4px;
+    border: var(--border-1px) solid var(--br);
+    border-radius: var(--radius-8px);
+    padding: var(--space-8px) var(--space-4px);
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s;
-    min-height: 60px;
+    transition: all var(--duration-200ms);
+    min-height: var(--size-60px);
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--space-2px);
     position: relative;
 }
 
@@ -312,7 +298,7 @@
 }
 
 .week-day.has-workout {
-    border-color: var(--good-soft);
+    border-color: var(--training-good-soft);
     background: var(--s3);
 }
 
@@ -321,39 +307,39 @@
 }
 
 .week-day-number {
-    font-size: 13px;
+    font-size: var(--font-size-13px);
     font-weight: bold;
     color: var(--wh);
 }
 
 .week-day-label {
-    font-size: 8px;
+    font-size: var(--font-size-8px);
     color: var(--tdd);
 }
 
 .week-day-count {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--td);
 }
 
 .week-day-goal-indicator {
-    width: 8px;
-    height: 8px;
+    width: var(--size-8px);
+    height: var(--size-8px);
     border-radius: 50%;
-    margin: 2px auto 0;
+    margin: var(--space-2px) auto 0;
     display: inline-block;
 }
 
 .week-day-goal-indicator.done {
-    background: var(--ok);
+    background: var(--training-ok);
 }
 
 .week-day-goal-indicator.partial {
-    background: var(--warn);
+    background: var(--training-warn);
 }
 
 .week-day-goal-indicator.fail {
-    background: var(--bad-soft);
+    background: var(--training-bad-soft);
 }
 
 .week-day-goal-indicator.none {
@@ -364,18 +350,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-16px);
 }
 
 .calendar-nav button {
     background: var(--s2);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--td);
-    padding: 4px 12px;
-    border-radius: 6px;
+    padding: var(--space-4px) var(--space-12px);
+    border-radius: var(--radius-6px);
     cursor: pointer;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-12px);
 }
 
 .calendar-nav button:hover {
@@ -384,28 +370,28 @@
 }
 
 .calendar-nav .month-label {
-    font-size: 14px;
-    font-family: 'Playfair Display', serif;
+    font-size: var(--font-size-14px);
+    font-family: var(--font-family-2);
     color: var(--wh);
 }
 
 .day-detail-block {
-    margin-top: 16px;
+    margin-top: var(--space-16px);
     background: var(--s2);
-    border: 1px solid var(--br);
-    border-radius: 8px;
-    padding: 16px;
+    border: var(--border-1px) solid var(--br);
+    border-radius: var(--radius-8px);
+    padding: var(--space-16px);
 }
 
 .day-detail-title {
-    font-size: 10px;
+    font-size: var(--font-size-10px);
     color: var(--td);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-12px);
 }
 
 .day-workout-item {
-    border-bottom: 1px solid var(--br2);
-    padding: 10px 0;
+    border-bottom: var(--border-1px) solid var(--br2);
+    padding: var(--space-10px) 0;
 }
 
 .day-workout-item:last-child {
@@ -417,76 +403,76 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-8px);
 }
 
 .day-workout-type {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--tdd);
     background: var(--s1);
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 1px solid var(--br);
+    padding: var(--space-2px) var(--space-8px);
+    border-radius: var(--radius-12px);
+    border: var(--border-1px) solid var(--br);
 }
 
 .day-workout-exercises {
-    font-size: 10px;
+    font-size: var(--font-size-10px);
     color: var(--td);
-    margin-top: 4px;
+    margin-top: var(--space-4px);
 }
 
 .day-workout-note {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--tdd);
-    margin-top: 4px;
+    margin-top: var(--space-4px);
 }
 
 .day-workout-actions {
     display: flex;
-    gap: 6px;
+    gap: var(--space-6px);
 }
 
 .day-goal-progress {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--br);
+    margin-top: var(--space-12px);
+    padding-top: var(--space-12px);
+    border-top: var(--border-1px) solid var(--br);
 }
 
 .day-goal-title {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--td);
-    margin-bottom: 6px;
+    margin-bottom: var(--space-6px);
 }
 
 .day-goal-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 0;
-    font-size: 10px;
+    padding: var(--space-4px) 0;
+    font-size: var(--font-size-10px);
     color: var(--td);
 }
 
 .day-goal-item .goal-status {
     font-weight: bold;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 9px;
+    padding: var(--space-2px) var(--space-8px);
+    border-radius: var(--radius-10px);
+    font-size: var(--font-size-9px);
 }
 
 .day-goal-item .goal-status.done {
-    background: var(--ok);
-    color: #fff;
+    background: var(--training-ok);
+    color: var(--color-fff);
 }
 
 .day-goal-item .goal-status.partial {
-    background: var(--warn);
-    color: #000;
+    background: var(--training-warn);
+    color: var(--color-000);
 }
 
 .day-goal-item .goal-status.fail {
-    background: var(--bad-soft);
-    color: #fff;
+    background: var(--training-bad-soft);
+    color: var(--color-fff);
 }
 
 .day-goal-item .goal-status.none {
@@ -495,58 +481,58 @@
 }
 
 .chart-wrap {
-    height: 150px;
+    height: var(--size-150px);
     position: relative;
 }
 
 .progress-container {
-    margin: 16px 0;
+    margin: var(--space-16px) 0;
 }
 
 .progress-bar {
-    height: 4px;
+    height: var(--size-4px);
     background: var(--s3);
-    border-radius: 2px;
+    border-radius: var(--radius-2px);
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
     background: var(--wh);
-    transition: width 0.3s;
+    transition: width var(--duration-300ms);
 }
 
 .progress-fill.done {
-    background: var(--ok);
+    background: var(--training-ok);
 }
 
 .progress-label {
     display: flex;
     justify-content: space-between;
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--td);
-    margin-top: 4px;
+    margin-top: var(--space-4px);
 }
 
 .progress-selectors {
     display: flex;
-    gap: 16px;
+    gap: var(--space-16px);
     flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: var(--space-16px);
 }
 
 .progress-select-lg {
-    min-width: 200px;
+    min-width: var(--size-200px);
 }
 
 .progress-select-sm {
-    min-width: 150px;
+    min-width: var(--size-150px);
 }
 
 .progress-stats {
-    margin-top: 12px;
-    font-size: 10px;
+    margin-top: var(--space-12px);
+    font-size: var(--font-size-10px);
     color: var(--td);
     text-align: center;
 }
@@ -554,84 +540,84 @@
 .goals-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--space-16px);
 }
 
 .goal-item {
     background: var(--s2);
-    border-radius: 8px;
-    padding: 12px 16px;
+    border-radius: var(--radius-8px);
+    padding: var(--space-12px) var(--space-16px);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-8px);
 }
 
 .goal-item .goal-name {
-    font-size: 11px;
+    font-size: var(--font-size-11px);
     color: var(--t);
-    min-width: 120px;
+    min-width: var(--size-120px);
 }
 
 .goal-item .goal-progress-wrap {
     flex: 1;
-    min-width: 200px;
+    min-width: var(--size-200px);
 }
 
 .goal-item .goal-progress-bar {
-    height: 4px;
+    height: var(--size-4px);
     background: var(--s3);
-    border-radius: 2px;
+    border-radius: var(--radius-2px);
     overflow: hidden;
 }
 
 .goal-item .goal-progress-fill {
     height: 100%;
-    transition: width 0.3s;
+    transition: width var(--duration-300ms);
 }
 
 .goal-item .goal-progress-fill.done {
-    background: var(--ok);
+    background: var(--training-ok);
 }
 
 .goal-item .goal-progress-fill.partial {
-    background: var(--warn);
+    background: var(--training-warn);
 }
 
 .goal-item .goal-progress-fill.low {
-    background: var(--bad-soft);
+    background: var(--training-bad-soft);
 }
 
 .goal-item .goal-label {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--td);
     display: flex;
     justify-content: space-between;
-    margin-top: 2px;
+    margin-top: var(--space-2px);
 }
 
 .goal-item .goal-status {
-    font-size: 10px;
+    font-size: var(--font-size-10px);
     font-weight: bold;
-    padding: 2px 10px;
-    border-radius: 12px;
+    padding: var(--space-2px) var(--space-10px);
+    border-radius: var(--radius-12px);
     white-space: nowrap;
 }
 
 .goal-status.done {
-    background: var(--ok);
-    color: #fff;
+    background: var(--training-ok);
+    color: var(--color-fff);
 }
 
 .goal-status.partial {
-    background: var(--warn);
-    color: #000;
+    background: var(--training-warn);
+    color: var(--color-000);
 }
 
 .goal-status.low {
-    background: var(--bad-soft);
-    color: #fff;
+    background: var(--training-bad-soft);
+    color: var(--color-fff);
 }
 
 .goal-status.zero {
@@ -641,29 +627,29 @@
 
 .goal-form {
     display: flex;
-    gap: 12px;
+    gap: var(--space-12px);
     align-items: flex-end;
     flex-wrap: wrap;
     background: var(--s2);
-    padding: 12px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--br);
+    padding: var(--space-12px) var(--space-16px);
+    border-radius: var(--radius-8px);
+    border: var(--border-1px) solid var(--br);
 }
 
 .goal-form .field-group {
     flex: 1;
-    min-width: 120px;
+    min-width: var(--size-120px);
 }
 
 .goal-form .field-group input,
 .goal-form .field-group select {
     background: var(--s1);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 6px 10px;
-    border-radius: 6px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-11px);
+    padding: var(--space-6px) var(--space-10px);
+    border-radius: var(--radius-6px);
     outline: none;
     width: 100%;
 }
@@ -674,58 +660,58 @@
 }
 
 .goal-form .btn {
-    height: 34px;
-    padding: 4px 16px;
-    font-size: 9px;
+    height: var(--size-34px);
+    padding: var(--space-4px) var(--space-16px);
+    font-size: var(--font-size-9px);
 }
 
 .weekly-target-input {
-    width: 60px;
+    width: var(--size-60px);
     background: var(--s2);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: var(--space-4px) var(--space-8px);
+    border-radius: var(--radius-6px);
 }
 
 .weekly-goal-row {
     display: flex;
-    gap: 12px;
+    gap: var(--space-12px);
     align-items: center;
 }
 
 .daily-goal-title {
-    font-size: 9px;
-    letter-spacing: 1.5px;
+    font-size: var(--font-size-9px);
+    letter-spacing: var(--tracking-1p5px);
     text-transform: uppercase;
     color: var(--td);
-    margin-bottom: 12px;
+    margin-bottom: var(--space-12px);
 }
 
 .exercise-goals-list {
-    margin-top: 12px;
+    margin-top: var(--space-12px);
 }
 
 .goals-empty {
-    padding: 10px 0;
+    padding: var(--space-10px) 0;
 }
 
 .filter-row {
     display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: var(--space-12px);
+    margin-bottom: var(--space-16px);
     flex-wrap: wrap;
 }
 
 .filter-row select,
 .filter-row input {
     background: var(--s2);
-    border: 1px solid var(--br);
+    border: var(--border-1px) solid var(--br);
     color: var(--t);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    padding: 6px 10px;
-    border-radius: 6px;
+    font-family: var(--font-family-1);
+    font-size: var(--font-size-10px);
+    padding: var(--space-6px) var(--space-10px);
+    border-radius: var(--radius-6px);
     outline: none;
 }
 
@@ -735,72 +721,72 @@
 }
 
 .history-list {
-    max-height: 400px;
+    max-height: var(--size-400px);
     overflow-y: auto;
 }
 
 .history-item {
     background: var(--s2);
-    border: 1px solid var(--br);
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 8px;
+    border: var(--border-1px) solid var(--br);
+    border-radius: var(--radius-8px);
+    padding: var(--space-12px);
+    margin-bottom: var(--space-8px);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-8px);
 }
 
 .history-item-info {
     display: flex;
-    gap: 16px;
+    gap: var(--space-16px);
     flex-wrap: wrap;
     flex: 1;
 }
 
 .history-item-date {
-    font-size: 10px;
+    font-size: var(--font-size-10px);
     color: var(--td);
 }
 
 .history-item-type {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--tdd);
     background: var(--s1);
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 1px solid var(--br);
+    padding: var(--space-2px) var(--space-8px);
+    border-radius: var(--radius-12px);
+    border: var(--border-1px) solid var(--br);
 }
 
 .history-item-exercises {
-    font-size: 10px;
+    font-size: var(--font-size-10px);
     color: var(--td);
 }
 
 .history-item-note {
-    font-size: 9px;
+    font-size: var(--font-size-9px);
     color: var(--tdd);
 }
 
 .history-item-actions {
     display: flex;
-    gap: 6px;
+    gap: var(--space-6px);
 }
 
 .delete-btn {
-    background: var(--bad);
-    color: #fff;
+    background: var(--training-bad);
+    color: var(--color-fff);
     border: none;
-    padding: 4px 10px;
-    border-radius: 4px;
+    padding: var(--space-4px) var(--space-10px);
+    border-radius: var(--radius-4px);
     cursor: pointer;
-    font-size: 9px;
-    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--font-size-9px);
+    font-family: var(--font-family-1);
 }
 
 .delete-btn:hover {
-    background: var(--bad-hover);
+    background: var(--training-bad-hover);
 }
 
 .modal-overlay {
@@ -810,8 +796,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--overlay);
-    z-index: 1000;
+    background: var(--training-overlay);
+    z-index: var(--z-1000);
     justify-content: center;
     align-items: center;
 }
@@ -822,20 +808,20 @@
 
 .modal-content {
     background: var(--s1);
-    border: 1px solid var(--br);
-    border-radius: 12px;
-    padding: 28px;
-    max-width: 800px;
-    width: 90%;
-    max-height: 90vh;
+    border: var(--border-1px) solid var(--br);
+    border-radius: var(--radius-12px);
+    padding: var(--space-28px);
+    max-width: var(--size-800px);
+    width: var(--ratio-90pct);
+    max-height: var(--viewport-90vh);
     overflow-y: auto;
 }
 
 .modal-title {
-    font-size: 14px;
-    font-family: 'Playfair Display', serif;
+    font-size: var(--font-size-14px);
+    font-family: var(--font-family-2);
     color: var(--wh);
-    margin-bottom: 20px;
+    margin-bottom: var(--space-20px);
 }
 
 .modal-close {
@@ -843,7 +829,7 @@
     background: none;
     border: none;
     color: var(--tdd);
-    font-size: 24px;
+    font-size: var(--font-size-24px);
     cursor: pointer;
 }
 
@@ -852,8 +838,8 @@
 }
 
 .status-box {
-    margin-top: 8px;
-    font-size: 10px;
+    margin-top: var(--space-8px);
+    font-size: var(--font-size-10px);
     display: none;
 }
 
@@ -862,14 +848,14 @@
 }
 
 .status-box.success {
-    color: var(--success-text);
+    color: var(--training-success-text);
 }
 
 .status-box.error {
-    color: var(--error-text);
+    color: var(--training-error-text);
 }
 
-@media (max-width: 900px) {
+@media (max-width: $breakpoint-900px) {
     .add-form {
         grid-template-columns: 1fr 1fr;
     }
@@ -877,11 +863,11 @@
         grid-template-columns: 1fr 1fr;
     }
     .week-grid {
-        gap: 4px;
+        gap: var(--space-4px);
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $breakpoint-600px) {
     .exercise-row {
         grid-template-columns: 1fr 1fr;
     }

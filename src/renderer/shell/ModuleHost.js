@@ -36,6 +36,12 @@ export class ModuleHost {
         return this.view.removePane(role);
     }
 
+    pushDesign(design) {
+        if (this.bridge) {
+            this.bridge.pushDesign(design);
+        }
+    }
+
     close() {
         this.view.close();
     }

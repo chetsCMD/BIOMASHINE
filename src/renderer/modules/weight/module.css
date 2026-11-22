@@ -1,68 +1,61 @@
-:root {
-  --danger: #ff4444;
-  --danger-hover: #ff6666;
-  --ok: #8bc34a;
-  --bad: #ff8888;
-}
-
 .req {
-  color: var(--danger);
+  color: var(--weight-danger);
 }
 
 .btn-danger {
-  background: var(--danger) !important;
-  color: white !important;
+  background: var(--weight-danger) !important;
+  color: var(--color-white) !important;
 }
 .btn-danger:hover {
-  background: var(--danger-hover) !important;
+  background: var(--weight-danger-hover) !important;
 }
 
 .add-data-panel {
   background: var(--s1);
-  border: 1px solid var(--br);
-  border-radius: 12px;
-  padding: 20px 24px;
-  margin-bottom: 28px;
-  animation: fadeUp 0.4s ease both;
+  border: var(--border-1px) solid var(--br);
+  border-radius: var(--radius-12px);
+  padding: var(--space-20px) var(--space-24px);
+  margin-bottom: var(--space-28px);
+  animation: fadeUp var(--duration-400ms) ease both;
 }
 .add-data-title {
-  font-size: 9px;
-  letter-spacing: 2.5px;
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-2p5px);
   text-transform: uppercase;
   color: var(--td);
-  margin-bottom: 16px;
+  margin-bottom: var(--space-16px);
 }
 .add-data-form {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: var(--space-16px);
   align-items: flex-end;
 }
 .add-data-field {
   flex: 1;
-  min-width: 120px;
+  min-width: var(--size-120px);
 }
 .add-data-field label {
   display: block;
-  font-size: 9px;
-  letter-spacing: 1.5px;
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-1p5px);
   text-transform: uppercase;
   color: var(--tdd);
-  margin-bottom: 6px;
+  margin-bottom: var(--space-6px);
 }
 .add-data-field label .optional {
   color: var(--tddd);
-  font-size: 8px;
+  font-size: var(--font-size-8px);
 }
 .add-data-field input {
   width: 100%;
   background: var(--s2);
-  border: 1px solid var(--br);
+  border: var(--border-1px) solid var(--br);
   color: var(--t);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 14px;
-  padding: 10px 12px;
-  border-radius: 8px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-14px);
+  padding: var(--space-10px) var(--space-12px);
+  border-radius: var(--radius-8px);
   outline: none;
   box-sizing: border-box;
 }
@@ -76,32 +69,32 @@
   background: var(--wh);
   color: var(--bg);
   border: none;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-10px);
   font-weight: bold;
-  letter-spacing: 1.5px;
+  letter-spacing: var(--tracking-1p5px);
   text-transform: uppercase;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: var(--space-10px) var(--space-20px);
+  border-radius: var(--radius-8px);
   cursor: pointer;
-  transition: all 0.2s;
-  height: 42px;
+  transition: all var(--duration-200ms);
+  height: var(--size-42px);
 }
 .add-data-btn:hover {
   background: var(--t);
-  transform: translateY(-1px);
+  transform: translateY(var(--distance-n1px));
 }
 .add-data-status {
-  margin-top: 12px;
-  font-size: 10px;
+  margin-top: var(--space-12px);
+  font-size: var(--font-size-10px);
   color: var(--tdd);
   display: none;
 }
 .add-data-status.success {
-  color: var(--ok);
+  color: var(--weight-ok);
 }
 .add-data-status.error {
-  color: var(--bad);
+  color: var(--weight-bad);
 }
 .delete-modal {
   display: none;
@@ -110,8 +103,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.9);
-  z-index: 1000;
+  background: var(--color-rgba-0-0-0-0p9);
+  z-index: var(--z-1000);
   justify-content: center;
   align-items: center;
 }
@@ -120,19 +113,19 @@
 }
 .delete-modal-content {
   background: var(--s1);
-  border: 1px solid var(--br);
-  border-radius: 12px;
-  max-width: 800px;
-  width: 90%;
-  max-height: 80vh;
+  border: var(--border-1px) solid var(--br);
+  border-radius: var(--radius-12px);
+  max-width: var(--size-800px);
+  width: var(--ratio-90pct);
+  max-height: var(--viewport-80vh);
   overflow: auto;
-  padding: 24px;
+  padding: var(--space-24px);
 }
 .delete-modal-title {
-  font-size: 16px;
-  font-family: 'Playfair Display', serif;
+  font-size: var(--font-size-16px);
+  font-family: var(--font-family-2);
   color: var(--wh);
-  margin-bottom: 20px;
+  margin-bottom: var(--space-20px);
 }
 .delete-table {
   width: 100%;
@@ -140,83 +133,83 @@
 }
 .delete-table th {
   text-align: left;
-  padding: 12px 8px;
-  font-size: 9px;
-  letter-spacing: 1.5px;
+  padding: var(--space-12px) var(--space-8px);
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-1p5px);
   text-transform: uppercase;
   color: var(--td);
-  border-bottom: 1px solid var(--br);
+  border-bottom: var(--border-1px) solid var(--br);
 }
 .delete-table td {
-  padding: 12px 8px;
-  font-size: 12px;
-  border-bottom: 1px solid var(--br2);
+  padding: var(--space-12px) var(--space-8px);
+  font-size: var(--font-size-12px);
+  border-bottom: var(--border-1px) solid var(--br2);
 }
 .delete-row-btn {
-  background: var(--danger);
-  color: white;
+  background: var(--weight-danger);
+  color: var(--color-white);
   border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: var(--space-6px) var(--space-12px);
+  border-radius: var(--radius-6px);
   cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-10px);
 }
 .delete-row-btn:hover {
-  background: var(--danger-hover);
+  background: var(--weight-danger-hover);
 }
 .close-modal-btn {
-  margin-top: 20px;
+  margin-top: var(--space-20px);
   background: var(--s2);
-  border: 1px solid var(--br);
+  border: var(--border-1px) solid var(--br);
   color: var(--t);
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: var(--space-8px) var(--space-16px);
+  border-radius: var(--radius-6px);
   cursor: pointer;
 }
 .goal-input-panel {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--br);
+  margin-top: var(--space-20px);
+  padding-top: var(--space-20px);
+  border-top: var(--border-1px) solid var(--br);
 }
 .goal-input-title {
-  font-size: 9px;
-  letter-spacing: 2.5px;
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-2p5px);
   text-transform: uppercase;
   color: var(--td);
-  margin-bottom: 16px;
+  margin-bottom: var(--space-16px);
 }
 .goal-input-form {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: var(--space-16px);
   align-items: flex-end;
 }
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(var(--distance-12px)); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .period-selector {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 12px 0 20px;
+  gap: var(--space-16px);
+  margin: var(--space-12px) 0 var(--space-20px);
   flex-wrap: wrap;
 }
 .period-selector label {
-  font-size: 9px;
-  letter-spacing: 1.5px;
+  font-size: var(--font-size-9px);
+  letter-spacing: var(--tracking-1p5px);
   text-transform: uppercase;
   color: var(--tdd);
 }
 .period-selector select {
   background: var(--s2);
-  border: 1px solid var(--br);
+  border: var(--border-1px) solid var(--br);
   color: var(--t);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  padding: 6px 12px;
-  border-radius: 6px;
+  font-family: var(--font-family-1);
+  font-size: var(--font-size-11px);
+  padding: var(--space-6px) var(--space-12px);
+  border-radius: var(--radius-6px);
   outline: none;
 }
 .period-selector select:focus {

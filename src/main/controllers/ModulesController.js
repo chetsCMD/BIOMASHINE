@@ -27,6 +27,7 @@ class ModulesController extends BaseController {
     routes() {
         return {
             list: () => this.modules.list(),
+            reorderPlugins: ({ ids }) => this.modules.reorderPlugins(ids),
             errors: () => this.translateProblems(this.modules.errors()),
             rescan: () => this.modules.rescan(),
             openFolder: () => this.system.openFolder(this.userDirectory),

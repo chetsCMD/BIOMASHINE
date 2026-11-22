@@ -66,7 +66,7 @@ class Application {
     start() {
         Menu.setApplicationMenu(null);
         const container = this.container;
-        new ProtocolHandler(container.config.get('app.protocol.scheme'), container.assets).attach();
+        new ProtocolHandler(container.config.get('app.protocol.scheme'), container.assets, container.design, container.config.get('app.protocol.appHost'), container.config.get('app.design.virtualPath')).attach();
         this.windows = new WindowManager({
             config: container.config,
             settings: container.settingsRepository,

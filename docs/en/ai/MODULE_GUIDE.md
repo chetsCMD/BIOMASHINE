@@ -207,6 +207,8 @@ The UI kit from `components.css`. Prefer it over custom CSS:
 
 Custom CSS is fine for anything the kit lacks. Put it in `module.css` in the module folder and link it after `components.css`.
 
+Two different cases exist. Code of the project itself never hard-codes a visual value: it uses design tokens. A module that you write for a user is the user's own content: use the variables above by default, and any literal values or custom CSS whenever the user asks for them. Users can also override every design token and add custom CSS from Settings, Design, without touching the module.
+
 ## 11. Charts
 
 Chart.js 3.8.0 is available as `window.Chart` when `index.html` contains `<script src="bm://app/vendor/chart.min.js"></script>`. Pass `window.Chart` into your class constructor, as in the example. Take axis colors from `bm.theme.chart` and the data color from `getComputedStyle(document.documentElement).getPropertyValue('--wh')`. Put the canvas inside `.bm-chart`. When the theme changes (`bm.onTheme`), call `chart.destroy()` and build the chart again.

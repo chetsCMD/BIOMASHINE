@@ -55,7 +55,7 @@ export class ModuleBridge {
             return;
         }
         if (message.type === MessageType.HELLO) {
-            this.send({ type: MessageType.INIT, theme: this.theme.current(), cssUrls: this.pluginCss, i18n: await this.bundle(), timezone: await this.timezone() });
+            this.send({ type: MessageType.INIT, theme: this.theme.current(), cssUrls: this.pluginCss, i18n: await this.bundle(), timezone: await this.timezone(), design: await this.design() });
         } else if (message.type === MessageType.PILLS) {
             this.onPills(Array.isArray(message.items) ? message.items.map(String) : []);
         } else if (message.type === MessageType.CRASH) {
@@ -71,6 +71,22 @@ export class ModuleBridge {
         } catch (error) {
             return 'system';
         }
+    }
+
+    async design() {
+        try {
+            const [tokens, css] = await Promise.all([
+                this.api.invoke('design:get', { module: this.moduleId }),
+                this.api.invoke('design:getCss', { module: this.moduleId })
+            ]);
+            return { tokens: tokens.effective || {}, customCss: css.effective || '' };
+        } catch (error) {
+            return { tokens: {}, customCss: '' };
+        }
+    }
+
+    pushDesign(design) {
+        this.send({ type: MessageType.DESIGN, tokens: design.tokens, customCss: design.customCss });
     }
 
     async bundle() {

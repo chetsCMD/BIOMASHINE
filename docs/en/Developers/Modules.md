@@ -190,3 +190,7 @@ bm.ready.then(() => new MyModule(bm, document).start());
 7. Describe the module in its `README.md`: purpose, channels, configs, files, behavior.
 
 Step-by-step guides written for AI assistants live in [docs/en/ai](../ai): `MODULE_GUIDE.md` for pages and `PLUGIN_GUIDE.md` for plugins.
+
+## 11. Design tokens and your own styles
+
+The project's own style sheets contain no literal visual values, only `var(--token)` (see [Design.md](Design.md)). A module of the project follows that rule and defines its palette as tokens prefixed with its id in `config/design.json`. Users can override any token, for the whole application or for one module, and can add custom CSS for either scope in Settings, Design; this is applied after plugins and always wins. Content written by or for a user is not restricted by the rule: any values are fine if the user asks for them.

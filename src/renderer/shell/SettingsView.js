@@ -1,15 +1,18 @@
+import { DesignEditor } from './DesignEditor.js';
 import { Dom } from './Dom.js';
 import { TextSearch } from './TextSearch.js';
 import { ShortcutEditor } from './ShortcutEditor.js';
 import { TrashView } from './TrashView.js';
 
 export class SettingsView {
-    constructor({ root, api, theme, dialogs, i18n, onModulesChanged, onSecurityChanged, onLanguageChanged, onMenuLayoutChanged, onOpenHub }) {
+    constructor({ root, api, theme, dialogs, i18n, onModulesChanged, onSecurityChanged, onLanguageChanged, onMenuLayoutChanged, onOpenHub, onDesignChanged }) {
         this.root = root;
         this.api = api;
         this.theme = theme;
         this.dialogs = dialogs;
         this.i18n = i18n;
+        this.onDesignChanged = onDesignChanged || (async () => {});
+        this.design = new DesignEditor({ api, i18n, dialogs, onChange: () => this.onDesignChanged() });
         this.onModulesChanged = onModulesChanged;
         this.onSecurityChanged = onSecurityChanged;
         this.onLanguageChanged = onLanguageChanged;
@@ -59,6 +62,8 @@ export class SettingsView {
                 this.exports(),
                 section('settings.section.trash'),
                 this.trash(),
+                section('settings.section.design'),
+                this.design.render(modules),
                 section('settings.section.security'),
                 this.security(status),
                 section('settings.section.about'),
@@ -120,7 +125,7 @@ export class SettingsView {
             onclick: async () => this.openResult(status, await this.api.invoke('config:openFolder'), (path) => this.t('settings.configChanges', { path }))
         });
         const errors = configErrors.map((error) => Dom.el('div', { class: 'form-error', text: this.t('settings.configError', { file: error.file, message: error.message }) }));
-        const pluginRows = plugins.map((plugin) => this.moduleRow(plugin, true));
+        const pluginRows = this.orderedPlugins(plugins).map((plugin, index, all) => this.pluginRow(plugin, index, all));
         return this.card([
             this.row(this.t('settings.theme'), themeSelect),
             this.row(this.t('settings.menuLayout'), layoutSelect, this.t('settings.menuLayout.hint')),
@@ -302,6 +307,31 @@ export class SettingsView {
             }
         }
         return this.card([rows]);
+    }
+
+    orderedPlugins(plugins) {
+        return [...plugins].sort((a, b) => (a.pluginOrder ?? 0) - (b.pluginOrder ?? 0));
+    }
+
+    pluginRow(plugin, index, all) {
+        const row = this.moduleRow(plugin, true);
+        const move = (offset) => async () => {
+            const ids = all.map((item) => item.id);
+            const target = index + offset;
+            if (target < 0 || target >= ids.length) {
+                return;
+            }
+            [ids[index], ids[target]] = [ids[target], ids[index]];
+            this.onModulesChanged(await this.api.invoke('modules:reorderPlugins', { ids }));
+            await this.render();
+        };
+        row.append(
+            Dom.el('div', { class: 'settings-actions' }, [
+                Dom.el('button', { class: 'dialog-btn secondary', text: '\u2191', title: this.t('settings.plugin.up'), onclick: move(-1) }),
+                Dom.el('button', { class: 'dialog-btn secondary', text: '\u2193', title: this.t('settings.plugin.down'), onclick: move(1) })
+            ])
+        );
+        return row;
     }
 
     moduleRow(module, isPlugin) {

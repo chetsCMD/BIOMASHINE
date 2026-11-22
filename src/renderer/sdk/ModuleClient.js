@@ -1,5 +1,6 @@
 import { MARK, MessageType } from './protocol.js';
 import { BmClock } from './BmClock.js';
+import { DesignStyle } from './DesignStyle.js';
 import { DomTranslator } from './DomTranslator.js';
 import { ModuleNotifications } from './ModuleNotifications.js';
 import { ModuleStorage } from './ModuleStorage.js';
@@ -51,10 +52,13 @@ export class ModuleClient {
             this.attachStyles(message.cssUrls || []);
             this.applyLanguage(message.i18n || Translator.EMPTY);
             this.clock = new BmClock(message.timezone);
+            this.applyDesign(message.design);
             this.resolveReady(this);
         } else if (message.type === MessageType.THEME) {
             this.applyTheme(message.theme);
             this.themeListeners.forEach((listener) => listener(this.theme));
+        } else if (message.type === MessageType.DESIGN) {
+            this.applyDesign(message);
         } else if (message.type === MessageType.RESPONSE) {
             this.settle(message);
         }
@@ -78,6 +82,12 @@ export class ModuleClient {
     applyTheme(theme) {
         ThemeStyle.apply(this.win.document, theme);
         this.theme = theme;
+    }
+
+    applyDesign(design) {
+        if (design) {
+            DesignStyle.apply(this.win.document, design.tokens, design.customCss);
+        }
     }
 
     applyLanguage(bundle) {

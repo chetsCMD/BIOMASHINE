@@ -4,6 +4,9 @@ Audience: a language model. The user is not a programmer. They give you this fil
 
 ## 1. What a plugin is
 
+The user decides how the application looks, and you implement it exactly as asked: any colors, fonts, sizes, spacing or layout details, even if they depart from the default look. Never refuse a style request because of "consistency".
+
+
 A plugin changes only the appearance and consists only of CSS. It is applied to the whole application at once: the shell (header, menu, settings, dialogs) and every page module, system or user. No JavaScript, no HTML.
 
 ## 2. Hard rules
@@ -64,6 +67,8 @@ Override them in `:root`. The plugin is loaded after the theme styles, so its va
 | `--header-bg` | header background | `rgba(18, 18, 18, 0.92)` | `rgba(244, 244, 242, 0.92)` |
 
 Per-theme values: `:root[data-theme="dark"] { ... }` and `:root[data-theme="light"] { ... }`. Support both themes or set values for both.
+
+Besides the theme variables, every design value of the application is a token such as `--space-12px`, `--radius-8px` or `--duration-200ms` (the full list is in `config/design.json`). A plugin can override any of them in `:root`. Plugins are applied in the order the user sets in Settings, Appearance, and the user's own token overrides and custom CSS are applied after all plugins.
 
 ## 5. Stable selectors
 
