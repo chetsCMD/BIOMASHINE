@@ -115,6 +115,14 @@
     "moduleHub": {
       "code": "KeyH",
       "ctrlOrMeta": true
+    },
+    "canvasMode": {
+      "code": "KeyE",
+      "ctrlOrMeta": true
+    },
+    "globalSearch": {
+      "code": "KeyO",
+      "ctrlOrMeta": true
     }
   },
   "fonts": {

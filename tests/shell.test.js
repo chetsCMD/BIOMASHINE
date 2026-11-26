@@ -22,14 +22,14 @@ test('портативные пути: данные рядом с програм
     assert.equal(paths.resolve({ PORTABLE_EXECUTABLE_DIR: '' }), null);
 });
 
-test('сборка портативная и не содержит установщика', () => {
+test('сборка: портативная версия и установщик', () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
-    assert.deepEqual(pkg.build.win.target, ['portable', 'zip']);
+    assert.deepEqual(pkg.build.win.target, ['portable', 'zip', 'nsis']);
     assert.ok(fs.existsSync(path.join(root, pkg.build.portable.splashImage)), 'нет картинки заставки при распаковке');
     assert.equal(pkg.build.compression, 'store');
     assert.ok(fs.existsSync(path.join(root, pkg.build.win.icon)), 'нет иконки приложения');
     assert.equal(pkg.build.win.icon, appConfig.window.icon);
-    assert.ok(!JSON.stringify(pkg.build).includes('nsis'));
+    assert.ok(JSON.stringify(pkg.build).includes('nsis'));
 });
 
 test('горячие клавиши: F11, Ctrl+P и Ctrl+H по физической клавише, без перехвата обычного ввода', () => {

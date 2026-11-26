@@ -1,0 +1,10 @@
+{
+  "type": "counter",
+  "title": { "en": "Tap counter", "ru": "Счётчик нажатий", "es": "Contador de pulsaciones", "de": "Tippzähler" },
+  "group": "data",
+  "size": { "w": 0.25, "h": 96 },
+  "props": [
+    { "name": "label", "type": "string", "default": "Taps" },
+    { "name": "collection", "type": "collection" }
+  ]
+}

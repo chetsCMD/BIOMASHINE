@@ -1,0 +1,61 @@
+{
+  "idPattern": "^[a-z][a-z0-9-]{1,40}$",
+  "itemPattern": "^[a-z][a-z0-9-]{0,35}$",
+  "idPrefix": "my-",
+  "blockTypePattern": "^[a-z][a-z0-9-]{1,40}$",
+  "maxBlocks": 200,
+  "maxCollections": 20,
+  "maxFields": 50,
+  "maxOptions": 100,
+  "maxTitleLength": 80,
+  "maxSpecBytes": 400000,
+  "maxBundleBytes": 2000000,
+  "maxBlockFileBytes": 200000,
+  "newBlockGapPx": 16,
+  "fieldTypes": [
+    "text",
+    "number",
+    "date",
+    "select",
+    "checkbox"
+  ],
+  "propTypes": [
+    "string",
+    "text",
+    "number",
+    "boolean",
+    "select",
+    "color",
+    "collection",
+    "field",
+    "form",
+    "list",
+    "columns",
+    "filters"
+  ],
+  "groups": [
+    "static",
+    "input",
+    "data"
+  ],
+  "categories": [
+    "body",
+    "mind",
+    "finance",
+    "knowledge",
+    "environment",
+    "other"
+  ],
+  "blockFiles": [
+    "block.json",
+    "render.js",
+    "style.css"
+  ],
+  "bundleFormat": "biomashine-module",
+  "bundleVersion": 1,
+  "systemBlocksBase": "bm://app/blocks/",
+  "userBlocksBase": "bm://blocks/",
+  "pageWidthPx": 1280,
+  "pageHeightPx": 720,
+  "stagePaddingPx": 32
+}

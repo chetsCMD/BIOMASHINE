@@ -52,7 +52,7 @@ function usedKeys(code, html, keyProperty = true) {
     }
     for (const [, argument] of rest.matchAll(/\bt\(\s*([^'"\s)][^,)]*)/g)) {
         const text = argument.trim();
-        if (text !== '__ternary__' && !/(^|\.)key$/.test(text) && !/Key$/.test(text)) {
+        if (text !== '__ternary__' && !/(^|\.)key$/.test(text) && !/Key\b/.test(text)) {
             dynamic.push(text);
         }
     }

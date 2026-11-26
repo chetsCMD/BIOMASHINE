@@ -122,7 +122,7 @@ test('дизайн: в JS нет присваиваний визуальных �
     for (const file of scripts(rendererRoot)) {
         const code = read(file);
         for (const match of code.matchAll(/\.style\.(?!display\b|visibility\b)([a-zA-Z]+)\s*=\s*(['"`])((?:(?!\2)[^\\]|\\.)*)\2/g)) {
-            if (!match[3].includes('${') && units.test(match[3])) found.push(`${relative(file)}: style.${match[1]} = ${match[2]}${match[3]}${match[2]}`);
+            if (!match[3].includes('${') && units.test(match[3].replace(/var\([^)]*\)/g, ''))) found.push(`${relative(file)}: style.${match[1]} = ${match[2]}${match[3]}${match[2]}`);
         }
         if (/\.style\.cssText\s*=/.test(code)) found.push(`${relative(file)}: style.cssText`);
     }

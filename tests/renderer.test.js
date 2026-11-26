@@ -265,7 +265,7 @@ test('мост оболочки и клиент модуля: рукопожат
     assert.deepEqual(await client.invoke('reaction:list', { a: 1 }), { channel: 'reaction:list' });
     await assert.rejects(client.invoke('sleep:listLogs'), (error) => error.status === 403 && /запрещён/.test(error.message));
     await assert.rejects(client.invoke('boom:fail'), (error) => error.message === 'сломалось');
-    assert.deepEqual(calls.map((call) => call[0]), ['reaction:list', 'boom:fail']);
+    assert.deepEqual(calls.map((call) => call[0]), ['layout:get', 'config:get', 'reaction:list', 'boom:fail']);
     assert.deepEqual(await client.config('themes'), { channel: 'config:get' });
     assert.deepEqual(calls.at(-1), ['config:get', { name: 'themes' }]);
     const id = await client.storage.insert('items', { a: 1 });
@@ -385,7 +385,7 @@ test('уведомления: SDK и мост — инъекция module, пр�
 
     await assert.rejects(client2.notify.schedule({ title: 'x', at: '2026-01-01 10:00:00' }), (error) => error.status === 403 && /запрещён/.test(error.message));
     await assert.rejects(client2.invoke('notifications:list'), (error) => error.status === 403);
-    assert.equal(calls.length, 0);
+    assert.equal(calls.length, 2);
 
     bridge2.detach();
     delete globalThis.window;

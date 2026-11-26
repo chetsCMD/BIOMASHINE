@@ -1,0 +1,129 @@
+{
+  "minQueryLength": 2,
+  "maxQueryLength": 200,
+  "maxResults": 60,
+  "perTable": 8,
+  "snippetLength": 120,
+  "debounceMs": 200,
+  "excludeTables": [
+    "settings",
+    "operations",
+    "operation_entries"
+  ],
+  "excludeColumns": [
+    "password",
+    "hash",
+    "salt",
+    "created_at",
+    "updated_at"
+  ],
+  "tables": {
+    "measurements": {
+      "module": "weight",
+      "titleColumns": [
+        "date"
+      ]
+    },
+    "weight_goals": {
+      "module": "weight",
+      "titleColumns": []
+    },
+    "sleep_logs": {
+      "module": "sleep",
+      "titleColumns": [
+        "start_time"
+      ]
+    },
+    "no_sleep_days": {
+      "module": "sleep",
+      "titleColumns": [
+        "date"
+      ]
+    },
+    "sleep_schedule": {
+      "module": "sleep",
+      "titleColumns": []
+    },
+    "nutrition_logs": {
+      "module": "nutrition",
+      "titleColumns": [
+        "name"
+      ]
+    },
+    "running_logs": {
+      "module": "running",
+      "titleColumns": [
+        "date"
+      ]
+    },
+    "running_goals": {
+      "module": "running",
+      "titleColumns": []
+    },
+    "workouts": {
+      "module": "training",
+      "titleColumns": [
+        "date",
+        "type"
+      ]
+    },
+    "workout_exercises": {
+      "module": "training",
+      "titleColumns": [
+        "exercise_name"
+      ]
+    },
+    "workout_templates": {
+      "module": "training",
+      "titleColumns": [
+        "name"
+      ]
+    },
+    "template_exercises": {
+      "module": "training",
+      "titleColumns": [
+        "exercise_name"
+      ]
+    },
+    "exercise_goals": {
+      "module": "training",
+      "titleColumns": [
+        "exercise_name"
+      ]
+    },
+    "training_goals": {
+      "module": "training",
+      "titleColumns": []
+    },
+    "reaction_tests": {
+      "module": "reaction",
+      "titleColumns": []
+    },
+    "profile": {
+      "module": "kbju",
+      "titleColumns": []
+    },
+    "mood_entries": {
+      "module": null,
+      "titleColumns": [
+        "date",
+        "mood"
+      ]
+    },
+    "notifications": {
+      "module": null,
+      "titleColumns": [
+        "title"
+      ]
+    }
+  },
+  "snapshot": {
+    "minLine": 2,
+    "maxLine": 200,
+    "maxLines": 800,
+    "maxBytes": 600000,
+    "intervalMs": 4000,
+    "timeoutMs": 1500,
+    "perModule": 3
+  }
+}

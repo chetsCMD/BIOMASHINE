@@ -296,7 +296,7 @@ class DesignTool {
         const stripped = DesignTool.stripDefinitions(original);
         const sources = { ...theme, ...tokens };
         const a = DesignTool.canon(DesignTool.expand(stripped.css, { ...sources, ...stripped.defs }));
-        const b = DesignTool.canon(DesignTool.expand(migrated, sources));
+        const b = DesignTool.canon(DesignTool.expand(DesignTool.stripDefinitions(migrated).css, sources));
         const problems = [];
         for (let index = 0; index < Math.max(a.length, b.length); index += 1) {
             if (a[index] !== b[index]) problems.push({ original: a[index], migrated: b[index] });

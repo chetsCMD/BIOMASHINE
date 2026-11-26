@@ -1,7 +1,7 @@
 {
   "name": "biomashine",
   "productName": "BIOMASHINE",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Personal Health and Lifestyle Dashboard",
   "author": "chetsCMD",
@@ -13,7 +13,8 @@
     "postinstall": "electron-builder install-app-deps",
     "dist": "node scripts/prepare.js && electron-builder",
     "i18n": "node scripts/i18n.js",
-    "design": "node scripts/design.js"
+    "design": "node scripts/design.js",
+    "bench": "node scripts/bench.js"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",

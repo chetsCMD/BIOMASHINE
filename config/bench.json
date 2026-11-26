@@ -1,0 +1,15 @@
+{
+  "rows": 1000000,
+  "batchSize": 50000,
+  "days": 365,
+  "seed": 12345,
+  "windowSize": 60,
+  "recentLimit": 1000,
+  "startTimestamp": 1700000000,
+  "daySeconds": 86400,
+  "hourSeconds": 3600,
+  "minuteSeconds": 60,
+  "sampleDayOffset": 100,
+  "bpm": { "min": 55, "range": 90 },
+  "spo2": { "min": 90, "range": 10 }
+}

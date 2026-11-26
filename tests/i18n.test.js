@@ -64,7 +64,7 @@ test('язык определяется по системе, сохраняет�
     await check('ru-RU', 'ru');
     await check('ru', 'ru');
     await check('en-GB', 'en');
-    await check('de-DE', 'en');
+    await check('fr-FR', 'en');
     await check('', 'en');
     await check(null, 'en');
     await check('de-DE', 'de', { 'de.json': { meta: { code: 'de', name: 'Deutsch' }, scopes: {} } });
@@ -85,22 +85,23 @@ test('язык сохраняется в настройках и больше н
 
 test('список языков: встроенные, пользовательские, ошибки файлов', async () => {
     const dir = workspace({
-        'de.json': { meta: { code: 'de', name: 'Deutsch', locale: 'de-DE' }, scopes: {} },
+        'nl.json': { meta: { code: 'nl', name: 'Nederlands', locale: 'nl-NL' }, scopes: {} },
         'broken.json': '{oops',
         'nometa.json': { scopes: {} },
         'badcode.json': { meta: { code: 'Deutsch!', name: 'X' } },
-        'dup.json': { meta: { code: 'de', name: 'Doppelt' } },
+        'dup.json': { meta: { code: 'nl', name: 'Dubbel' } },
         'patch-en.json': { meta: { code: 'en', name: 'English' }, scopes: { shell: { 'nav.settings': 'Preferences' } } }
     });
     const { call, container } = createApp({ rendererRoot: dir.renderer, userLocalesDir: dir.locales });
     const languages = await call('i18n:languages');
-    assert.deepEqual(languages.map((language) => [language.code, language.builtin]), [['ru', true], ['en', true], ['de', false]]);
-    assert.equal(languages[2].locale, 'de-DE');
+    const builtin = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config', 'app.json'), 'utf8')).i18n.builtin.map((language) => [language.code, true]);
+    assert.deepEqual(languages.map((language) => [language.code, language.builtin]), [...builtin, ['nl', false]]);
+    assert.ok(String(languages[languages.length - 1].locale).startsWith('nl'));
     const messages = (await call('i18n:errors')).map((error) => `${error.file}: ${error.message}`).join('\n');
     assert.match(messages, /broken\.json: некорректный JSON/);
     assert.match(messages, /nometa\.json: meta\.code/);
     assert.match(messages, /badcode\.json: meta\.code/);
-    assert.match(messages, /dup\.json: язык «de» уже описан/);
+    assert.match(messages, /nl\.json: язык «nl» уже описан/);
     container.close();
 });
 

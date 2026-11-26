@@ -1,0 +1,52 @@
+{
+  "snapPx": 8,
+  "nudgeLargeFactor": 5,
+  "minWidthPx": 24,
+  "minHeightPx": 16,
+  "maxHeightPx": 20000,
+  "maxItems": 2000,
+  "maxKeyLength": 400,
+  "maxOffsetPx": 20000,
+  "maxSizePx": 20000,
+  "maxLayoutBytes": 400000,
+  "historyLimit": 100,
+  "precision": 4,
+  "zMax": 1000,
+  "defaultRoot": "body",
+  "pickMinSizePx": 4,
+  "labelMaxLength": 40,
+  "ignoreTags": [
+    "html",
+    "head",
+    "body",
+    "script",
+    "style",
+    "link",
+    "meta",
+    "template",
+    "noscript",
+    "iframe",
+    "option"
+  ],
+  "protectedSelectors": [
+    "[data-bm-canvas-ui]",
+    ".dialog",
+    ".palette",
+    ".global-search"
+  ],
+  "swallowedEvents": [
+    "pointerdown",
+    "pointerup",
+    "mousedown",
+    "mouseup",
+    "click",
+    "dblclick",
+    "contextmenu",
+    "touchstart",
+    "touchend",
+    "submit",
+    "dragstart"
+  ],
+  "logLimit": 12,
+  "maxTextLength": 500
+}

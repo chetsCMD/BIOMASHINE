@@ -1,0 +1,14 @@
+{
+  "defaultMode": "ask",
+  "modes": [
+    "ask",
+    "always",
+    "never"
+  ],
+  "snapshotTimeoutMs": 1500,
+  "restoreWindowMs": 4000,
+  "maxStateBytes": 200000,
+  "maxValueLength": 2000,
+  "splitRetries": 30,
+  "splitRetryMs": 100
+}

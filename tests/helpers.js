@@ -30,6 +30,10 @@ class StubSystem {
         return this.windowState();
     }
 
+    closeNow() {
+        this.closedNow = true;
+    }
+
     closeWindow() {
         this.closed = true;
     }
@@ -85,6 +89,9 @@ function createApp(options = {}) {
         migrationsDir: path.join(root, 'migrations'),
         rendererRoot: options.rendererRoot || path.join(root, 'src', 'renderer'),
         userModulesDir: options.userModulesDir,
+        overridesDir: options.overridesDir,
+        workspaces: options.workspaces,
+        workspaceId: options.workspaceId,
         userLocalesDir: options.userLocalesDir,
         mainLocalesDir: options.mainLocalesDir,
         now: options.now,

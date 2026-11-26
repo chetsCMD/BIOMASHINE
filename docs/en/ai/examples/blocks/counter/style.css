@@ -1,0 +1,2 @@
+.counter-card { display: flex; flex-direction: column; gap: var(--space-8px); align-items: flex-start; padding: var(--space-8px) var(--space-12px); background: var(--s1); border: var(--border-1px) solid var(--br); }
+.counter-value { color: var(--wh); font-size: var(--font-size-32px); }

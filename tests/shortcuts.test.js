@@ -9,7 +9,7 @@ test('shortcuts:list возвращает реестр действий с пр�
     const list = await call('shortcuts:list');
     assert.ok(Array.isArray(list));
     const ids = list.map((item) => item.id).sort();
-    assert.deepEqual(ids, ['fullscreen', 'moduleHub', 'quickSwitch']);
+    assert.deepEqual(ids, ['canvasMode', 'fullscreen', 'globalSearch', 'moduleHub', 'quickSwitch']);
     const fullscreen = list.find((item) => item.id === 'fullscreen');
     assert.equal(fullscreen.titleKey, 'shortcut.fullscreen');
     assert.deepEqual(fullscreen.binding, { code: 'F11', ctrlOrMeta: false, shift: false, alt: false });
@@ -53,7 +53,7 @@ test('shortcuts:set без модификатора разрешено толь�
 
 test('shortcuts:set принимает только допустимые коды клавиш', async () => {
     const { call } = createApp();
-    await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'Space', ctrlOrMeta: true } }), 400);
+    await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'CapsLock', ctrlOrMeta: true } }), 400);
     await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'F13' } }), 400);
     await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'KeyZZ', ctrlOrMeta: true } }), 400);
     await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'Key1', ctrlOrMeta: true } }), 400);
@@ -84,5 +84,5 @@ test('shortcuts: сообщения об ошибках на английско�
     await rejects(call('shortcuts:set', { id: 'unknown', binding: { code: 'F2' } }), 400, 'Unknown action: unknown');
     await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'Escape', ctrlOrMeta: true } }), 400, 'Key Escape is reserved');
     await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'KeyK' } }), 400, 'Only F1');
-    await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'Space', ctrlOrMeta: true } }), 400, 'Invalid key code: Space');
+    await rejects(call('shortcuts:set', { id: 'quickSwitch', binding: { code: 'CapsLock', ctrlOrMeta: true } }), 400, 'Invalid key code: CapsLock');
 });
