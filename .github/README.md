@@ -102,4 +102,63 @@ But if you don't know how to work with code, that's not a problem. There is [doc
 - **Module builder.** Assemble a page from 13 ready-made blocks — from text and fields to charts and metrics — without a single line of code. The block set will keep growing. Custom blocks are written in a folder with a description, script, and styles.
 - **Global search.** `Ctrl+O` searches records across all tables, module names and descriptions, and the content of pages you've already opened.
 - **Languages.** Russian, English, Spanish, and German are built in. Export a translation template in settings, translate it, put the file in the languages folder, and your language will appear in the list.
-- **Design.** Light and dark themes, and behind them a design editor: every color, size, spacing, radius, font, and animation duration is a token that can be changed for the whole app or for a single module with live preview. Write custom CSS for the whole application or an
+- **Design.** Light and dark themes, and behind them a design editor: every color, size, spacing, radius, font, and animation duration is a token that can be changed for the whole app or for a single module with live preview. Write custom CSS for the whole application or an individual module, import and export ready-made designs, and order plugins as needed.
+- **Config editor.** Change any JSON configs (coefficients, colors, limits) directly in the app. Changes apply immediately, and only your differences from default values are stored.
+- **Time zone.** Choose the time zone in which dates and times are recorded.
+- **Profiles.** Keep several independent spaces, such as "real life," "experiment," and "sandbox." Each profile has its own database; create, duplicate, rename, delete, and switch between them in settings.
+
+## Principles
+
+- **The user sets the rules.** The app helps collect and make sense of information but does not evaluate the person or dictate goals.
+- **Data stays local.** BIOMASHINE works with an SQLite database on the device; a cloud account and internet connection are not needed for keeping records.
+- **A personal system, not a corporate service.** It is a tool "from people to people," created for the everyday tasks of a specific person—the user.
+- **Freedom instead of a single scenario.** Ready-made pages are a foundation that the user can supplement with their own modules, themes, and translations.
+- **Tracking for yourself.** Records are not meant to prove something to anyone. Their value is determined by the person themselves.
+
+## Your data is safe
+
+- **Local only.** One SQLite database per profile, no network access.
+- **Password protection.** Optional login and password, stored as a scrypt hash with salt.
+- **Recycle bin.** Undo the last ten operations directly from settings.
+- **Export.** Save everything to JSON or CSV at any time.
+- **Notifications.** Modules can schedule system notifications, and you can disable them for each module.
+- **Isolation.** Each module runs in its own isolated frame and can only use declared channels.
+
+## Download and install
+
+Get the latest build from the [releases page](https://github.com/chetsCMD/BIOMASHINE/releases).
+
+| System | File | Notes |
+|---|---|---|
+| Windows | `.exe` (portable) or `.zip` | Nothing needs to be installed. The portable version stores data in the `BIOMASHINE-data` folder next to the program, so it can be carried on a USB drive. |
+| Linux | `.AppImage` | `chmod +x` and run. Requires `libfuse2`. |
+| macOS | `.zip` | Unsigned: on first launch, right-click the app and choose "Open." |
+
+## Building from source
+
+Requires Node.js 22 or newer.
+
+    npm install
+    npm start          # launch the application
+    npm run dist       # build for the current operating system
+
+Native modules must be built on the operating system for which the build is intended. The repository has a working GitHub Actions workflow that builds packages for Windows, Linux, and macOS.
+
+## Documentation
+
+- [Project map: architecture, IPC channels, data layer](../docs/en/Developers/Project%20Map.md)
+- [Modules: manifest, SDK, storage, styling](../docs/en/Developers/Modules.md)
+- [Design system: tokens, tool, editor](../docs/en/Developers/Design.md)
+- [Canvas mode](../docs/en/Canvas.md)
+- [Module builder](../docs/en/Builder.md)
+- [Guide for AI assistants: creating a module](../docs/en/ai/MODULE_GUIDE.md)
+- [Guide for AI assistants: creating a builder block](../docs/en/ai/BLOCK_GUIDE.md)
+- [Guide for AI assistants: creating a plugin](../docs/en/ai/PLUGIN_GUIDE.md)
+
+## Support the project
+
+BIOMASHINE is free and created by one person. If you find it useful, you can [support the author](https://boosty.to/chetscmd) or star the repository.
+
+## License
+
+BIOMASHINE is free software under the GNU General Public License v3.0 with an additional attribution requirement (section 7b). The full text is in the `LICENSE` file.
