@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.0-8b7e6a" alt="Versión 1.2.0">
+  <img src="https://img.shields.io/badge/version-2.0.0-8b7e6a" alt="Versión 2.0.0">
   <img src="https://img.shields.io/badge/Electron-45-47848f?logo=electron&logoColor=white" alt="Electron 45">
   <img src="https://img.shields.io/badge/data-local%20%26%20offline-6b8e76" alt="Datos locales, funcionamiento sin conexión">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-555" alt="Windows, Linux y macOS">
@@ -51,6 +51,7 @@ Y el usuario determina **qué registrar exactamente**.
 - **Suyo.** Los datos no salen del ordenador. Sin telemetría, sin servicio de sincronización, sin registro.
 - **Personalizable hasta el píxel.** Nada está codificado de forma fija: ni la apariencia, ni los textos, ni los coeficientes. Idioma, colores, tamaños, fuentes, fórmulas y constantes están en ajustes y archivos de configuración que se pueden editar en la propia aplicación o manualmente.
 - **Modular.** Cada página es un módulo. Oculte lo que no necesite, añada lo suyo o describa la página que necesita a un asistente de IA y coloque el resultado en la carpeta de módulos.
+- **Ensamblado sin código.** El constructor de módulos arma una página a partir de bloques listos: paleta, vista previa 16:9, inspector de propiedades y editor de datos. Los bloques propios se añaden como una carpeta con descripción, script y estilos.
 - **Abierto.** Software libre bajo licencia GPL.
 
 ## El usuario controla la aplicación
@@ -58,6 +59,7 @@ Y el usuario determina **qué registrar exactamente**.
 La idea principal de BIOMASHINE es que **la persona controla el programa, no el programa a la persona**. No es solo un conjunto de páginas listo para usar «como se pretende». El usuario puede formar el entorno a su medida:
 
 - crear módulos propios para los tipos de registro que necesite;
+- ensamblar páginas en el constructor sin programar;
 - activar y ocultar módulos, controlando la composición de la aplicación;
 - crear plugins y cambiar la apariencia de la interfaz, incluido el desarrollo de temas propios basados en el mecanismo de estilos y plugins;
 - traducir la interfaz a cualquier idioma: la aplicación incluye archivos de idioma y la posibilidad de añadir traducciones propias.
@@ -73,6 +75,7 @@ En la versión actual hay varias páginas de ejemplo ya preparadas:
 - **Carrera** — carreras, objetivos y estadísticas.
 - **Entrenamientos** — sesiones y plantillas de entrenamiento.
 - **Reacción** — test de velocidad de reacción e historial de resultados.
+- **Constructor** — ensamblaje de páginas propias a partir de bloques listos.
 
 [![Ejemplo de una página para registrar el sueño:](media/sleep.png)](media/sleep.png)
 
@@ -80,7 +83,7 @@ En la versión actual hay varias páginas de ejemplo ya preparadas:
 
 - **Panel y hub de módulos.** Fije los módulos más necesarios en el panel superior; los demás esperan en el hub: una página de tarjetas con búsqueda, categorías y botones de fijación. ¿Prefiere un menú lateral? Cambie a una disposición vertical con categorías plegables.
 - **Salto rápido.** `Ctrl+P` (`Cmd+P` en macOS) abre cualquier módulo o sección de ajustes y funciona con cualquier distribución de teclado.
-- **Atajos propios.** Cualquier combinación se puede reasignar en los ajustes.
+- **Atajos propios.** Cualquier combinación se puede reasignar en los ajustes, y las acciones se disparan incluso con el foco dentro de una página de módulo. Las macros — cadenas de acciones — están por ahora en fase beta.
 - **Pantalla completa.** `F11` la activa, y los botones de control de la ventana quedan a mano.
 - **Restauración de sesión.** Al salir, la aplicación puede ofrecer recordar el módulo abierto, los valores de los campos y la posición de desplazamiento, y devolverle exactamente a esa pantalla en el siguiente inicio.
 
@@ -93,6 +96,11 @@ Pero si no sabe trabajar con código, no hay problema. Hay [documentación dispo
 
 ## Hágalo a su medida
 
+[![Constructor:](media/Constructor.png)](media/Constructor.png)
+
+- **Modo lienzo.** Active ✥ y edite cualquier elemento visible: mover, escalar, ocultar, cambiar capa. El diseño se guarda por separado para cada módulo, el shell y sus pantallas.
+- **Constructor de módulos.** Arme una página con 13 bloques listos — de texto y campos a gráficos e indicadores — sin una sola línea de código. El conjunto de bloques se irá ampliando. Los bloques propios se escriben en una carpeta con descripción, script y estilos.
+- **Búsqueda global.** `Ctrl+O` busca en los registros de todas las tablas, en nombres y descripciones de módulos y en el contenido de páginas ya abiertas.
 - **Idiomas.** Integrados ruso, inglés, español y alemán. Exporte una plantilla de traducción en los ajustes, tradúzcala, coloque el archivo en la carpeta de idiomas y su idioma aparecerá en la lista.
 - **Diseño.** Temas claro y oscuro, y detrás un editor de diseño: cada color, tamaño, espaciado, radio, fuente y duración de animación es un token que se puede cambiar para toda la aplicación o para un módulo con vista previa en vivo. Escriba CSS propio para toda la aplicación o para un módulo, importe y exporte diseños listos y ordene los plugins como necesite.
 - **Editor de configuración.** Cambie cualquier configuración JSON (coeficientes, colores, límites) directamente en la aplicación. Los cambios se aplican de inmediato y solo se guardan sus diferencias respecto a los valores predeterminados.
@@ -141,7 +149,10 @@ Los módulos nativos deben compilarse en el sistema operativo para el que se rea
 - [Mapa del proyecto: arquitectura, canales IPC, capa de datos](../docs/es/Developers/Project%20Map.md)
 - [Módulos: manifiesto, SDK, almacenamiento, diseño](../docs/es/Developers/Modules.md)
 - [Sistema de diseño: tokens, herramienta, editor](../docs/es/Developers/Design.md)
+- [Modo lienzo](../docs/es/Canvas.md)
+- [Constructor de módulos](../docs/es/Builder.md)
 - [Guía para asistentes de IA: creación de un módulo](../docs/es/ai/MODULE_GUIDE.md)
+- [Guía para asistentes de IA: creación de un bloque del constructor](../docs/es/ai/BLOCK_GUIDE.md)
 - [Guía para asistentes de IA: creación de un plugin](../docs/es/ai/PLUGIN_GUIDE.md)
 
 ## Apoyar el proyecto
