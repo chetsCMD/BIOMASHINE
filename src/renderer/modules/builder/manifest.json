@@ -1,0 +1,13 @@
+{
+  "id": "builder",
+  "kind": "page",
+  "title": "Constructor",
+  "version": "1.0.0",
+  "description": "Build your own module from ready-made blocks",
+  "category": "other",
+  "order": 95,
+  "entry": "index.html",
+  "hideable": true,
+  "i18n": true,
+  "channels": ["builder:*", "blocks:*"]
+}

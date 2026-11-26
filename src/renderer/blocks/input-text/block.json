@@ -1,0 +1,44 @@
+{
+  "type": "input-text",
+  "title": {
+    "en": "Text field",
+    "ru": "Текстовое поле",
+    "es": "Campo de texto",
+    "de": "Textfeld"
+  },
+  "group": "input",
+  "size": {
+    "w": 0.3,
+    "h": 72
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Text"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "field",
+      "type": "field"
+    },
+    {
+      "name": "form",
+      "type": "form",
+      "default": "main"
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": false
+    }
+  ]
+}

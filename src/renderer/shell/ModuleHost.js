@@ -1,7 +1,9 @@
 import { SplitView } from './SplitView.js';
 
 export class ModuleHost {
-    constructor({ container, api, theme, dialogs, i18n, splitRatio, onPills, onClosePane }) {
+    constructor({ container, api, theme, dialogs, i18n, splitRatio, onPills, onClosePane, onCanvasState = null, canvasEnabled = null }) {
+        this.onCanvasState = onCanvasState;
+        this.canvasEnabled = canvasEnabled;
         this.container = container;
         this.pluginCss = [];
         this.onPills = onPills;
@@ -24,7 +26,7 @@ export class ModuleHost {
         this.view.setPluginCss(this.pluginCss);
     }
 
-    open(descriptor) {
+    open(descriptor, state = null) {
         this.view.open(descriptor);
     }
 

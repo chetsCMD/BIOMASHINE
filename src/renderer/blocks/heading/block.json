@@ -1,0 +1,31 @@
+{
+  "type": "heading",
+  "title": {
+    "en": "Heading",
+    "ru": "Заголовок",
+    "es": "Encabezado",
+    "de": "Überschrift"
+  },
+  "group": "static",
+  "size": {
+    "w": 0.6,
+    "h": 56
+  },
+  "props": [
+    {
+      "name": "text",
+      "type": "string",
+      "default": "Title"
+    },
+    {
+      "name": "level",
+      "type": "select",
+      "options": [
+        "1",
+        "2",
+        "3"
+      ],
+      "default": "1"
+    }
+  ]
+}

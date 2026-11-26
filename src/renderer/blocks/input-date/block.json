@@ -1,0 +1,48 @@
+{
+  "type": "input-date",
+  "title": {
+    "en": "Date field",
+    "ru": "Поле даты",
+    "es": "Campo de fecha",
+    "de": "Datumsfeld"
+  },
+  "group": "input",
+  "size": {
+    "w": 0.3,
+    "h": 72
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Date"
+    },
+    {
+      "name": "default",
+      "type": "select",
+      "options": [
+        "today",
+        "empty"
+      ],
+      "default": "today"
+    },
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "field",
+      "type": "field"
+    },
+    {
+      "name": "form",
+      "type": "form",
+      "default": "main"
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+.bm-canvas-overlay { position: fixed; inset: 0; z-index: var(--z-2147483000); pointer-events: none; }
+.bm-canvas-grid { position: absolute; inset: 0; display: none; background-image: linear-gradient(var(--br2) var(--size-1px), transparent var(--size-1px)), linear-gradient(var(--angle-90deg), var(--br2) var(--size-1px), transparent var(--size-1px)); background-size: var(--bm-snap) var(--bm-snap); opacity: var(--opacity-0p5); }
+.bm-canvas-grid-on .bm-canvas-grid { display: block; }
+.bm-canvas-hover, .bm-canvas-selection { position: absolute; left: var(--bm-left); top: var(--bm-top); width: var(--bm-width); height: var(--bm-height); box-sizing: border-box; pointer-events: none; }
+.bm-canvas-hover { outline: var(--border-1px) dashed var(--canvas-accent-soft); }
+.bm-canvas-selection { outline: var(--border-2px) solid var(--canvas-accent); box-shadow: var(--shadow-4); }
+.bm-canvas-hidden { display: none; }
+.bm-canvas-label { position: absolute; left: 0; bottom: 100%; margin-bottom: var(--space-6px); padding: var(--space-2px) var(--space-8px); background: var(--canvas-accent); color: var(--bg); font-size: var(--font-size-11px); white-space: nowrap; max-width: var(--size-320px); overflow: hidden; text-overflow: ellipsis; }
+.bm-canvas-handle { position: absolute; width: var(--size-12px); height: var(--size-12px); background: var(--canvas-accent); border: var(--border-2px) solid var(--bg); border-radius: 50%; box-sizing: border-box; pointer-events: auto; transform: translate(var(--ratio-n50pct), var(--ratio-n50pct)); }
+.bm-canvas-handle[data-bm-handle="nw"] { left: 0; top: 0; cursor: nwse-resize; }
+.bm-canvas-handle[data-bm-handle="n"] { left: 50%; top: 0; cursor: ns-resize; }
+.bm-canvas-handle[data-bm-handle="ne"] { left: 100%; top: 0; cursor: nesw-resize; }
+.bm-canvas-handle[data-bm-handle="e"] { left: 100%; top: 50%; cursor: ew-resize; }
+.bm-canvas-handle[data-bm-handle="se"] { left: 100%; top: 100%; cursor: nwse-resize; }
+.bm-canvas-handle[data-bm-handle="s"] { left: 50%; top: 100%; cursor: ns-resize; }
+.bm-canvas-handle[data-bm-handle="sw"] { left: 0; top: 100%; cursor: nesw-resize; }
+.bm-canvas-handle[data-bm-handle="w"] { left: 0; top: 50%; cursor: ew-resize; }

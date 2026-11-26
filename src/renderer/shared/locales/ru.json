@@ -10,5 +10,10 @@
   "achievement.marathon.name": "Марафон",
   "achievement.marathon.description": "Пройти 42 км 195 метров",
   "achievement.saratov_moscow.name": "Саратов — Москва",
-  "achievement.saratov_moscow.description": "Пройти 800 км"
+  "achievement.saratov_moscow.description": "Пройти 800 км",
+  "block.required": "Заполните обязательные поля",
+  "block.saved": "Сохранено",
+  "block.empty": "Пока пусто",
+  "block.deleteConfirm": "Удалить запись?",
+  "block.loadFailed": "Блок не загрузился"
 }

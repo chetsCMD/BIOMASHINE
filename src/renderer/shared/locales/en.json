@@ -10,5 +10,10 @@
   "achievement.marathon.name": "Marathon",
   "achievement.marathon.description": "Cover 42 km 195 meters",
   "achievement.saratov_moscow.name": "Saratov — Moscow",
-  "achievement.saratov_moscow.description": "Cover 800 km"
+  "achievement.saratov_moscow.description": "Cover 800 km",
+  "block.required": "Fill in the required fields",
+  "block.saved": "Saved",
+  "block.empty": "Nothing yet",
+  "block.deleteConfirm": "Delete this record?",
+  "block.loadFailed": "The block failed to load"
 }

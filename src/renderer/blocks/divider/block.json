@@ -1,0 +1,15 @@
+{
+  "type": "divider",
+  "title": {
+    "en": "Divider",
+    "ru": "Разделитель",
+    "es": "Separador",
+    "de": "Trennlinie"
+  },
+  "group": "static",
+  "size": {
+    "w": 1,
+    "h": 24
+  },
+  "props": []
+}

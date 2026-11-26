@@ -1,0 +1,53 @@
+{
+  "type": "list",
+  "title": {
+    "en": "List",
+    "ru": "Список",
+    "es": "Lista",
+    "de": "Liste"
+  },
+  "group": "data",
+  "size": {
+    "w": 0.6,
+    "h": 260
+  },
+  "props": [
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "columns",
+      "type": "columns",
+      "default": []
+    },
+    {
+      "name": "sortField",
+      "type": "field"
+    },
+    {
+      "name": "order",
+      "type": "select",
+      "options": [
+        "asc",
+        "desc"
+      ],
+      "default": "desc"
+    },
+    {
+      "name": "limit",
+      "type": "number",
+      "default": 20
+    },
+    {
+      "name": "allowDelete",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "filters",
+      "type": "filters",
+      "default": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "type": "text",
+  "title": {
+    "en": "Text",
+    "ru": "Текст",
+    "es": "Texto",
+    "de": "Text"
+  },
+  "group": "static",
+  "size": {
+    "w": 0.5,
+    "h": 96
+  },
+  "props": [
+    {
+      "name": "text",
+      "type": "text",
+      "default": ""
+    },
+    {
+      "name": "align",
+      "type": "select",
+      "options": [
+        "left",
+        "center",
+        "right"
+      ],
+      "default": "left"
+    }
+  ]
+}

@@ -10,5 +10,10 @@
   "achievement.marathon.name": "Marathon",
   "achievement.marathon.description": "42 km 195 Meter zurücklegen",
   "achievement.saratov_moscow.name": "Saratow — Moskau",
-  "achievement.saratov_moscow.description": "800 km zurücklegen"
+  "achievement.saratov_moscow.description": "800 km zurücklegen",
+  "block.required": "Pflichtfelder ausfüllen",
+  "block.saved": "Gespeichert",
+  "block.empty": "Noch nichts vorhanden",
+  "block.deleteConfirm": "Diesen Eintrag löschen?",
+  "block.loadFailed": "Der Block konnte nicht geladen werden"
 }

@@ -1,4 +1,6 @@
+import { ContextShortcuts } from './ContextShortcuts.js';
 import { Dom } from './Dom.js';
+import { MacroEditor } from './MacroEditor.js';
 
 export class ShortcutEditor {
     constructor({ api, i18n }) {
@@ -30,6 +32,9 @@ export class ShortcutEditor {
     }
 
     bindingLabel(binding) {
+        if (!binding) {
+            return '—';
+        }
         const mac = this.isMac();
         const parts = [];
         if (binding.ctrlOrMeta) {
@@ -46,7 +51,7 @@ export class ShortcutEditor {
     }
 
     titleOf(item) {
-        return this.t(item.titleKey || item.id);
+        return item.macro ? item.name : this.t(item.titleKey || item.id);
     }
 
     render(items, container) {
@@ -55,6 +60,29 @@ export class ShortcutEditor {
         this.root = container;
         this.error = null;
         this.draw();
+        this.loadRules();
+    }
+
+    async loadRules() {
+        if (!this.rules) {
+            this.rules = await this.api.invoke('config:get', { name: 'shortcuts' });
+            this.draw();
+        }
+    }
+
+    async refreshItems() {
+        this.items = await this.api.invoke('shortcuts:list');
+        window.dispatchEvent(new CustomEvent('bm-hotkeys-changed'));
+        this.draw();
+    }
+
+    mountExtras(contextBox, macroBox) {
+        if (!this.rules) {
+            return;
+        }
+        const shared = { api: this.api, i18n: this.i18n, items: this.items, titleOf: (item) => this.titleOf(item) };
+        new ContextShortcuts({ ...shared, bindingLabel: (binding) => this.bindingLabel(binding) }).render(contextBox);
+        new MacroEditor({ ...shared, rules: this.rules, onChanged: () => this.refreshItems() }).render(macroBox);
     }
 
     draw() {
@@ -73,11 +101,16 @@ export class ShortcutEditor {
         const status = this.error
             ? Dom.el('div', { class: 'form-error', text: this.error })
             : Dom.el('div', { class: 'settings-status' });
+        const contextBox = Dom.el('div', { class: 'shortcut-extra' });
+        const macroBox = Dom.el('div', { class: 'shortcut-extra' });
         Dom.clear(this.root).append(
             Dom.el('div', { class: 'shortcut-list' }, rows),
             actions,
-            status
+            status,
+            contextBox,
+            macroBox
         );
+        this.mountExtras(contextBox, macroBox);
     }
 
     row(item) {
@@ -155,7 +188,7 @@ export class ShortcutEditor {
             this.draw();
             return;
         }
-        if (event.code === 'Tab' || event.code === 'Enter') {
+        if (event.code === 'Tab' || event.code === 'Enter' || /^(Control|Shift|Alt|Meta|OS)(Left|Right)$/.test(event.code)) {
             return;
         }
         if (!event.code) {

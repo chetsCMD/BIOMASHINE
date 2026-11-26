@@ -1,0 +1,57 @@
+{
+  "type": "progress",
+  "title": {
+    "en": "Progress",
+    "ru": "Прогресс",
+    "es": "Progreso",
+    "de": "Fortschritt"
+  },
+  "group": "data",
+  "size": {
+    "w": 0.4,
+    "h": 72
+  },
+  "props": [
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "field",
+      "type": "field"
+    },
+    {
+      "name": "op",
+      "type": "select",
+      "options": [
+        "sum",
+        "count",
+        "avg",
+        "max",
+        "last"
+      ],
+      "default": "sum"
+    },
+    {
+      "name": "period",
+      "type": "select",
+      "options": [
+        "all",
+        "today",
+        "7d",
+        "30d"
+      ],
+      "default": "all"
+    },
+    {
+      "name": "target",
+      "type": "number",
+      "default": 100
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Progress"
+    }
+  ]
+}

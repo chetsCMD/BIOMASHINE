@@ -1,0 +1,35 @@
+{
+  "type": "submit",
+  "title": {
+    "en": "Save button",
+    "ru": "Кнопка сохранения",
+    "es": "Botón de guardar",
+    "de": "Speichern-Schaltfläche"
+  },
+  "group": "input",
+  "size": {
+    "w": 0.25,
+    "h": 56
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "form",
+      "type": "form",
+      "default": "main"
+    },
+    {
+      "name": "clearAfter",
+      "type": "boolean",
+      "default": true
+    }
+  ]
+}

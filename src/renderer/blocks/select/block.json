@@ -1,0 +1,47 @@
+{
+  "type": "select",
+  "title": {
+    "en": "Choice",
+    "ru": "Выбор",
+    "es": "Selección",
+    "de": "Auswahl"
+  },
+  "group": "input",
+  "size": {
+    "w": 0.3,
+    "h": 72
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Choice"
+    },
+    {
+      "name": "options",
+      "type": "list",
+      "default": [
+        "One",
+        "Two"
+      ]
+    },
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "field",
+      "type": "field"
+    },
+    {
+      "name": "form",
+      "type": "form",
+      "default": "main"
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": false
+    }
+  ]
+}

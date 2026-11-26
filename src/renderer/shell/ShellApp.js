@@ -1,6 +1,13 @@
 import { DomTranslator } from '../sdk/DomTranslator.js';
 import { Translator } from '../sdk/Translator.js';
+import { CanvasManager } from './CanvasManager.js';
+import { ContentIndex } from './ContentIndex.js';
+import { GlobalSearch } from './GlobalSearch.js';
+import { HotkeyContext } from './HotkeyContext.js';
+import { MacroRunner } from './MacroRunner.js';
+import { ModuleBridge } from './ModuleBridge.js';
 import { DesignRuntime } from './DesignRuntime.js';
+import { SessionManager } from './SessionManager.js';
 import { Dom } from './Dom.js';
 import { CommandPalette } from './CommandPalette.js';
 import { DialogService } from './DialogService.js';
@@ -80,6 +87,17 @@ export class ShellApp {
         this.theme.apply(this.settings.theme);
         this.designRuntime = new DesignRuntime({ api: this.api, doc: this.document });
         await this.designRuntime.load();
+        this.session = new SessionManager({
+            api: this.api,
+            i18n: this.i18n,
+            dialogs: null,
+            win: window,
+            getHost: () => this.host,
+            isReady: () => !this.locked && !this.ui.app.classList.contains('hidden')
+        });
+        await this.session.load();
+        this.canvas = new CanvasManager({ api: this.api, i18n: this.i18n, dialogs: null, win: window, getHost: () => this.host, getStage: () => this.ui.stage });
+        ModuleBridge.hooks = { onCanvasState: (canvasState) => this.canvas.handleModuleState(canvasState), canvasEnabled: () => this.canvas.isEnabled(), onCanvasLog: (id, text) => this.canvas.log(`${id}: ${text}`), stateFor: (id) => this.session.takeState(id) };
         this.dialogs = new DialogService(this.ui.dialogs, this.i18n);
         this.navigation = new Navigation(this.ui.nav, this.i18n);
         this.navigation.onReorder = (ids) => this.handleReorder(ids);
@@ -94,6 +112,8 @@ export class ShellApp {
             i18n: this.i18n,
             splitRatio: this.splitRatio,
             onPills: (items) => this.showPills(items),
+            onCanvasState: (canvasState) => this.canvas.handleModuleState(canvasState),
+            canvasEnabled: () => this.canvas.isEnabled(),
             onClosePane: (role) => this.handleClosePane(role)
         });
         this.settingsView = new SettingsView({
@@ -106,6 +126,7 @@ export class ShellApp {
             onSecurityChanged: () => this.refreshStatus(),
             onLanguageChanged: () => this.changeLanguage(),
             onDesignChanged: () => this.onDesignChanged(),
+            onConfigChanged: (name) => this.onConfigChanged(name),
             onMenuLayoutChanged: (settings) => this.handleMenuLayoutChange(settings),
             onOpenHub: () => this.navigate(Navigation.HUB_ID)
         });
@@ -115,10 +136,24 @@ export class ShellApp {
             i18n: this.i18n,
             onChanged: (list) => this.applyModules(list)
         });
+        this.session.dialogs = this.dialogs;
+        this.session.getSplit = () => this.split;
+        this.canvas.dialogs = this.dialogs;
+        await this.canvas.start();
+        this.search = new GlobalSearch({ api: this.api, i18n: this.i18n, win: window, onOpen: (result) => this.openSearchResult(result) });
+        await this.search.start();
+        this.macros = new MacroRunner({ api: this.api, win: window, perform: (step) => this.performStep(step) });
+        const hotkeyRules = await this.api.invoke('config:get', { name: 'shortcuts' });
+        this.hotkeys = new HotkeyContext({ api: this.api, win: window, getPrimary: () => (this.split ? this.split.primaryId : null), getPages: () => this.pages || [], settingsId: Navigation.SETTINGS_ID, hubId: Navigation.HUB_ID, pollMs: hotkeyRules.contextPollMs });
+        this.contentIndex = new ContentIndex({ api: this.api, win: window });
+        await this.contentIndex.start();
+        this.macroList = [];
+        window.addEventListener('bm-hotkeys-changed', () => this.reloadMacros());
+        this.api.onBeforeClose(() => this.session.handleBeforeClose());
         this.palette = new CommandPalette({
             root: this.ui.dialogs,
             i18n: this.i18n,
-            providers: [() => new ModuleCommands(() => this.pages, (route) => this.navigate(route), this.i18n).provide()]
+            providers: [() => this.extraCommands(), () => new ModuleCommands(() => this.pages, (route) => this.navigate(route), this.i18n).provide()]
         });
         this.navMultiClick = new NavMultiClick({
             root: this.ui.nav,
@@ -141,12 +176,58 @@ export class ShellApp {
         this.document.body.classList.toggle('is-fullscreen', fullscreen);
     }
 
+    openSearchResult(result) {
+        if (result.module) {
+            this.navigate(`module/${result.module}`);
+        }
+    }
+
+    async reloadMacros() {
+        try {
+            this.macroList = await this.api.invoke('hotkeys:macros');
+        } catch (error) {
+            this.macroList = [];
+        }
+    }
+
+    extraCommands() {
+        const commands = [
+            { title: this.i18n.t('shortcut.canvasMode'), hint: '', keywords: this.i18n.t('palette.canvasKeywords').split(' '), run: () => this.canvas.toggle() },
+            { title: this.i18n.t('shortcut.globalSearch'), hint: '', keywords: this.i18n.t('palette.searchKeywords').split(' '), run: () => this.search.toggle() }
+        ];
+        for (const macro of this.macroList || []) {
+            commands.push({ title: macro.name, hint: this.i18n.t('settings.shortcuts.macro'), keywords: [], run: () => this.macros.run(macro.id) });
+        }
+        return commands;
+    }
+
+    async performStep(step) {
+        if (step.startsWith('open:')) {
+            const target = step.slice('open:'.length);
+            if (target === 'settings') window.location.hash = Navigation.SETTINGS_ID;
+            else if (target === 'hub') window.location.hash = Navigation.HUB_ID || 'hub';
+            else this.navigate(`module/${target}`);
+        } else if (step === 'fullscreen') {
+            await this.api.invoke('window:toggleFullscreen');
+        } else {
+            this.onShortcut(step);
+        }
+    }
+
+    async onConfigChanged(name) {
+        if (name === 'themes') {
+            await this.theme.load();
+            this.theme.apply(this.theme.name);
+        } else if (name === 'design') {
+            await this.designRuntime.load();
+        } else if (name !== 'app' && this.host && this.host.frame) {
+            this.host.reload();
+        }
+    }
+
     async onDesignChanged() {
         await this.designRuntime.load();
-        const id = this.host && this.host.descriptor ? this.host.descriptor.id : null;
-        if (id) {
-            this.host.pushDesign(await this.designRuntime.forModule(id));
-        }
+        ModuleBridge.broadcastDesign((id) => this.designRuntime.forModule(id));
     }
 
     async changeLanguage() {
@@ -188,6 +269,17 @@ export class ShellApp {
         this.showSplit();
     }
 
+    applySplit(secondary) {
+        if (!this.split.primaryId) {
+            return false;
+        }
+        if (this.split.secondaryId === secondary) {
+            return true;
+        }
+        this.enterSplit(secondary);
+        return this.split.secondaryId === secondary;
+    }
+
     showSplit() {
         const primary = this.pages.find((page) => page.id === this.split.primaryId);
         const secondary = this.pages.find((page) => page.id === this.split.secondaryId);
@@ -226,6 +318,18 @@ export class ShellApp {
     }
 
     onShortcut(name) {
+        if (name === 'canvasMode') {
+            this.canvas.toggle();
+            return;
+        }
+        if (name === 'globalSearch') {
+            this.search.toggle();
+            return;
+        }
+        if (name.startsWith('macro:')) {
+            this.macros.run(name.slice('macro:'.length));
+            return;
+        }
         const ready = !this.locked && this.status && (!this.status.protected || this.status.unlocked);
         if (!ready || this.ui.app.classList.contains('hidden')) {
             return;
@@ -258,11 +362,22 @@ export class ShellApp {
         this.ui.app.classList.remove('hidden');
         await this.refreshLayout();
         this.applyModules(await this.api.invoke('modules:list'));
+        await this.session.restore();
+        this.canvas.setAvailable(true);
+        this.search.setAvailable(true);
+        this.contentIndex.setAvailable(true);
+        this.hotkeys.start();
+        this.reloadMacros();
         if (!this.bound) {
             window.addEventListener('hashchange', () => this.route());
             this.bound = true;
         }
         this.route();
+        const panes = this.session.panes();
+        if (panes.length === 2) {
+            this.session.restoreSplit(() => this.applySplit(panes[1]));
+        }
+        this.session.finishLater();
     }
 
     applyModules(list) {
@@ -310,7 +425,7 @@ export class ShellApp {
         this.ui.hub.classList.add('hidden');
         this.showPills([]);
         this.navigation.render(this.pages, this.split.primaryId);
-        this.host.open(descriptor);
+        this.host.open(descriptor, this.session.takeState(descriptor.id));
     }
 
     async showSettings() {

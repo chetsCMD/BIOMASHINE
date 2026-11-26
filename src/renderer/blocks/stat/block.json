@@ -1,0 +1,58 @@
+{
+  "type": "stat",
+  "title": {
+    "en": "Statistic",
+    "ru": "Показатель",
+    "es": "Indicador",
+    "de": "Kennzahl"
+  },
+  "group": "data",
+  "size": {
+    "w": 0.25,
+    "h": 96
+  },
+  "props": [
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "field",
+      "type": "field"
+    },
+    {
+      "name": "op",
+      "type": "select",
+      "options": [
+        "count",
+        "sum",
+        "avg",
+        "min",
+        "max",
+        "last"
+      ],
+      "default": "count"
+    },
+    {
+      "name": "period",
+      "type": "select",
+      "options": [
+        "all",
+        "today",
+        "7d",
+        "30d"
+      ],
+      "default": "all"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Total"
+    },
+    {
+      "name": "unit",
+      "type": "string",
+      "default": ""
+    }
+  ]
+}

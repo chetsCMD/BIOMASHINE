@@ -1,0 +1,34 @@
+{
+  "type": "checkbox",
+  "title": {
+    "en": "Checkbox",
+    "ru": "Флажок",
+    "es": "Casilla",
+    "de": "Kontrollkästchen"
+  },
+  "group": "input",
+  "size": {
+    "w": 0.3,
+    "h": 48
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Done"
+    },
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "field",
+      "type": "field"
+    },
+    {
+      "name": "form",
+      "type": "form",
+      "default": "main"
+    }
+  ]
+}

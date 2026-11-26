@@ -1,0 +1,57 @@
+{
+  "type": "input-number",
+  "title": {
+    "en": "Number field",
+    "ru": "Числовое поле",
+    "es": "Campo numérico",
+    "de": "Zahlenfeld"
+  },
+  "group": "input",
+  "size": {
+    "w": 0.3,
+    "h": 72
+  },
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "default": "Number"
+    },
+    {
+      "name": "min",
+      "type": "number"
+    },
+    {
+      "name": "max",
+      "type": "number"
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "default": 1
+    },
+    {
+      "name": "unit",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "field",
+      "type": "field"
+    },
+    {
+      "name": "form",
+      "type": "form",
+      "default": "main"
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "default": false
+    }
+  ]
+}

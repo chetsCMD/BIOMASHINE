@@ -1,0 +1,63 @@
+{
+  "type": "chart",
+  "title": {
+    "en": "Chart",
+    "ru": "График",
+    "es": "Gráfico",
+    "de": "Diagramm"
+  },
+  "group": "data",
+  "size": {
+    "w": 0.6,
+    "h": 320
+  },
+  "props": [
+    {
+      "name": "collection",
+      "type": "collection"
+    },
+    {
+      "name": "x",
+      "type": "field"
+    },
+    {
+      "name": "y",
+      "type": "field"
+    },
+    {
+      "name": "type",
+      "type": "select",
+      "options": [
+        "line",
+        "bar"
+      ],
+      "default": "line"
+    },
+    {
+      "name": "aggregate",
+      "type": "select",
+      "options": [
+        "sum",
+        "avg",
+        "last",
+        "count"
+      ],
+      "default": "sum"
+    },
+    {
+      "name": "period",
+      "type": "select",
+      "options": [
+        "all",
+        "7d",
+        "30d"
+      ],
+      "default": "30d"
+    },
+    {
+      "name": "colorToken",
+      "type": "string",
+      "default": "wh"
+    }
+  ]
+}

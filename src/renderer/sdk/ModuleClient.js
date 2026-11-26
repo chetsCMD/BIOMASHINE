@@ -1,6 +1,9 @@
 import { MARK, MessageType } from './protocol.js';
 import { BmClock } from './BmClock.js';
+import { CanvasEngine } from './CanvasEngine.js';
+import { PageText } from './PageText.js';
 import { DesignStyle } from './DesignStyle.js';
+import { ModuleState } from './ModuleState.js';
 import { DomTranslator } from './DomTranslator.js';
 import { ModuleNotifications } from './ModuleNotifications.js';
 import { ModuleStorage } from './ModuleStorage.js';
@@ -17,6 +20,7 @@ export class ModuleClient {
         this.notify = new ModuleNotifications(this);
         this.i18n = new Translator();
         this.clock = new BmClock();
+        this.state = new ModuleState(win);
         this.t = (key, params) => this.i18n.t(key, params);
         this.themeListeners = new Set();
         const ancestor = win.location.ancestorOrigins && win.location.ancestorOrigins[0];
@@ -53,10 +57,36 @@ export class ModuleClient {
             this.applyLanguage(message.i18n || Translator.EMPTY);
             this.clock = new BmClock(message.timezone);
             this.applyDesign(message.design);
+            this.applyState(message.state);
+            try {
+                this.applyCanvas(message.canvas);
+            } catch (error) {
+                this.post({ type: MessageType.CANVAS_LOG, text: `init: ${error.message}` });
+            }
             this.resolveReady(this);
         } else if (message.type === MessageType.THEME) {
             this.applyTheme(message.theme);
             this.themeListeners.forEach((listener) => listener(this.theme));
+        } else if (message.type === MessageType.SNAPSHOT_REQUEST) {
+            this.post({ type: MessageType.SNAPSHOT_RESPONSE, lines: PageText.collect(this.win.document, message.limits) });
+        } else if (message.type === MessageType.CANVAS_INIT) {
+            try {
+                this.applyCanvas(message.canvas);
+            } catch (error) {
+                this.post({ type: MessageType.CANVAS_LOG, text: `init: ${error.message}` });
+            }
+        } else if (message.type === MessageType.CANVAS_COMMAND) {
+            try {
+                if (this.canvas) {
+                    this.canvas.command(message);
+                } else {
+                    this.post({ type: MessageType.CANVAS_LOG, text: `no engine for ${message.command}` });
+                }
+            } catch (error) {
+                this.post({ type: MessageType.CANVAS_LOG, text: `${message.command}: ${error.message}` });
+            }
+        } else if (message.type === MessageType.STATE_REQUEST) {
+            this.post({ type: MessageType.STATE_RESPONSE, state: this.state.capture() });
         } else if (message.type === MessageType.DESIGN) {
             this.applyDesign(message);
         } else if (message.type === MessageType.RESPONSE) {
@@ -82,6 +112,43 @@ export class ModuleClient {
     applyTheme(theme) {
         ThemeStyle.apply(this.win.document, theme);
         this.theme = theme;
+    }
+
+    applyCanvas(canvas) {
+        const scope = `module:${this.win.location.hostname}`;
+        if (this.canvas) {
+            return;
+        }
+        if (!canvas || !canvas.config || !canvas.config.snapPx) {
+            if (!this.canvasRequested) {
+                this.canvasRequested = true;
+                this.post({ type: MessageType.CANVAS_REQUEST, scope });
+            }
+            return;
+        }
+        this.canvas = new CanvasEngine({
+            win: this.win,
+            config: canvas.config,
+            scope,
+            onLog: (text) => this.post({ type: MessageType.CANVAS_LOG, text }),
+            onChange: (target, layout) => this.post({ type: MessageType.LAYOUT_CHANGE, scope: target, layout }),
+            onState: (state) => this.post({ type: MessageType.CANVAS_STATE, state })
+        });
+        this.canvas.start();
+        this.canvas.applyLayout(scope, canvas.layout);
+        if (canvas.enabled) {
+            this.canvas.setEnabled(true, false);
+        }
+    }
+
+    applyState(saved) {
+        if (!saved) {
+            return;
+        }
+        this.state.configure({ windowMs: saved.windowMs, maxValueLength: saved.maxValueLength });
+        if (saved.data) {
+            this.state.restore(saved.data, saved.windowMs);
+        }
     }
 
     applyDesign(design) {

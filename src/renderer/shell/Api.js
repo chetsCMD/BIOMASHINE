@@ -7,6 +7,10 @@ export class Api {
         window.api.onShortcut(handler);
     }
 
+    onBeforeClose(handler) {
+        window.api.onBeforeClose(handler);
+    }
+
     onWindowState(handler) {
         window.api.onWindowState(handler);
     }

@@ -1,11 +1,14 @@
+import { ConfigEditor } from './ConfigEditor.js';
 import { DesignEditor } from './DesignEditor.js';
+import { SessionSettings } from './SessionSettings.js';
+import { WorkspaceSettings } from './WorkspaceSettings.js';
 import { Dom } from './Dom.js';
 import { TextSearch } from './TextSearch.js';
 import { ShortcutEditor } from './ShortcutEditor.js';
 import { TrashView } from './TrashView.js';
 
 export class SettingsView {
-    constructor({ root, api, theme, dialogs, i18n, onModulesChanged, onSecurityChanged, onLanguageChanged, onMenuLayoutChanged, onOpenHub, onDesignChanged }) {
+    constructor({ root, api, theme, dialogs, i18n, onModulesChanged, onSecurityChanged, onLanguageChanged, onMenuLayoutChanged, onOpenHub, onDesignChanged, onConfigChanged }) {
         this.root = root;
         this.api = api;
         this.theme = theme;
@@ -13,6 +16,9 @@ export class SettingsView {
         this.i18n = i18n;
         this.onDesignChanged = onDesignChanged || (async () => {});
         this.design = new DesignEditor({ api, i18n, dialogs, onChange: () => this.onDesignChanged() });
+        this.configs = new ConfigEditor({ api, i18n, dialogs, onChange: (name) => (onConfigChanged ? onConfigChanged(name) : null) });
+        this.session = new SessionSettings({ api, i18n });
+        this.workspaces = new WorkspaceSettings({ api, i18n, dialogs });
         this.onModulesChanged = onModulesChanged;
         this.onSecurityChanged = onSecurityChanged;
         this.onLanguageChanged = onLanguageChanged;
@@ -50,8 +56,12 @@ export class SettingsView {
                 this.language(settings, languages, languageErrors),
                 section('settings.section.time'),
                 this.time(settings, zones, clock),
+                section('settings.section.workspaces'),
+                this.workspaces.render(),
                 section('settings.section.startup'),
                 this.startup(settings),
+                section('settings.section.session'),
+                this.session.render(),
                 section('settings.section.shortcuts'),
                 this.shortcuts(shortcutItems),
                 section('settings.section.modules'),
@@ -64,6 +74,8 @@ export class SettingsView {
                 this.trash(),
                 section('settings.section.design'),
                 this.design.render(modules),
+                section('settings.section.configs'),
+                this.configs.render(),
                 section('settings.section.security'),
                 this.security(status),
                 section('settings.section.about'),
