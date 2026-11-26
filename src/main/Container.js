@@ -27,6 +27,19 @@ const ThemeCatalog = require('./services/ThemeCatalog');
 const LocaleService = require('./services/LocaleService');
 const DesignService = require('./services/DesignService');
 const DesignController = require('./controllers/DesignController');
+const SessionService = require('./services/SessionService');
+const SessionController = require('./controllers/SessionController');
+const ConfigEditorController = require('./controllers/ConfigEditorController');
+const WorkspaceController = require('./controllers/WorkspaceController');
+const LayoutService = require('./services/LayoutService');
+const LayoutController = require('./controllers/LayoutController');
+const SearchService = require('./services/SearchService');
+const SearchController = require('./controllers/SearchController');
+const HotkeysController = require('./controllers/HotkeysController');
+const BlockRegistry = require('./services/BlockRegistry');
+const BuilderService = require('./services/BuilderService');
+const BlocksController = require('./controllers/BlocksController');
+const BuilderController = require('./controllers/BuilderController');
 const ClockService = require('./services/ClockService');
 const NotificationService = require('./services/NotificationService');
 const MessageService = require('./services/MessageService');
@@ -54,12 +67,12 @@ const ShortcutService = require('./ShortcutService');
 const ShortcutController = require('./controllers/ShortcutController');
 
 class Container {
-    constructor({ dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, mainLocalesDir, system, appVersion, now }) {
-        this.options = { dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, mainLocalesDir, system, appVersion, now };
+    constructor({ dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, mainLocalesDir, system, appVersion, now, workspaces, workspaceId }) {
+        this.options = { dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, mainLocalesDir, system, appVersion, now, workspaces, workspaceId };
     }
 
     build() {
-        const { dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, system, appVersion, now } = this.options;
+        const { dbPath, dataDir, configDir, overridesDir, migrationsDir, rendererRoot, userModulesDir, userLocalesDir, system, appVersion, now, workspaces, workspaceId } = this.options;
         this.config = new ConfigService(configDir, overridesDir);
         const filePath = dbPath || path.join(dataDir, this.config.get('app.database.fileName'));
         this.database = new Database(filePath).open();
@@ -68,6 +81,7 @@ class Container {
         const db = this.database;
         this.settingsRepository = new SettingsRepository(db);
         this.shortcuts = new ShortcutService({
+            rules: this.config.get('shortcuts'),
             defaults: this.config.get('app.shortcuts'),
             settings: this.settingsRepository
         });
@@ -114,6 +128,17 @@ class Container {
             language: () => this.settingsService.getAll().language
         });
         this.design = new DesignService({ config: this.config, catalog: this.themeCatalog, settings: this.settingsService, store: this.settingsRepository });
+        this.sessionService = new SessionService(this.settingsRepository, this.config);
+        this.layoutService = new LayoutService(this.settingsRepository, this.config);
+        this.search = new SearchService({ config: this.config, database: this.database, getModules: () => this.moduleService.list(), store: this.settingsRepository });
+        const userBlocksDir = userModulesDir ? path.join(path.dirname(userModulesDir), 'blocks') : null;
+        this.blocks = new BlockRegistry({ config: this.config, systemDir: path.join(rendererRoot, 'blocks'), userDir: userBlocksDir });
+        this.builder = new BuilderService({ config: this.config, blocks: this.blocks, registry: this.registry, userModulesDir, userBlocksDir, onChanged: () => this.moduleService.rescan() });
+        const originalResolve = this.assets.resolve.bind(this.assets);
+        this.assets.resolve = (requestUrl) => {
+            const own = this.blocks.resolveUrl(requestUrl);
+            return own !== undefined ? own : originalResolve(requestUrl);
+        };
         this.moduleService = new ModuleService(this.registry, this.settingsRepository, protocol.scheme, this.locales, () => this.settingsService.getAll().language, this.config);
         this.notificationsRepository = notificationRepository;
         this.notifications = new NotificationService({
@@ -158,7 +183,15 @@ class Container {
             new ShortcutController(this.shortcuts),
             new NotificationController(this.notifications),
             new TrashController(this.operationLog),
-            new DesignController(this.design, this.registry)
+            new DesignController(this.design, this.registry),
+            new SessionController(this.sessionService),
+            new ConfigEditorController(this.config),
+            ...(workspaces ? [new WorkspaceController(workspaces, workspaceId, this.database, system)] : []),
+            new LayoutController(this.layoutService, this.registry),
+            new BlocksController(this.blocks, system, userBlocksDir),
+            new BuilderController(this.builder, system),
+            new SearchController(this.search),
+            new HotkeysController(this.shortcuts)
         ].forEach((controller) => this.router.register(controller));
 
         this.notifications.start();

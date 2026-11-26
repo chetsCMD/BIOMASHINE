@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { app, ipcMain, Menu } = require('electron');
 const Container = require('./Container');
+const WorkspaceRegistry = require('./services/WorkspaceRegistry');
 const ElectronSystem = require('./ElectronSystem');
 const ProtocolHandler = require('./ProtocolHandler');
 const PortablePaths = require('./PortablePaths');
@@ -42,6 +43,24 @@ class Application {
         }
     }
 
+    argument(name) {
+        const prefix = `--${name}=`;
+        const inline = process.argv.find((item) => item.startsWith(prefix));
+        if (inline) {
+            return inline.slice(prefix.length);
+        }
+        const index = process.argv.indexOf(`--${name}`);
+        return index !== -1 ? process.argv[index + 1] : null;
+    }
+
+    applyTitle() {
+        const entry = this.workspaces.get(this.workspaceId);
+        const template = this.appConfig().workspaces.titleTemplate;
+        if (entry && entry.name && this.windows) {
+            this.windows.fixTitle(template.replace('{app}', app.getName()).replace('{name}', entry.name));
+        }
+    }
+
     build() {
         const userData = app.getPath('userData');
         const userModulesDir = path.join(userData, this.appConfig().modules.userDirectory);
@@ -50,7 +69,14 @@ class Application {
         fs.mkdirSync(userLocalesDir, { recursive: true });
         const overridesDir = path.join(userData, 'config');
         fs.mkdirSync(overridesDir, { recursive: true });
+        const config = this.appConfig();
+        this.workspaces = new WorkspaceRegistry({ dataDir: userData, settings: config.workspaces, fileName: config.database.fileName });
+        this.workspaces.ensure();
+        this.workspaceId = this.workspaces.resolve(this.argument('profile'));
         return new Container({
+            workspaces: this.workspaces,
+            workspaceId: this.workspaceId,
+            dbPath: this.workspaces.dbPath(this.workspaceId),
             dataDir: userData,
             configDir: path.join(this.root, 'config'),
             overridesDir,
@@ -58,7 +84,7 @@ class Application {
             rendererRoot: path.join(this.root, 'src', 'renderer'),
             userModulesDir,
             userLocalesDir,
-            system: new ElectronSystem(() => (this.windows ? this.windows.window : null)),
+            system: new ElectronSystem(() => (this.windows ? this.windows.window : null), () => this.windows),
             appVersion: app.getVersion()
         }).build();
     }
@@ -77,6 +103,7 @@ class Application {
         container.router.attach(ipcMain);
         container.settingsService.applyStored();
         this.windows.create();
+        this.applyTitle();
     }
 }
 

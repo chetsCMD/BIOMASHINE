@@ -14,7 +14,8 @@ class WindowController extends BaseController {
         return {
             state: () => this.system.windowState(),
             toggleFullscreen: () => this.system.toggleFullscreen(),
-            close: () => this.system.closeWindow()
+            close: () => this.system.closeWindow(),
+            closeNow: () => this.system.closeNow()
         };
     }
 }

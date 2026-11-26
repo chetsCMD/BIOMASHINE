@@ -44,7 +44,25 @@ class WindowManager {
         this.window.once('ready-to-show', () => this.window.show());
         this.window.on('enter-full-screen', () => this.announceFullscreen(true));
         this.window.on('leave-full-screen', () => this.announceFullscreen(false));
-        this.window.on('close', () => this.settings.set('window.bounds', this.window.getBounds()));
+        this.window.on('close', (event) => {
+            if (!this.closeApproved) {
+                event.preventDefault();
+                if (this.closePending) {
+                    this.closeApproved = true;
+                    this.window.close();
+                    return;
+                }
+                this.closePending = true;
+                this.window.webContents.send('before-close');
+                return;
+            }
+            this.settings.set('window.bounds', this.window.getBounds());
+        });
+        this.window.on('page-title-updated', (event) => {
+            if (this.fixedTitle) {
+                event.preventDefault();
+            }
+        });
         this.window.loadURL(this.startUrl);
         return this.window;
     }
@@ -61,6 +79,20 @@ class WindowManager {
                 event.preventDefault();
             }
         });
+    }
+
+    approveClose() {
+        this.closeApproved = true;
+        if (this.window) {
+            this.window.close();
+        }
+    }
+
+    fixTitle(title) {
+        this.fixedTitle = title;
+        if (this.window) {
+            this.window.setTitle(title);
+        }
     }
 
     focus() {

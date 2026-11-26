@@ -3,8 +3,9 @@ const path = require('path');
 const { app, dialog, shell, Notification } = require('electron');
 
 class ElectronSystem {
-    constructor(getWindow) {
+    constructor(getWindow, getManager) {
         this.getWindow = getWindow;
+        this.getManager = getManager;
     }
 
     systemLocale() {
@@ -39,6 +40,13 @@ class ElectronSystem {
             window.setFullScreen(!window.isFullScreen());
         }
         return this.windowState();
+    }
+
+    closeNow() {
+        const manager = this.getManager ? this.getManager() : null;
+        if (manager) {
+            manager.approveClose();
+        }
     }
 
     closeWindow() {

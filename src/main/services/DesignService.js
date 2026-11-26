@@ -14,6 +14,9 @@ class DesignService {
     }
 
     read(key, fallback) {
+        if (!this.store) {
+            return fallback;
+        }
         const value = this.store.get(key);
         return value === null || value === undefined ? fallback : value;
     }

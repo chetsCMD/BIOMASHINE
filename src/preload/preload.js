@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld('api', {
     onShortcut: (handler) => {
         ipcRenderer.on(SHORTCUT_CHANNEL, (event, name) => handler(name));
     },
+    onBeforeClose: (handler) => {
+        ipcRenderer.on('before-close', () => handler());
+    },
     onWindowState: (handler) => {
         ipcRenderer.on(WINDOW_CHANNEL, (event, state) => handler(state));
     },
