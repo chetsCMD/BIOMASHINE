@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.0-8b7e6a" alt="Version 1.2.0">
+  <img src="https://img.shields.io/badge/version-2.0.0-8b7e6a" alt="Version 2.0.0">
   <img src="https://img.shields.io/badge/Electron-45-47848f?logo=electron&logoColor=white" alt="Electron 45">
   <img src="https://img.shields.io/badge/data-local%20%26%20offline-6b8e76" alt="Lokale Daten, Offline-Betrieb">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-555" alt="Windows, Linux und macOS">
@@ -51,6 +51,7 @@ Und der Nutzer bestimmt, **was genau erfasst wird**.
 - **Ihres.** Die Daten verlassen den Computer nicht. Keine Telemetrie, kein Synchronisierungsdienst, keine Registrierung.
 - **Bis auf das Pixel anpassbar.** Im Code ist nichts fest verdrahtet: weder Gestaltung noch Texte noch Koeffizienten. Sprache, Farben, Größen, Schriftarten, Formeln und Konstanten liegen in Einstellungen und Konfigurationsdateien, die in der Anwendung selbst oder manuell bearbeitet werden können.
 - **Modular.** Jede Seite ist ein Modul. Blenden Sie Unnötiges aus, fügen Sie Eigenes hinzu oder beschreiben Sie die benötigte Seite einem KI-Assistenten und legen Sie das Ergebnis in den Modulordner.
+- **Ohne Code zusammengestellt.** Der Modul-Builder baut eine Seite aus fertigen Blöcken zusammen: Palette, 16:9-Vorschau, Eigenschaften-Inspektor und Daten-Editor. Eigene Blöcke werden als Ordner mit Beschreibung, Skript und Stilen hinzugefügt.
 - **Offen.** Freie Software unter der GPL-Lizenz.
 
 ## Der Nutzer steuert die Anwendung
@@ -58,6 +59,7 @@ Und der Nutzer bestimmt, **was genau erfasst wird**.
 Die Grundidee von BIOMASHINE ist: **Der Mensch steuert das Programm, nicht das Programm den Menschen.** Dies ist nicht nur ein fertiger Satz von Seiten, der „wie vorgesehen“ verwendet werden muss. Der Nutzer kann die Umgebung nach seinen Bedürfnissen gestalten:
 
 - eigene Module für die benötigten Arten der Erfassung erstellen;
+- Seiten im Builder ohne Programmierung zusammenstellen;
 - Module aktivieren und ausblenden und so die Zusammensetzung der Anwendung steuern;
 - Plugins erstellen und das Erscheinungsbild der Oberfläche ändern – einschließlich der Entwicklung eigener Themes auf Basis des Stil- und Plugin-Mechanismus;
 - die Oberfläche in jede Sprache übersetzen: Die Anwendung bietet Sprachdateien und die Möglichkeit, eigene Übersetzungen hinzuzufügen.
@@ -73,6 +75,7 @@ In der aktuellen Version gibt es mehrere fertige Beispielseiten:
 - **Laufen** – Läufe, Ziele und Statistiken.
 - **Training** – Einheiten und Trainingsvorlagen.
 - **Reaktion** – Reaktionsgeschwindigkeitstest und Ergebnisverlauf.
+- **Builder** – Zusammenstellen eigener Seiten aus fertigen Blöcken.
 
 [![Beispiel einer Seite zur Schlafaufzeichnung:](media/sleep.png)](media/sleep.png)
 
@@ -80,7 +83,7 @@ In der aktuellen Version gibt es mehrere fertige Beispielseiten:
 
 - **Leiste und Modul-Hub.** Heften Sie die wichtigsten Module an die obere Leiste; die übrigen warten im Hub: einer Kartenseite mit Suche, Kategorien und Anheft-Schaltflächen. Lieber eine Seitenleiste? Wechseln Sie zu einem vertikalen Layout mit einklappbaren Kategorien.
 - **Schnellsprung.** `Ctrl+P` (`Cmd+P` unter macOS) öffnet jedes Modul oder jeden Einstellungsbereich und funktioniert mit jedem Tastaturlayout.
-- **Eigene Tastenkürzel.** Jede Tastenkombination kann in den Einstellungen neu zugewiesen werden.
+- **Eigene Tastenkürzel.** Jede Tastenkombination kann in den Einstellungen neu zugewiesen werden, und Aktionen lösen auch bei Fokus innerhalb einer Modulseite aus. Makros – Aktionsketten – sind vorerst in der Beta-Phase.
 - **Vollbild.** `F11` aktiviert es, und die Fenstersteuerung bleibt erreichbar.
 - **Sitzungswiederherstellung.** Beim Beenden kann die Anwendung anbieten, das geöffnete Modul, Feldwerte und die Scrollposition zu merken und Sie beim nächsten Start genau zu diesem Bildschirm zurückzubringen.
 
@@ -93,6 +96,11 @@ Aber wenn Sie nicht mit Code arbeiten können – kein Problem. Es gibt eine [Do
 
 ## Machen Sie es zu Ihrem
 
+[![Constructor:](media/Constructor.png)](media/Constructor.png)
+
+- **Canvas-Modus.** Aktivieren Sie ✥ und bearbeiten Sie jedes sichtbare Element: verschieben, skalieren, ausblenden, Ebene ändern. Das Layout wird getrennt für jedes Modul, die Shell und deren Bildschirme gespeichert.
+- **Modul-Builder.** Stellen Sie eine Seite aus 13 fertigen Blöcken zusammen – von Text und Feldern bis zu Diagrammen und Kennzahlen – ohne eine einzige Zeile Code. Das Blockset wird erweitert. Eigene Blöcke werden in einem Ordner mit Beschreibung, Skript und Stilen geschrieben.
+- **Globale Suche.** `Ctrl+O` durchsucht die Einträge aller Tabellen, Modulnamen und -beschreibungen sowie den Inhalt bereits geöffneter Seiten.
 - **Sprachen.** Russisch, Englisch, Spanisch und Deutsch sind integriert. Exportieren Sie in den Einstellungen eine Übersetzungsvorlage, übersetzen Sie sie, legen Sie die Datei in den Sprachordner, und Ihre Sprache erscheint in der Liste.
 - **Design.** Helles und dunkles Theme, und dahinter ein Design-Editor: Jede Farbe, Größe, Abstand, Radius, Schriftart und Animationsdauer ist ein Token, das für die gesamte Anwendung oder für ein einzelnes Modul mit Live-Vorschau geändert werden kann. Schreiben Sie eigenes CSS für die gesamte Anwendung oder ein einzelnes Modul, importieren und exportieren Sie fertige Designs und ordnen Sie Plugins in der gewünschten Reihenfolge an.
 - **Konfigurationseditor.** Ändern Sie beliebige JSON-Konfigurationen (Koeffizienten, Farben, Grenzwerte) direkt in der Anwendung. Änderungen werden sofort angewendet, und gespeichert werden nur Ihre Abweichungen von den Standardwerten.
@@ -141,7 +149,10 @@ Native Module müssen auf dem Betriebssystem gebaut werden, für das die Build-V
 - [Projektkarte: Architektur, IPC-Kanäle, Datenschicht](../docs/de/Developers/Project%20Map.md)
 - [Module: Manifest, SDK, Speicher, Gestaltung](../docs/de/Developers/Modules.md)
 - [Designsystem: Tokens, Werkzeug, Editor](../docs/de/Developers/Design.md)
+- [Canvas-Modus](../docs/de/Canvas.md)
+- [Modul-Builder](../docs/de/Builder.md)
 - [Leitfaden für KI-Assistenten: Erstellen eines Moduls](../docs/de/ai/MODULE_GUIDE.md)
+- [Leitfaden für KI-Assistenten: Erstellen eines Builder-Blocks](../docs/de/ai/BLOCK_GUIDE.md)
 - [Leitfaden für KI-Assistenten: Erstellen eines Plugins](../docs/de/ai/PLUGIN_GUIDE.md)
 
 ## Projekt unterstützen
